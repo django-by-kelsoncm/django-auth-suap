@@ -1,0 +1,28 @@
+site_name: django-auth-suap
+site_description: Django OAuth2 authentication backend for SUAP (IFRN's System)
+site_author: kelsoncm
+repo_url: https://github.com/django-by-kelsoncm/django-auth-suap
+repo_name: django-by-kelsoncm/django-auth-suap
+site_url: https://django-by-kelsoncm.github.io/django-auth-suap/
+
+theme:
+  name: readthedocs
+  highlightjs: true
+
+nav:
+  - Início: index.md
+  - Instalação: installation.md
+  - Configuração: configuration.md
+  - Escopos: scopes.md
+  - Mapeamento de Atributos: attribute-mapping.md
+  - Fluxo de Autenticação: auth-flow.md
+  - Ambiente Sandbox: sandboxes.md
+  - Desenvolvimento: development.md
+  - Processo de Release: release.md
+
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - admonition
+  - toc:
+      permalink: true
