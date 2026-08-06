@@ -20,7 +20,7 @@ Backend de autenticação OAuth2 do Django para **SUAP** (Sistema Unificado de A
 - [Pipeline de Perfil de Usuário](user-info-pipeline.md)
 - [Fetchers (Busca de Dados)](fetchers.md)
 - [Mappers (Mapeamento)](mappers.md)
-- [Auth Flow](auth-flow.md)
+- [Auth flow](auth-flow.md)
 - [Sandboxes](sandboxes.md)
 - [Development](development.md)
 - [Release](release.md)
