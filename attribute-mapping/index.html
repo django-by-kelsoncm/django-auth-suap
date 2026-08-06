@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="kelsoncm" /><link rel="canonical" href="https://django-by-kelsoncm.github.io/django-auth-suap/attribute-mapping/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Mapeamento de Atributos - django-auth-suap</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Mapeamento de Atributos";
+        var mkdocs_page_input_path = "attribute-mapping.md";
+        var mkdocs_page_url = "/django-auth-suap/attribute-mapping/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> django-auth-suap
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Início</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../installation/">Instalação</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../configuration/">Configuração</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../scopes/">Escopos</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Mapeamento de Atributos</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#mapeamento-padrao">Mapeamento Padrão</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#formatos-de-mapeamento-suportados">Formatos de Mapeamento Suportados</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#1-campo-simples-ou-aninhado-dotted-path">1. Campo Simples ou Aninhado (Dotted Path)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#2-divisao-de-nome-em-dois-campos-tupla">2. Divisão de Nome em Dois Campos (Tupla)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#3-lambdas-e-callables-customizadas">3. Lambdas e Callables Customizadas</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#4-dicionarios-de-especificacao-com-transformadores-e-val-padrao-dict-spec">4. Dicionários de Especificação com Transformadores e Val padrão (dict spec)</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#mapeamento-de-fotos-url-vs-download-para-imagefield">Mapeamento de Fotos (URL vs Download para ImageField)</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#caso-a-mapear-apenas-a-url-charfield-urlfield">Caso A: Mapear apenas a URL (CharField / URLField)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#caso-b-baixar-a-foto-e-salvar-num-imagefield-filefield">Caso B: Baixar a foto e salvar num ImageField / FileField</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#utilitarios-de-transformacao-embutidos-django_suap_authtransformers">Utilitários de Transformação Embutidos (django_suap_auth.transformers)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#class-based-mapper-customizado-user_mapper">Class-Based Mapper Customizado (USER_MAPPER)</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../user-info-pipeline/">Pipeline de Perfil de Usuário</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../fetchers/">Fetchers (Busca de Dados)</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../mappers/">Mappers (Mapeamento)</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../auth-flow/">Fluxo de Autenticação</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../sandboxes/">Ambiente Sandbox</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../development/">Desenvolvimento</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../release/">Processo de Release</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">django-auth-suap</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Mapeamento de Atributos</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/django-by-kelsoncm/django-auth-suap/edit/master/docs/attribute-mapping.md">Edit on django-by-kelsoncm/django-auth-suap</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="mapeamento-de-atributos-do-suap-para-o-django-user-model">Mapeamento de Atributos do SUAP para o Django User Model<a class="headerlink" href="#mapeamento-de-atributos-do-suap-para-o-django-user-model" title="Permanent link">&para;</a></h1>
+<p>O dicionário <code>USER_ATTR_MAP</code> define como os campos retornados pelas APIs do SUAP são gravados no model <code>User</code> do Django (seja o padrão ou um customizado via <code>AUTH_USER_MODEL</code>).</p>
+<h2 id="mapeamento-padrao">Mapeamento Padrão<a class="headerlink" href="#mapeamento-padrao" title="Permanent link">&para;</a></h2>
+<pre class="highlight"><code class="language-python">SUAP_AUTH = {
+    # ...
+    'USER_ATTR_MAP': {
+        'username': 'identificacao',
+        'email': 'email',
+        ('first_name', 'last_name'): 'nome_usual',
+    },
+}</code></pre>
+<h2 id="formatos-de-mapeamento-suportados">Formatos de Mapeamento Suportados<a class="headerlink" href="#formatos-de-mapeamento-suportados" title="Permanent link">&para;</a></h2>
+<h3 id="1-campo-simples-ou-aninhado-dotted-path">1. Campo Simples ou Aninhado (Dotted Path)<a class="headerlink" href="#1-campo-simples-ou-aninhado-dotted-path" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-python">'USER_ATTR_MAP': {
+    'username': 'identificacao',
+    'email': 'email',
+    'cpf': 'dados_pessoais.cpf',   # extrai do dicionário aninhado
+    'suap_raw': 'fulljson',        # atribui o dicionário user_info completo ao campo
+}</code></pre>
+<h3 id="2-divisao-de-nome-em-dois-campos-tupla">2. Divisão de Nome em Dois Campos (Tupla)<a class="headerlink" href="#2-divisao-de-nome-em-dois-campos-tupla" title="Permanent link">&para;</a></h3>
+<p>Quando a chave do mapeamento é uma <strong>tupla</strong>, o valor retornado pelo SUAP é dividido no primeiro espaço:</p>
+<pre class="highlight"><code class="language-python">('first_name', 'last_name'): 'nome_usual'
+# "João Silva Santos" → first_name="João", last_name="Silva Santos"
+# "João"              → first_name="João", last_name=""</code></pre>
+<h3 id="3-lambdas-e-callables-customizadas">3. Lambdas e Callables Customizadas<a class="headerlink" href="#3-lambdas-e-callables-customizadas" title="Permanent link">&para;</a></h3>
+<p>Você pode passar um <code>callable</code> ou <code>lambda</code> que recebe o dicionário completo de informações do SUAP (<code>suap_user_info</code>):</p>
+<pre class="highlight"><code class="language-python">'USER_ATTR_MAP': {
+    'username': 'identificacao',
+    'full_name': lambda info: f"{info.get('primeiro_nome', '')} {info.get('ultimo_nome', '')}".strip(),
+    'is_student': lambda info: info.get('tipo_vinculo') == 'Aluno',
+}</code></pre>
+<h3 id="4-dicionarios-de-especificacao-com-transformadores-e-val-padrao-dict-spec">4. Dicionários de Especificação com Transformadores e Val padrão (<code>dict</code> spec)<a class="headerlink" href="#4-dicionarios-de-especificacao-com-transformadores-e-val-padrao-dict-spec" title="Permanent link">&para;</a></h3>
+<p>Permite definir a chave de origem, valor padrão (<code>default</code>) e uma função de transformação (<code>transform</code>):</p>
+<pre class="highlight"><code class="language-python">'USER_ATTR_MAP': {
+    'username': 'identificacao',
+    'cpf': {
+        'key': 'cpf',
+        'transform': 'django_suap_auth.transformers.format_cpf',
+    },
+    'data_nascimento': {
+        'key': 'data_nascimento',
+        'transform': 'django_suap_auth.transformers.parse_date',
+    },
+    'campus': {
+        'key': 'vinculo.campus',
+        'default': 'Campus Geral',
+    },
+}</code></pre>
+<hr />
+<h2 id="mapeamento-de-fotos-url-vs-download-para-imagefield">Mapeamento de Fotos (URL vs Download para ImageField)<a class="headerlink" href="#mapeamento-de-fotos-url-vs-download-para-imagefield" title="Permanent link">&para;</a></h2>
+<p>O SUAP retorna a URL da foto no campo <code>url_foto_75x100</code>.</p>
+<h3 id="caso-a-mapear-apenas-a-url-charfield-urlfield">Caso A: Mapear apenas a URL (CharField / URLField)<a class="headerlink" href="#caso-a-mapear-apenas-a-url-charfield-urlfield" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-python">'USER_ATTR_MAP': {
+    'foto_url': 'url_foto_75x100',
+}</code></pre>
+<h3 id="caso-b-baixar-a-foto-e-salvar-num-imagefield-filefield">Caso B: Baixar a foto e salvar num <code>ImageField</code> / <code>FileField</code><a class="headerlink" href="#caso-b-baixar-a-foto-e-salvar-num-imagefield-filefield" title="Permanent link">&para;</a></h3>
+<p>Utilize o transformador <code>fetch_image_file</code> fornecido pelo pacote:</p>
+<p><pre class="highlight"><code class="language-python">'USER_ATTR_MAP': {
+    'foto': {
+        'key': 'url_foto_75x100',
+        'transform': 'django_suap_auth.transformers.fetch_image_file',
+    },
+}</code></pre>
+Ou via lambda customizada:
+<pre class="highlight"><code class="language-python">from django_suap_auth.transformers import fetch_image_file
+
+'USER_ATTR_MAP': {
+    'foto': lambda info: fetch_image_file(info.get('url_foto_75x100')),
+}</code></pre></p>
+<hr />
+<h2 id="utilitarios-de-transformacao-embutidos-django_suap_authtransformers">Utilitários de Transformação Embutidos (<code>django_suap_auth.transformers</code>)<a class="headerlink" href="#utilitarios-de-transformacao-embutidos-django_suap_authtransformers" title="Permanent link">&para;</a></h2>
+<p>O pacote já disponibiliza as seguintes funções prontas:</p>
+<ul>
+<li><code>fetch_image_file(value, suap_info=None)</code>: baixa a imagem da URL informada e retorna um <code>ContentFile</code> do Django pronto para ser salvo em <code>ImageField</code> / <code>FileField</code>.</li>
+<li><code>parse_date(value, suap_info=None)</code>: converte string ISO (<code>YYYY-MM-DD</code>) para <code>datetime.date</code>.</li>
+<li><code>format_cpf(value, suap_info=None)</code>: formata uma string de 11 dígitos para o padrão <code>"XXX.XXX.XXX-XX"</code>.</li>
+<li><code>to_upper(value, suap_info=None)</code> / <code>to_lower(value, suap_info=None)</code>: converte caixas de texto.</li>
+<li><code>to_bool(value, suap_info=None)</code>: converte valores variados para booleano.</li>
+</ul>
+<hr />
+<h2 id="class-based-mapper-customizado-user_mapper">Class-Based Mapper Customizado (<code>USER_MAPPER</code>)<a class="headerlink" href="#class-based-mapper-customizado-user_mapper" title="Permanent link">&para;</a></h2>
+<p>Para cenários complexos (como registrar perfis em tabelas vinculadas), você pode implementar uma classe customizada derivada de <code>BaseSuapUserMapper</code>:</p>
+<pre class="highlight"><code class="language-python"># mappers.py
+from django_suap_auth.mappers import BaseSuapUserMapper
+
+class CustomSuapUserMapper(BaseSuapUserMapper):
+    def map_attributes(self, user_info, attr_map=None):
+        attrs = super().map_attributes(user_info, attr_map)
+        attrs['is_servidor'] = (user_info.get('tipo_vinculo') == 'Servidor')
+        return attrs</code></pre>
+<p>E ativá-la nas configurações do Django:
+<pre class="highlight"><code class="language-python">SUAP_AUTH = {
+    # ...
+    'USER_MAPPER': 'meu_app.mappers.CustomSuapUserMapper',
+}</code></pre></p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../scopes/" class="btn btn-neutral float-left" title="Escopos"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../user-info-pipeline/" class="btn btn-neutral float-right" title="Pipeline de Perfil de Usuário">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/django-by-kelsoncm/django-auth-suap" class="fa fa-code-fork" style="color: #fcfcfc"> django-by-kelsoncm/django-auth-suap</a>
+        </span>
+    
+    
+      <span><a href="../scopes/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../user-info-pipeline/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

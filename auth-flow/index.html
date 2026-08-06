@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="kelsoncm" /><link rel="canonical" href="https://django-by-kelsoncm.github.io/django-auth-suap/auth-flow/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Fluxo de Autenticação - django-auth-suap</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Fluxo de Autentica\u00e7\u00e3o";
+        var mkdocs_page_input_path = "auth-flow.md";
+        var mkdocs_page_url = "/django-auth-suap/auth-flow/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> django-auth-suap
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Início</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../installation/">Instalação</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../configuration/">Configuração</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../scopes/">Escopos</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../attribute-mapping/">Mapeamento de Atributos</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../user-info-pipeline/">Pipeline de Perfil de Usuário</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../fetchers/">Fetchers (Busca de Dados)</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../mappers/">Mappers (Mapeamento)</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Fluxo de Autenticação</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#visao-geral">Visão Geral</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#redirecionamento-direto-padrao">Redirecionamento Direto (Padrão)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#pagina-intermediaria">Página Intermediária</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#protecao-csrf">Proteção CSRF</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../sandboxes/">Ambiente Sandbox</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../development/">Desenvolvimento</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../release/">Processo de Release</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">django-auth-suap</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Fluxo de Autenticação</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/django-by-kelsoncm/django-auth-suap/edit/master/docs/auth-flow.md">Edit on django-by-kelsoncm/django-auth-suap</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="fluxo-de-autenticacao">Fluxo de Autenticação<a class="headerlink" href="#fluxo-de-autenticacao" title="Permanent link">&para;</a></h1>
+<h2 id="visao-geral">Visão Geral<a class="headerlink" href="#visao-geral" title="Permanent link">&para;</a></h2>
+<p>django-suap-auth implementa o fluxo de autorização de código OAuth2.</p>
+<pre class="highlight"><code class="language-mermaid">flowchart TD
+    A["Usuário"] --&gt;|Clica em Entrar| B["GET /auth/suap/login/"]
+    B --&gt;|Gera state| C["Armazena state na sessao"]
+    C --&gt;|DIRECT_REDIRECT true| D["Redireciona para SUAP"]
+    C --&gt;|DIRECT_REDIRECT false| E["Renderiza login.html"]
+    E --&gt;|Clica botao| D
+    D --&gt;|Faz login| F["SUAP /o/authorize/"]
+    F --&gt;|Autoriza| G["Redireciona com code"]
+    G --&gt;|POST /auth/suap/callback/| H["Valida state"]
+    H --&gt;|Valido| I["POST /o/token/"]
+    H --&gt;|Invalido| J["Erro CSRF"]
+    I --&gt;|Troca code por token| K["Recebe access_token"]
+    K --&gt;|GET /api/rh/eu/| L["SUAP API"]
+    L --&gt;|Dados do usuario| M["Informacoes JSON"]
+    M --&gt;|authenticate| N["Backend SUAP"]
+    N --&gt;|Cria Usuario| O["Usuario autenticado"]
+    O --&gt;|login| P["Sessao criada"]
+    P --&gt;|Redireciona| Q["LOGIN_REDIRECT_URL"]
+    Q --&gt;|Ex /dashboard/| R["Logado com sucesso"]
+
+    style A fill:#e1f5ff
+    style F fill:#fff3e0
+    style L fill:#fff3e0
+    style R fill:#c8e6c9
+    style J fill:#ffcdd2</code></pre>
+<h2 id="redirecionamento-direto-padrao">Redirecionamento Direto (Padrão)<a class="headerlink" href="#redirecionamento-direto-padrao" title="Permanent link">&para;</a></h2>
+<p>Com <code>DIRECT_REDIRECT = True</code> (padrão em <code>SUAP_AUTH</code>), o usuário é imediatamente redirecionado para SUAP quando visita <code>/auth/suap/login/</code>.</p>
+<h2 id="pagina-intermediaria">Página Intermediária<a class="headerlink" href="#pagina-intermediaria" title="Permanent link">&para;</a></h2>
+<p>Com <code>DIRECT_REDIRECT = False</code> em <code>SUAP_AUTH</code>, a view de login renderiza uma página intermediária (<code>django_suap_auth/login.html</code>) onde o usuário deve clicar em um botão para prosseguir para SUAP.</p>
+<h2 id="protecao-csrf">Proteção CSRF<a class="headerlink" href="#protecao-csrf" title="Permanent link">&para;</a></h2>
+<p>O parâmetro de estado é gerado usando <code>secrets.token_urlsafe(32)</code> e armazenado na sessão. Ele é validado no callback para prevenir ataques CSRF.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../mappers/" class="btn btn-neutral float-left" title="Mappers (Mapeamento)"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../sandboxes/" class="btn btn-neutral float-right" title="Ambiente Sandbox">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/django-by-kelsoncm/django-auth-suap" class="fa fa-code-fork" style="color: #fcfcfc"> django-by-kelsoncm/django-auth-suap</a>
+        </span>
+    
+    
+      <span><a href="../mappers/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../sandboxes/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

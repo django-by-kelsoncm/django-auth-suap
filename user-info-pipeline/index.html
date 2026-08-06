@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="kelsoncm" /><link rel="canonical" href="https://django-by-kelsoncm.github.io/django-auth-suap/user-info-pipeline/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Pipeline de Perfil de Usuário - django-auth-suap</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Pipeline de Perfil de Usu\u00e1rio";
+        var mkdocs_page_input_path = "user-info-pipeline.md";
+        var mkdocs_page_url = "/django-auth-suap/user-info-pipeline/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> django-auth-suap
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Início</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../installation/">Instalação</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../configuration/">Configuração</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../scopes/">Escopos</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../attribute-mapping/">Mapeamento de Atributos</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Pipeline de Perfil de Usuário</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#arquitetura-geral">Arquitetura Geral</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#1-cadeia-de-busca-de-dados-user_info_fetchers">1. Cadeia de Busca de Dados (USER_INFO_FETCHERS)</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#elo-padrao-defaultendpointsuserinfofetcher">Elo Padrão: DefaultEndpointsUserInfoFetcher</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#criando-um-fetcher-customizado-para-fontes-externas">Criando um Fetcher Customizado para Fontes Externas</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#2-cadeia-de-mapeamento-user_info_mappers">2. Cadeia de Mapeamento (USER_INFO_MAPPERS)</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#elo-padrao-defaultattrmapusermapper">Elo Padrão: DefaultAttrMapUserMapper</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#criando-um-mapper-customizado">Criando um Mapper Customizado</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../fetchers/">Fetchers (Busca de Dados)</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../mappers/">Mappers (Mapeamento)</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../auth-flow/">Fluxo de Autenticação</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../sandboxes/">Ambiente Sandbox</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../development/">Desenvolvimento</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../release/">Processo de Release</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">django-auth-suap</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Pipeline de Perfil de Usuário</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/django-by-kelsoncm/django-auth-suap/edit/master/docs/user-info-pipeline.md">Edit on django-by-kelsoncm/django-auth-suap</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="pipeline-de-busca-e-mapeamento-do-perfil-do-usuario">Pipeline de Busca e Mapeamento do Perfil do Usuário<a class="headerlink" href="#pipeline-de-busca-e-mapeamento-do-perfil-do-usuario" title="Permanent link">&para;</a></h1>
+<p>O <code>django-suap-auth</code> utiliza o padrão de projeto <strong>Chain of Responsibility (Cadeia de Responsabilidade)</strong> para os subsistemas de busca de dados (<code>USER_INFO_FETCHERS</code>) e mapeamento de atributos (<code>USER_INFO_MAPPERS</code>).</p>
+<hr />
+<h2 id="arquitetura-geral">Arquitetura Geral<a class="headerlink" href="#arquitetura-geral" title="Permanent link">&para;</a></h2>
+<pre class="highlight"><code>1. OAuth2 Code Swap ──&gt; Access Token
+                             │
+                             ▼
+2. USER_INFO_FETCHERS Chain ──&gt; Dicionário user_info acumulado
+                             │
+                             ▼
+3. USER_INFO_MAPPERS Chain  ──&gt; Dicionário attrs para o Django Model
+                             │
+                             ▼
+4. User Model (get_or_create) ──&gt; Usuário Autenticado</code></pre>
+<hr />
+<h2 id="1-cadeia-de-busca-de-dados-user_info_fetchers">1. Cadeia de Busca de Dados (<code>USER_INFO_FETCHERS</code>)<a class="headerlink" href="#1-cadeia-de-busca-de-dados-user_info_fetchers" title="Permanent link">&para;</a></h2>
+<p>O SUAP possui múltiplos endpoints de API (<code>/api/rh/eu/</code>, <code>/api/rh/meus-dados/</code>, <code>/api/rh/meus-vinculos/</code>). A cadeia de fetchers é responsável por consultar esses endpoints e mesclar as informações em um único dicionário <code>user_info</code>.</p>
+<h3 id="elo-padrao-defaultendpointsuserinfofetcher">Elo Padrão: <code>DefaultEndpointsUserInfoFetcher</code><a class="headerlink" href="#elo-padrao-defaultendpointsuserinfofetcher" title="Permanent link">&para;</a></h3>
+<p>Consome a lista <code>USER_INFO_ENDPOINTS</code> do <code>settings.py</code>:</p>
+<pre class="highlight"><code class="language-python">SUAP_AUTH = {
+    # Lista de endpoints do SUAP a serem consultados e mesclados
+    "USER_INFO_ENDPOINTS": [
+        "/api/rh/eu/",          # Dados básicos na raiz do dict
+        "/api/rh/meus-dados/",  # Mescla rg, filiação, vinculo.cargo, etc.
+        {
+            "endpoint": "/api/rh/meus-vinculos/",
+            "namespace": "vinculos",   # Injeta sob user_info['vinculos']
+            "extract_list": "results", # Extrai a lista do campo paginado 'results'
+        },
+        {
+            "endpoint": "/api/rh/meu-vinculo/{id}/",
+            "namespace": "detalhes_vinculos",
+            "for_each": "vinculos",    # Itera sobre cada item em user_info['vinculos']
+        },
+    ],
+}</code></pre>
+<h3 id="criando-um-fetcher-customizado-para-fontes-externas">Criando um Fetcher Customizado para Fontes Externas<a class="headerlink" href="#criando-um-fetcher-customizado-para-fontes-externas" title="Permanent link">&para;</a></h3>
+<p>Você pode adicionar elos à cadeia <code>USER_INFO_FETCHERS</code> para consultar sistemas de RH internos, LDAP ou bancos corporativos:</p>
+<pre class="highlight"><code class="language-python"># meu_app/fetchers.py
+from django_suap_auth.fetchers import BaseUserInfoFetcher
+
+class ExternalLdapUserInfoFetcher(BaseUserInfoFetcher):
+    def fetch(self, client, access_token, user_info=None):
+        user_info = super().fetch(client, access_token, user_info)
+
+        cpf = user_info.get("cpf")
+        if cpf:
+            # Enriquece o dicionário com dados de outra fonte
+            user_info["ldap"] = meu_servico_ldap.buscar_por_cpf(cpf)
+
+        return user_info</code></pre>
+<p>Configuração no <code>settings.py</code>:
+<pre class="highlight"><code class="language-python">SUAP_AUTH = {
+    "USER_INFO_FETCHERS": [
+        "django_suap_auth.fetchers.DefaultEndpointsUserInfoFetcher",
+        "meu_app.fetchers.ExternalLdapUserInfoFetcher",
+    ],
+}</code></pre></p>
+<hr />
+<h2 id="2-cadeia-de-mapeamento-user_info_mappers">2. Cadeia de Mapeamento (<code>USER_INFO_MAPPERS</code>)<a class="headerlink" href="#2-cadeia-de-mapeamento-user_info_mappers" title="Permanent link">&para;</a></h2>
+<p>Após a busca, a cadeia de mappers recebe o <code>user_info</code> unificado e constrói os atributos do modelo de usuário do Django.</p>
+<h3 id="elo-padrao-defaultattrmapusermapper">Elo Padrão: <code>DefaultAttrMapUserMapper</code><a class="headerlink" href="#elo-padrao-defaultattrmapusermapper" title="Permanent link">&para;</a></h3>
+<p>Aplica as regras configuradas no <code>USER_ATTR_MAP</code>:</p>
+<pre class="highlight"><code class="language-python">SUAP_AUTH = {
+    "USER_INFO_MAPPERS": [
+        "django_suap_auth.mappers.DefaultAttrMapUserMapper",
+    ],
+    "USER_ATTR_MAP": {
+        "username": "identificacao",
+        "email": "email",
+        "rg": "rg",
+        "cargo": "vinculo.cargo",
+        "foto": {
+            "key": "url_foto_75x100",
+            "transform": "django_suap_auth.transformers.fetch_image_file",
+        },
+        "is_servidor": lambda info: any(v.get("tipo") == "servidor" for v in info.get("vinculos", [])),
+    },
+}</code></pre>
+<h3 id="criando-um-mapper-customizado">Criando um Mapper Customizado<a class="headerlink" href="#criando-um-mapper-customizado" title="Permanent link">&para;</a></h3>
+<p>Para adicionar lógica complexa ou manipular o modelo de usuário diretamente:</p>
+<pre class="highlight"><code class="language-python"># meu_app/mappers.py
+from django_suap_auth.mappers import BaseUserMapper
+
+class ProfileUserMapper(BaseUserMapper):
+    def map_attributes(self, user_info, attrs=None):
+        attrs = super().map_attributes(user_info, attrs)
+        if user_info.get("ldap", {}).get("is_admin"):
+            attrs["is_staff"] = True
+        return attrs</code></pre>
+<p>Configuração no <code>settings.py</code>:
+<pre class="highlight"><code class="language-python">SUAP_AUTH = {
+    "USER_INFO_MAPPERS": [
+        "django_suap_auth.mappers.DefaultAttrMapUserMapper",
+        "meu_app.mappers.ProfileUserMapper",
+    ],
+}</code></pre></p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../attribute-mapping/" class="btn btn-neutral float-left" title="Mapeamento de Atributos"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../fetchers/" class="btn btn-neutral float-right" title="Fetchers (Busca de Dados)">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/django-by-kelsoncm/django-auth-suap" class="fa fa-code-fork" style="color: #fcfcfc"> django-by-kelsoncm/django-auth-suap</a>
+        </span>
+    
+    
+      <span><a href="../attribute-mapping/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../fetchers/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
