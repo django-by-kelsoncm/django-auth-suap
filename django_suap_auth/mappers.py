@@ -108,7 +108,7 @@ class BaseUserMapper:
 
 
 class DefaultAttrMapUserMapper(BaseUserMapper):
-    """Default User Info Mapper link applying SUAP_AUTH['USER_ATTR_MAP']."""
+    """Default User Info Mapper  link applying SUAP_AUTH['USER_ATTR_MAP']."""
 
     def map_attributes(self, user_info, attr_map=None):
         return super().map_attributes(user_info, attr_map)
