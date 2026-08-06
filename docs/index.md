@@ -8,7 +8,7 @@ Backend de autenticação OAuth2 do Django para **SUAP** (Sistema Unificado de A
 - Escopos configuráveis (`identificacao`, `email`, `documentos_pessoais`, `dados_academicos`, `dados_pessoais`, `reitoria`)
 - Mapeamento flexível de atributos da resposta SUAP para campos do modelo de usuário do Django
 - Armazenamento opcional em campo JSON para a resposta completa do SUAP
-- Página de login intermediária configurável (`SUAP_AUTH_DIRECT_REDIRECT`)
+- Página de login intermediária configurável (`SUAP_AUTH['DIRECT_REDIRECT']`)
 - Proteção CSRF via validação do parâmetro de estado
 
 ## Links Rápidos
