@@ -27,6 +27,11 @@ def resolve_callable_or_class(target):
     raise TypeError(f"Expected callable, class, or import path string, got {type(target)}")
 
 
+def resolve_callable(target):
+    """Resolve a callable, class, or import path string (backward compatible name)."""
+    return resolve_callable_or_class(target)
+
+
 def _call_transformer(fn, raw_val, user_info):
     """Call a transformer function trying flexible argument signatures."""
     sig = inspect.signature(fn)
@@ -49,21 +54,11 @@ class BaseUserMapper:
     def __init__(self, suap_settings=None):
         self.suap_settings = suap_settings or {}
 
-    def map_attributes(self, user_info, attrs=None):
-        if attrs is None:
-            attrs = {}
-        return attrs
+    def map_attributes(self, user_info, attr_map=None):
+        if attr_map is None:
+            attr_map = self.suap_settings.get("user_attr_map", {})
 
-
-class DefaultAttrMapUserMapper(BaseUserMapper):
-    """Default User Info Mapper link applying SUAP_AUTH['USER_ATTR_MAP']."""
-
-    def map_attributes(self, user_info, attrs=None):
-        if attrs is None:
-            attrs = {}
-
-        attr_map = self.suap_settings.get("user_attr_map", {})
-
+        attrs = {}
         for model_field, spec in attr_map.items():
             if callable(spec):
                 val = _call_transformer(spec, user_info, user_info)
@@ -112,6 +107,13 @@ class DefaultAttrMapUserMapper(BaseUserMapper):
         return attrs
 
 
+class DefaultAttrMapUserMapper(BaseUserMapper):
+    """Default User Info Mapper link applying SUAP_AUTH['USER_ATTR_MAP']."""
+
+    def map_attributes(self, user_info, attr_map=None):
+        return super().map_attributes(user_info, attr_map)
+
+
 # Alias for backward compatibility
 BaseSuapUserMapper = BaseUserMapper
 DefaultSuapUserMapper = DefaultAttrMapUserMapper
@@ -139,13 +141,23 @@ def get_user_info_mappers(cfg=None):
 
 def run_user_info_mapper_chain(user_info, attr_map=None, cfg=None):
     """Execute the Chain of Responsibility for mapping user_info to model field attributes."""
+    from .utils import get_suap_settings
+
+    if cfg is None:
+        cfg = get_suap_settings()
+
+    if attr_map is None:
+        attr_map = cfg.get("user_attr_map", {})
+
     mappers = get_user_info_mappers(cfg)
     attrs = {}
 
     for mapper in mappers:
         if hasattr(mapper, "map_attributes"):
-            attrs = mapper.map_attributes(user_info, attrs)
+            res = mapper.map_attributes(user_info, attr_map)
+            attrs.update(res)
         elif callable(mapper):
-            attrs = mapper(user_info, attrs)
+            res = mapper(user_info, attr_map)
+            attrs.update(res)
 
     return attrs

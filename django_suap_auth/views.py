@@ -47,14 +47,7 @@ class SuapLoginView(View):
         return redirect(authorization_url)
 
 class SuapAuthenticationError(Exception):
-    def __init__(self, message=None):
-        self.message = message
-
-    def __str__(self):
-        raise NotImplementedError
-
-    def some_method(self, *args, **kwargs):
-        raise NotImplementedError
+    """Raised when SUAP authentication fails."""
 
 
 class SuapCallbackView(View):

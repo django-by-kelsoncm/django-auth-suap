@@ -1,6 +1,14 @@
 from unittest.mock import MagicMock
 
-from django_suap_auth.fetchers import BaseUserInfoFetcher, DefaultEndpointsUserInfoFetcher, run_user_info_fetcher_chain
+import pytest
+
+from django_suap_auth.fetchers import (
+    BaseUserInfoFetcher,
+    DefaultEndpointsUserInfoFetcher,
+    resolve_callable,
+    resolve_callable_or_class,
+    run_user_info_fetcher_chain,
+)
 from django_suap_auth.utils import get_suap_settings
 
 
@@ -8,6 +16,14 @@ def test_base_user_info_fetcher():
     fetcher = BaseUserInfoFetcher()
     info = fetcher.fetch(None, "token", {"initial": "val"})
     assert info == {"initial": "val"}
+
+
+def test_fetchers_resolve_callable():
+    assert resolve_callable(BaseUserInfoFetcher) is BaseUserInfoFetcher
+    assert resolve_callable("django_suap_auth.fetchers.BaseUserInfoFetcher") is BaseUserInfoFetcher
+    assert resolve_callable_or_class(BaseUserInfoFetcher) is BaseUserInfoFetcher
+    with pytest.raises(TypeError):
+        resolve_callable(12345)
 
 
 def test_default_endpoints_user_info_fetcher():

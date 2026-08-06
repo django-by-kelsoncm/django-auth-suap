@@ -3,6 +3,8 @@ import logging
 
 from django.utils.module_loading import import_string
 
+from .exceptions import SuapUserInfoError
+
 logger = logging.getLogger(__name__)
 
 DEFAULT_SUAP_ENDPOINTS = [
@@ -17,6 +19,11 @@ def resolve_callable_or_class(target):
     if isinstance(target, str):
         return import_string(target)
     raise TypeError(f"Expected callable, class, or import path string, got {type(target)}")
+
+
+def resolve_callable(target):
+    """Resolve a callable, class, or import path string (backward compatible name)."""
+    return resolve_callable_or_class(target)
 
 
 class BaseUserInfoFetcher:
@@ -112,6 +119,8 @@ class DefaultEndpointsUserInfoFetcher(BaseUserInfoFetcher):
                     elif isinstance(data_to_store, dict):
                         user_info.update(data_to_store)
             except Exception as exc:
+                if isinstance(exc, SuapUserInfoError):
+                    raise
                 logger.warning("Failed to fetch SUAP user info endpoint '%s': %s", endpoint_spec, exc)
 
         return user_info
