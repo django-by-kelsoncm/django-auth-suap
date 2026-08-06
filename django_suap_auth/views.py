@@ -134,7 +134,7 @@ class SuapCallbackView(View):
             messages.error(request, "Security check failed. Please try logging in again.")
             return redirect(settings.LOGIN_URL)
         except SuapTokenError as e:
-            logger.warning("SUAP token error: %s", e)
+            logger.warning("SUAP authorization code exchange error: %s", e)
             messages.error(request, "Failed to complete login. Please try again.")
             return redirect(settings.LOGIN_URL)
         except SuapUserInfoError as e:
