@@ -14,7 +14,9 @@ Backend de autenticação OAuth2 do Django para **SUAP** (Sistema Unificado de A
 ## Instalação
 
 ```bash
-pip install django-suap-auth
+uv add django-suap-auth
+# ou com pip:
+# pip install django-suap-auth
 ```
 
 ## Início Rápido
@@ -22,7 +24,7 @@ pip install django-suap-auth
 ```python
 # settings.py
 INSTALLED_APPS = [
-    ...
+    # ...
     "django_suap_auth",
 ]
 
@@ -31,10 +33,12 @@ AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
 ]
 
-SUAP_CLIENT_ID = "your-client-id"
-SUAP_CLIENT_SECRET = "your-client-secret"
-SUAP_REDIRECT_URI = "https://yourapp.example.com/auth/suap/callback/"
-SUAP_AUTH_SCOPES = ["identificacao", "email"]  # opcional
+SUAP_AUTH = {
+    "CLIENT_ID": "your-client-id",
+    "CLIENT_SECRET": "your-client-secret",
+    "REDIRECT_URI": "https://yourapp.example.com/auth/suap/callback/",
+    "SCOPES": ["identificacao", "email"],  # opcional
+}
 LOGIN_REDIRECT_URL = "/dashboard/"
 LOGIN_URL = "/login/"
 ```

@@ -5,7 +5,7 @@
 ```bash
 git clone https://github.com/kelsoncm/django-suap-auth.git
 cd django-suap-auth
-pip install -e ".[dev]"
+uv pip install -e ".[dev]" # ou pip install -e ".[dev]"
 pre-commit install
 pre-commit install --hook-type pre-push
 ```

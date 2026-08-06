@@ -15,6 +15,7 @@ nav:
   - Configuração: configuration.md
   - Escopos: scopes.md
   - Mapeamento de Atributos: attribute-mapping.md
+  - Pipeline de Perfil de Usuário: user-info-pipeline.md
   - Fluxo de Autenticação: auth-flow.md
   - Ambiente Sandbox: sandboxes.md
   - Desenvolvimento: development.md

@@ -8,8 +8,8 @@ django-suap-auth implementa o fluxo de autorização de código OAuth2.
 flowchart TD
     A["Usuário"] -->|Clica em Entrar| B["GET /auth/suap/login/"]
     B -->|Gera state| C["Armazena state na sessao"]
-    C -->|SUAP_AUTH_DIRECT_REDIRECT true| D["Redireciona para SUAP"]
-    C -->|SUAP_AUTH_DIRECT_REDIRECT false| E["Renderiza login.html"]
+    C -->|DIRECT_REDIRECT true| D["Redireciona para SUAP"]
+    C -->|DIRECT_REDIRECT false| E["Renderiza login.html"]
     E -->|Clica botao| D
     D -->|Faz login| F["SUAP /o/authorize/"]
     F -->|Autoriza| G["Redireciona com code"]
@@ -34,11 +34,11 @@ flowchart TD
 
 ## Redirecionamento Direto (Padrão)
 
-Com `SUAP_AUTH_DIRECT_REDIRECT = True` (padrão), o usuário é imediatamente redirecionado para SUAP quando visita `/auth/suap/login/`.
+Com `DIRECT_REDIRECT = True` (padrão em `SUAP_AUTH`), o usuário é imediatamente redirecionado para SUAP quando visita `/auth/suap/login/`.
 
 ## Página Intermediária
 
-Com `SUAP_AUTH_DIRECT_REDIRECT = False`, a view de login renderiza uma página intermediária (`django_suap_auth/login.html`) onde o usuário deve clicar em um botão para prosseguir para SUAP.
+Com `DIRECT_REDIRECT = False` em `SUAP_AUTH`, a view de login renderiza uma página intermediária (`django_suap_auth/login.html`) onde o usuário deve clicar em um botão para prosseguir para SUAP.
 
 ## Proteção CSRF
 

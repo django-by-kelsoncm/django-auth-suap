@@ -1,3 +1,5 @@
+import json
+
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
@@ -14,4 +16,16 @@ def home(request):
 
 @login_required
 def dashboard(request):
-    return render(request, "home/dashboard.html", {"user": request.user})
+    raw_json_pretty = ""
+    profile = getattr(request.user, "profile", None)
+    if profile and hasattr(profile, "raw_data") and profile.raw_data:
+        raw_json_pretty = json.dumps(profile.raw_data.data, indent=2, ensure_ascii=False)
+
+    return render(
+        request,
+        "home/dashboard.html",
+        {
+            "user": request.user,
+            "raw_json_pretty": raw_json_pretty,
+        },
+    )

@@ -63,17 +63,26 @@ class SuapOAuth2Client:
         except Exception as exc:
             raise SuapTokenError(f"Token exchange unexpected error: {exc}") from exc
 
-    def get_user_info(self, access_token, timeout=30):
-        """Fetch the authenticated user's profile from SUAP."""
-        url = f"{self.base_url}{USER_INFO_PATH}"
+    def get_endpoint_data(self, access_token, path_or_url, timeout=30):
+        """Fetch JSON data from a specific SUAP API endpoint or full URL."""
+        if path_or_url.startswith("http://") or path_or_url.startswith("https://"):
+            url = path_or_url
+        else:
+            url = f"{self.base_url}/{path_or_url.lstrip('/')}"
         headers = {"Authorization": f"Bearer {access_token}"}
         try:
             response = self._session.get(url, headers=headers, timeout=timeout)
             response.raise_for_status()
             return response.json()
         except requests.HTTPError as exc:
-            raise SuapUserInfoError(f"Failed to fetch user info: {exc}") from exc
+            raise SuapUserInfoError(f"Failed to fetch endpoint '{path_or_url}': {exc}") from exc
         except requests.RequestException as exc:
-            raise SuapUserInfoError(f"User info request error: {exc}") from exc
+            raise SuapUserInfoError(f"Endpoint '{path_or_url}' request error: {exc}") from exc
         except Exception as exc:
-            raise SuapUserInfoError(f"User info unexpected error: {exc}") from exc
+            raise SuapUserInfoError(f"Endpoint '{path_or_url}' unexpected error: {exc}") from exc
+
+    def get_user_info(self, access_token, timeout=30):
+        """Fetch the authenticated user's profile from SUAP via the fetcher chain."""
+        from .fetchers import run_user_info_fetcher_chain
+
+        return run_user_info_fetcher_chain(self, access_token)

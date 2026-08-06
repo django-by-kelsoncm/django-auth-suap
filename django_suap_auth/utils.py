@@ -3,13 +3,15 @@ import secrets
 from django.core.exceptions import ImproperlyConfigured
 
 # Default mapping: user model field → SUAP response key.
-# A tuple key means "split the SUAP value on the first space and assign
-# the first part to key[0] and the remainder to key[1]".
 DEFAULT_USER_ATTR_MAP = {
     "username": "identificacao",
     "email": "email",
     ("first_name", "last_name"): "nome_usual",
 }
+
+DEFAULT_USER_INFO_ENDPOINTS = [
+    "/api/rh/eu/",
+]
 
 
 def get_suap_settings():
@@ -25,6 +27,9 @@ def get_suap_settings():
         'SCOPES': ['identificacao', 'email'],  # optional
         'USER_LOOKUP_FIELD': 'username',  # optional
         'USER_ATTR_MAP': {...},  # optional
+        'USER_INFO_FETCHERS': [...],  # optional Chain of Responsibility
+        'USER_INFO_ENDPOINTS': [...],  # optional endpoints
+        'USER_INFO_MAPPERS': [...],  # optional Chain of Responsibility
         'USER_JSON_FIELD': None,  # optional
         'DIRECT_REDIRECT': True,  # optional
     }
@@ -43,6 +48,11 @@ def get_suap_settings():
             f"Configure SUAP_AUTH dictionary in settings.py"
         )
 
+    # Legacy USER_MAPPER compatibility
+    default_mappers = ["django_suap_auth.mappers.DefaultAttrMapUserMapper"]
+    if "USER_MAPPER" in suap_auth:
+        default_mappers = [suap_auth["USER_MAPPER"]]
+
     return {
         "client_id": suap_auth["CLIENT_ID"],
         "client_secret": suap_auth["CLIENT_SECRET"],
@@ -51,64 +61,42 @@ def get_suap_settings():
         "base_url": suap_auth.get("BASE_URL", "https://suap.ifrn.edu.br"),
         "user_lookup_field": suap_auth.get("USER_LOOKUP_FIELD", "username"),
         "user_attr_map": suap_auth.get("USER_ATTR_MAP", DEFAULT_USER_ATTR_MAP),
+        "user_info_fetchers": suap_auth.get(
+            "USER_INFO_FETCHERS", ["django_suap_auth.fetchers.DefaultEndpointsUserInfoFetcher"]
+        ),
+        "user_info_endpoints": suap_auth.get("USER_INFO_ENDPOINTS", DEFAULT_USER_INFO_ENDPOINTS),
+        "user_info_mappers": suap_auth.get("USER_INFO_MAPPERS", default_mappers),
         "json_field": suap_auth.get("USER_JSON_FIELD", None),
         "direct_redirect": suap_auth.get("DIRECT_REDIRECT", True),
         "backend": suap_auth.get("BACKEND", "django_suap_auth.backends.SuapAuthBackend"),
         "create_user": suap_auth.get("CREATE_USER", True),
         "user_defaults": suap_auth.get("USER_DEFAULTS", {"is_active": True}),
         "first_user_defaults": suap_auth.get("FIRST_USER_DEFAULTS", None),
-        # None = all mapped fields; [] = none; ["field", ...] = only those listed
         "update_fields_on_create": suap_auth.get("UPDATE_FIELDS_ON_CREATE", None),
         "update_fields_on_login": suap_auth.get("UPDATE_FIELDS_ON_LOGIN", None),
     }
 
 
 def _extract_nested(data, dotted_key):
-    """Extract a value from a (possibly nested) dict using a dotted key path.
-
-    Example: _extract_nested(data, "dados_pessoais.data_nascimento")
-    """
-    keys = dotted_key.split(".")
-    value = data
-    for key in keys:
-        if not isinstance(value, dict):
-            return None
-        value = value.get(key)
-        if value is None:
-            return None
-    return value
+    """Extract a value from a (possibly nested) dict using a dotted key path."""
+    from .mappers import _extract_nested as mapper_extract
+    return mapper_extract(data, dotted_key)
 
 
-def apply_user_attr_map(user_info, attr_map):
+def get_user_mapper(cfg=None):
+    """Instantiate and return the configured SUAP user mapper chain or first mapper."""
+    from .mappers import get_user_info_mappers
+    mappers = get_user_info_mappers(cfg)
+    return mappers[0] if mappers else None
+
+
+def apply_user_attr_map(user_info, attr_map, cfg=None):
     """Translate a SUAP user_info dict into a flat dict of user model field→value pairs.
 
-    The ``attr_map`` uses the convention ``{model_field: suap_key}``:
-
-    - **Plain string key**: maps the SUAP field to the given user model field.
-    - **Tuple key** ``(field_a, field_b)``: splits the SUAP value on the first space;
-      the part before the space goes to ``field_a`` and everything after to ``field_b``.
-    - **Dotted SUAP key** (e.g. ``"dados_pessoais.data_nascimento"``): traverses nested
-      dicts in the SUAP response.
-    - Special key ``"fulljson"``: maps the entire raw SUAP response dict to the field.
-      Suitable for a ``JSONField`` or any field that accepts a dict.
-    - If the SUAP value is ``None`` or absent, the field is skipped.
+    Executes the configured USER_INFO_MAPPERS Chain of Responsibility.
     """
-    result = {}
-    for model_field, suap_key in attr_map.items():
-        if suap_key == "fulljson":
-            result[model_field] = user_info
-            continue
-        value = _extract_nested(user_info, suap_key)
-        if value is None:
-            continue
-        if isinstance(model_field, (list, tuple)) and len(model_field) == 2:
-            field_a, field_b = model_field
-            parts = str(value).split(" ", 1)
-            result[field_a] = parts[0]
-            result[field_b] = parts[1] if len(parts) > 1 else ""
-        else:
-            result[model_field] = value
-    return result
+    from .mappers import run_user_info_mapper_chain
+    return run_user_info_mapper_chain(user_info, attr_map, cfg=cfg)
 
 
 def get_oauth2_client():

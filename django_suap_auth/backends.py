@@ -73,7 +73,7 @@ class SuapAuthBackend:
         Override to add, remove, or transform attributes before the user is
         looked up or created.
         """
-        attrs = apply_user_attr_map(suap_user_info, cfg["user_attr_map"])
+        attrs = apply_user_attr_map(suap_user_info, cfg["user_attr_map"], cfg=cfg)
         if cfg["json_field"]:
             attrs[cfg["json_field"]] = suap_user_info
         return attrs
@@ -119,7 +119,12 @@ class SuapAuthBackend:
         else:
             defaults = dict(cfg["user_defaults"])
         defaults.update(_filter_fields(mapped_attrs, cfg["update_fields_on_create"]))
-        user = User(**{lookup_field: lookup_value}, **defaults)
+
+        user_fields = {f.name for f in User._meta.get_fields()}
+        user_kwargs = {k: v for k, v in defaults.items() if k in user_fields or hasattr(User, k)}
+        user_kwargs[lookup_field] = lookup_value
+
+        user = User(**user_kwargs)
         user.save()
         return user
 
@@ -132,15 +137,17 @@ class SuapAuthBackend:
         changed = False
 
         for field, value in _filter_fields(mapped_attrs, cfg["update_fields_on_login"]).items():
-            if getattr(user, field, None) != value:
-                setattr(user, field, value)
-                changed = True
+            if hasattr(user, field):
+                if getattr(user, field, None) != value:
+                    setattr(user, field, value)
+                    changed = True
 
         # Always enforce user_defaults (e.g. reactivate a deactivated account)
         for field, value in cfg["user_defaults"].items():
-            if getattr(user, field, None) != value:
-                setattr(user, field, value)
-                changed = True
+            if hasattr(user, field):
+                if getattr(user, field, None) != value:
+                    setattr(user, field, value)
+                    changed = True
 
         if changed:
             user.save()

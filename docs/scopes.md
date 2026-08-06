@@ -36,5 +36,7 @@
 ## Configurando Escopos
 
 ```python
-SUAP_AUTH_SCOPES = ["identificacao", "email", "dados_academicos"]
+SUAP_AUTH = {
+    "SCOPES": ["identificacao", "email", "dados_academicos"],
+}
 ```

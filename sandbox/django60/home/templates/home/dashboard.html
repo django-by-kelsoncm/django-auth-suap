@@ -4,26 +4,247 @@
 
 {% block content %}
 <div class="row justify-content-center">
-  <div class="col-md-8">
-    <h1 class="mb-4">Dashboard</h1>
-    <div class="card">
+  <div class="col-md-10">
+    <h1 class="mb-4">Dashboard SUAP</h1>
+
+    <!-- Dados do Usuário -->
+    <div class="card mb-4">
+      <div class="card-header bg-primary text-white">
+        <h5 class="card-title mb-0">Usuário Autenticado</h5>
+      </div>
       <div class="card-body">
-        <h5 class="card-title">Olá, {{ user.get_full_name|default:user.username }}!</h5>
-        <p class="card-text">Você está autenticado via SUAP no sandbox Django 6.0.</p>
         <ul class="list-group list-group-flush">
           <li class="list-group-item"><strong>Username:</strong> {{ user.username }}</li>
           <li class="list-group-item"><strong>Email:</strong> {{ user.email|default:"Não informado" }}</li>
           <li class="list-group-item"><strong>Nome completo:</strong> {{ user.get_full_name|default:"Não informado" }}</li>
-          <li class="list-group-item"><strong>Primeiro nome:</strong> {{ user.first_name|default:"Não informado" }}</li>
-          <li class="list-group-item"><strong>Último nome:</strong> {{ user.last_name|default:"Não informado" }}</li>
-          <li class="list-group-item"><strong>Staff:</strong> {{ user.is_staff|yesno:"Sim,Não" }}</li>
-          <li class="list-group-item"><strong>Superusuário:</strong> {{ user.is_superuser|yesno:"Sim,Não" }}</li>
-          <li class="list-group-item"><strong>Ativo:</strong> {{ user.is_active|yesno:"Sim,Não" }}</li>
-          <li class="list-group-item"><strong>Data de criação:</strong> {{ user.date_joined|date:"d/m/Y H:i" }}</li>
-          <li class="list-group-item"><strong>Último login:</strong> {{ user.last_login|date:"d/m/Y H:i" }}</li>
         </ul>
       </div>
     </div>
+
+    {% if user.profile %}
+    <!-- Dados do Perfil -->
+    <div class="card mb-4">
+      <div class="card-header bg-info text-white">
+        <h5 class="card-title mb-0">Perfil SUAP</h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6">
+            <p><strong>Matrícula:</strong> {{ user.profile.matricula }}</p>
+            <p><strong>CPF:</strong> {{ user.profile.cpf }}</p>
+            <p><strong>RG:</strong> {{ user.profile.rg }}</p>
+            <p><strong>Data Nascimento:</strong> {{ user.profile.data_nascimento|default:"-" }}</p>
+            <p><strong>Naturalidade:</strong> {{ user.profile.naturalidade }}</p>
+            <p><strong>Tipo Sanguíneo:</strong> {{ user.profile.tipo_sanguineo }}</p>
+          </div>
+          <div class="col-md-6">
+            <p><strong>Tipo Usuário:</strong> {{ user.profile.tipo_usuario }}</p>
+            <p><strong>Tipo Vínculo:</strong> {{ user.profile.tipo_vinculo }}</p>
+            <p><strong>Campus:</strong> {{ user.profile.campus }}</p>
+            <p><strong>Email Preferencial:</strong> {{ user.profile.email_preferencial }}</p>
+            <p><strong>Email Acadêmico:</strong> {{ user.profile.email_academico }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% if user.profile.aluno_profile %}
+    <!-- Dados de Aluno (Ensino) -->
+    <div class="card mb-4">
+      <div class="card-header bg-success text-white">
+        <h5 class="card-title mb-0">Dados de Aluno (Ensino)</h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6">
+            <p><strong>Curso:</strong> {{ user.profile.aluno_profile.curso }}</p>
+            <p><strong>Matriz:</strong> {{ user.profile.aluno_profile.matriz }}</p>
+            <p><strong>Ingresso:</strong> {{ user.profile.aluno_profile.ingresso }}</p>
+            <p><strong>Situação:</strong> {{ user.profile.aluno_profile.situacao }}</p>
+          </div>
+          <div class="col-md-6">
+            <p><strong>IRA:</strong> {{ user.profile.aluno_profile.ira }}</p>
+            <p><strong>Período Referência:</strong> {{ user.profile.aluno_profile.periodo_referencia }}</p>
+            <p><strong>Qtd Períodos:</strong> {{ user.profile.aluno_profile.qtd_periodos }}</p>
+            <p><strong>Diploma Emitido:</strong> {{ user.profile.aluno_profile.emitiu_diploma|yesno:"Sim,Não" }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Vínculos -->
+    <div class="card mb-4">
+      <div class="card-header bg-secondary text-white">
+        <h5 class="card-title mb-0">Vínculos</h5>
+      </div>
+      <div class="card-body">
+        {% if user.profile.vinculos.all %}
+        <div class="table-responsive">
+          <table class="table table-striped mb-0">
+            <thead>
+              <tr>
+                <th>Identificador</th>
+                <th>Tipo</th>
+                <th>Campus</th>
+                <th>Estrangeiro</th>
+                <th>Detalhamento</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for v in user.profile.vinculos.all %}
+              <tr>
+                <td>{{ v.identificador }}</td>
+                <td>{{ v.tipo }}</td>
+                <td>{{ v.campus|default:"-" }}</td>
+                <td>{{ v.estrangeiro|yesno:"Sim,Não" }}</td>
+                <td>{{ v.detalhamento|default:"-" }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <p class="text-muted mb-0">Nenhum vínculo registrado.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if user.profile.diarios.all %}
+    <!-- Diários (Disciplinas) -->
+    <div class="card mb-4">
+      <div class="card-header bg-secondary text-white">
+        <h5 class="card-title mb-0">Diários (Disciplinas)</h5>
+      </div>
+      <div class="card-body">
+        <ul class="list-group">
+          {% for d in user.profile.diarios.all %}
+          <li class="list-group-item">
+            <strong>{{ d.disciplina_sigla }}</strong> - {{ d.disciplina_descricao }}
+            {% if d.local_sala %}<br><small class="text-muted">Local: {{ d.local_sala }}</small>{% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if user.profile.boletins.all %}
+    <!-- Boletim Acadêmico -->
+    <div class="card mb-4">
+      <div class="card-header bg-secondary text-white">
+        <h5 class="card-title mb-0">Boletim Acadêmico</h5>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-striped mb-0">
+            <thead>
+              <tr>
+                <th>Código Diário</th>
+                <th>Disciplina</th>
+                <th>Carga Horária</th>
+                <th>Faltas</th>
+                <th>Média Final</th>
+                <th>Situação</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for b in user.profile.boletins.all %}
+              <tr>
+                <td>{{ b.codigo_diario }}</td>
+                <td>{{ b.disciplina }}</td>
+                <td>{{ b.carga_horaria_cumprida }}/{{ b.carga_horaria }}h</td>
+                <td>{{ b.numero_faltas }}</td>
+                <td>{{ b.media_final_disciplina|default:b.media_disciplina|default:"-" }}</td>
+                <td>{{ b.situacao }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Telefones -->
+    <div class="card mb-4">
+      <div class="card-header bg-secondary text-white">
+        <h5 class="card-title mb-0">Telefones</h5>
+      </div>
+      <div class="card-body">
+        {% if user.profile.telefones.all %}
+        <ul class="list-group">
+          {% for t in user.profile.telefones.all %}
+          <li class="list-group-item"><strong>{{ t.tipo|title }}:</strong> {{ t.numero }}</li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p class="text-muted mb-0">Nenhum telefone registrado.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Funções -->
+    <div class="card mb-4">
+      <div class="card-header bg-secondary text-white">
+        <h5 class="card-title mb-0">Funções</h5>
+      </div>
+      <div class="card-body">
+        {% if user.profile.funcoes.all %}
+        <ul class="list-group">
+          {% for f in user.profile.funcoes.all %}
+          <li class="list-group-item">
+            <strong>{{ f.nome }}</strong> - Setor: {{ f.setor|default:"-" }} (Campus: {{ f.campus|default:"-" }})
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p class="text-muted mb-0">Nenhuma função registrada.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Histórico Funcional -->
+    <div class="card mb-4">
+      <div class="card-header bg-secondary text-white">
+        <h5 class="card-title mb-0">Histórico Funcional</h5>
+      </div>
+      <div class="card-body">
+        {% if user.profile.historicos_funcionais.all %}
+        <ul class="list-group">
+          {% for h in user.profile.historicos_funcionais.all %}
+          <li class="list-group-item">
+            <strong>Data: {{ h.data }}</strong>
+            {% if h.eventos %}
+            <ul class="mt-2">
+              {% for ev in h.eventos %}
+              <li>{{ ev.descricao|safe }}</li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p class="text-muted mb-0">Nenhum histórico funcional registrado.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Dados Brutos Retornados (JSON Formatado) -->
+    {% if raw_json_pretty %}
+    <div class="card mb-4">
+      <div class="card-header bg-dark text-white">
+        <h5 class="card-title mb-0">Dados Brutos dos Endpoints SUAP (JSON)</h5>
+      </div>
+      <div class="card-body">
+        <pre class="bg-light p-3 border rounded text-dark overflow-auto" style="max-height: 400px;"><code>{{ raw_json_pretty }}</code></pre>
+      </div>
+    </div>
+    {% endif %}
+
+    {% endif %}
+
   </div>
 </div>
 {% endblock %}

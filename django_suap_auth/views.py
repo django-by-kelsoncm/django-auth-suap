@@ -101,7 +101,8 @@ class SuapCallbackView(View):
             user = authenticate(request, suap_user_info=user_info)
 
             if user is not None:
-                login(request, user, backend=cfg["backend"])
+                backend_path = getattr(user, "backend", cfg["backend"])
+                login(request, user, backend=backend_path)
 
                 # 5. Redirecionar para próxima página
                 next_url = request.GET.get("next", "")
@@ -129,20 +130,26 @@ class SuapCallbackView(View):
                 raise SuapAuthenticationError("Authentication failed. User not found or invalid credentials.")
 
         except SuapStateMismatchError as e:
+            logger.warning("SUAP state mismatch error: %s", e)
             messages.error(request, "Security check failed. Please try logging in again.")
             return redirect(settings.LOGIN_URL)
         except SuapTokenError as e:
+            logger.warning("SUAP token error: %s", e)
             messages.error(request, "Failed to complete login. Please try again.")
             return redirect(settings.LOGIN_URL)
         except SuapUserInfoError as e:
+            logger.warning("SUAP user info error: %s", e)
             messages.error(request, "Failed to retrieve your profile. Please try again.")
             return redirect(settings.LOGIN_URL)
-        except SuapUserNotAllowedError:
+        except SuapUserNotAllowedError as e:
+            logger.warning("SUAP user not allowed: %s", e)
             messages.error(request, "Your account is not authorised to access this application.")
             return redirect(settings.LOGIN_URL)
         except SuapAuthenticationError as e:
+            logger.warning("SUAP authentication error: %s", e)
             messages.error(request, "Authentication failed. Please try again.")
             return redirect(settings.LOGIN_URL)
         except Exception as e:
+            logger.exception("Unexpected error during SUAP callback: %s", e)
             messages.error(request, "An unexpected error occurred. Please try again.")
             return redirect(settings.LOGIN_URL)

@@ -10,7 +10,7 @@ Sandbox Django 5.2.
 cd sandbox/django52
 cp .env.example .env
 # Edite .env com suas credenciais SUAP
-pip install -r requirements.txt
+uv pip install -r requirements.txt # ou pip install -r requirements.txt
 python manage.py migrate
 python manage.py runserver
 ```
@@ -23,7 +23,7 @@ Sandbox Django 6.0.
 cd sandbox/django60
 cp .env.example .env
 # Edite .env com suas credenciais SUAP
-pip install -r requirements.txt
+uv pip install -r requirements.txt # ou pip install -r requirements.txt
 python manage.py migrate
 python manage.py runserver
 ```

@@ -7,6 +7,14 @@
 
 ## Instalar do PyPI
 
+Com `uv` (recomendado):
+
+```bash
+uv add django-suap-auth
+```
+
+Ou com `pip`:
+
 ```bash
 pip install django-suap-auth
 ```
