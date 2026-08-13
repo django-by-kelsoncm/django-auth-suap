@@ -1,0 +1,362 @@
+
+<!DOCTYPE html>
+
+
+<html lang="pt-BR" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Mappers (Mapeamento de Atributos do Usuário) &#8212; Documentação django-suap-auth 1.2.0</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=29da98fa" />
+    <link rel="stylesheet" type="text/css" href="_static/css/colors.css?v=c15837ed" />
+    <link rel="stylesheet" type="text/css" href="_static/css/base.css?v=5e993626" />
+    <script src="_static/documentation_options.js?v=253ccc8f"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/js/theme.js?v=d5b7f521"></script>
+    <script src="_static/translations.js?v=71a39b36"></script>
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Buscar" href="search.html" />
+    <link rel="next" title="Fluxo de Autenticação" href="auth-flow.html" />
+    <link rel="prev" title="Fetchers (Busca de Dados de Usuário)" href="fetchers.html" />
+   
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  
+  <script>
+    (function() {
+      try {
+        var storedTheme = localStorage.getItem('django-theme');
+        var systemPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = storedTheme || (systemPrefersDark ? 'dark' : 'light');
+        if (theme === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+          document.documentElement.removeAttribute('data-theme');
+        }
+      } catch (e) {}
+    })();
+  </script>
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+
+  
+  <style>
+    :root {
+      --django-primary: #0c4b33; --django-header-bg: #0c4b33; --django-footer-bg: #0c4b33; --django-link: #0c4b33;
+      --django-secondary: #44b78b; --django-link-hover: #44b78b;
+      --django-accent: #f8f9fa;
+      --django-text: #2b2b2b;
+      --django-bg: #ffffff;
+      --django-code-bg: #f8f9fa;
+      --django-link: #0c4b33;
+      --django-link-hover: #44b78b;
+      --django-sidebar-bg: #f8f9fa;
+    }
+  </style>
+
+  </head><body>
+<div class="django-site-wrapper">
+  
+  <header class="django-header">
+    <div class="django-header-inner">
+      
+      <div class="django-brand-group">
+        <a href="index.html" class="django-brand">
+          
+            <span class="django-brand-title">
+              django-suap-auth
+            </span>
+          
+        </a>
+        <span class="django-tagline">
+          Backend de autenticação OAuth2 do Django para SUAP
+        </span>
+      </div>
+
+      
+      <div class="django-header-tools">
+        <form action="search.html" method="get" class="django-header-search">
+          <input type="text" name="q" placeholder="Buscar..." aria-label="Buscar na documentação" required />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+          <button type="submit" title="Buscar">🔍</button>
+        </form>
+
+        
+          <button id="theme-toggle" class="theme-toggle-btn" aria-label="Alternar modo claro/escuro" title="Alternar modo claro/escuro">
+            <span id="theme-toggle-icon">🌙</span>
+          </button>
+        
+      </div>
+    </div>
+  </header>
+
+  
+  <section class="django-sub-header">
+    <div class="django-sub-header-inner">
+      <div class="django-sub-header-title">
+        <span>Documentação</span>
+        
+          <span class="django-version-badge">v1.2.0</span>
+        
+      </div>
+      <div>
+        
+          <a href="https://github.com/django-by-kelsoncm/django-auth-suap" style="color: rgba(255, 255, 255, 0.85); font-size: 0.85rem;" target="_blank" rel="noopener noreferrer">Repositório no GitHub ↗</a>
+        
+      </div>
+    </div>
+  </section>
+
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navegação</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Índice Geral"
+             accesskey="I">índice</a></li>
+        <li class="right" >
+          <a href="auth-flow.html" title="Fluxo de Autenticação"
+             accesskey="N">próximo</a> |</li>
+        <li class="right" >
+          <a href="fetchers.html" title="Fetchers (Busca de Dados de Usuário)"
+             accesskey="P">anterior</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Documentação django-suap-auth 1.2.0</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Mappers (Mapeamento de Atributos do Usuário)</a></li> 
+      </ul>
+    </div>
+  
+  <div class="django-main-container">
+    
+    <main class="django-content" role="main">
+      
+  <article class="django-page">
+    <section id="mappers-mapeamento-de-atributos-do-usuario">
+<h1>Mappers (Mapeamento de Atributos do Usuário)<a class="headerlink" href="#mappers-mapeamento-de-atributos-do-usuario" title="Link para este cabeçalho">¶</a></h1>
+<p>O <code class="docutils literal notranslate"><span class="pre">django-suap-auth</span></code> utiliza o padrão <strong>Chain of Responsibility (Cadeia de Responsabilidade)</strong> para mapear o dicionário de informações brutos do usuário (<code class="docutils literal notranslate"><span class="pre">user_info</span></code>) obtido pelos fetchers para os campos do modelo <code class="docutils literal notranslate"><span class="pre">User</span></code> do Django.</p>
+<section id="como-funcionam-os-mappers">
+<h2>Como Funcionam os Mappers<a class="headerlink" href="#como-funcionam-os-mappers" title="Link para este cabeçalho">¶</a></h2>
+<p>A cadeia de mappers (<code class="docutils literal notranslate"><span class="pre">USER_INFO_MAPPERS</span></code>) é executada logo após a conclusão dos fetchers. Cada mapper recebe o dicionário <code class="docutils literal notranslate"><span class="pre">user_info</span></code> acumulado e o dicionário de atributos do modelo <code class="docutils literal notranslate"><span class="pre">attrs</span></code>, podendo adicionar ou modificar pares de campo/valor.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[user_info acumulado] ──&gt; Mapper 1 (DefaultAttrMapUserMapper)
+                               │ attrs = {&#39;username&#39;: &#39;...&#39;, &#39;email&#39;: &#39;...&#39;}
+                               ▼
+                           Mapper 2 (Mapper Customizado / Permissões)
+                               │ attrs final
+                               ▼
+                           SuapAuthBackend (get_or_create)
+</pre></div>
+</div>
+</section>
+<section id="configuracao-user-info-mappers">
+<h2>Configuração: <code class="docutils literal notranslate"><span class="pre">USER_INFO_MAPPERS</span></code><a class="headerlink" href="#configuracao-user-info-mappers" title="Link para este cabeçalho">¶</a></h2>
+<p>No <code class="docutils literal notranslate"><span class="pre">settings.py</span></code>, configure a lista de mappers em <code class="docutils literal notranslate"><span class="pre">SUAP_AUTH</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SUAP_AUTH</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1"># ...</span>
+    <span class="s2">&quot;USER_INFO_MAPPERS&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;django_suap_auth.mappers.DefaultAttrMapUserMapper&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;meu_app.mappers.ProfileUserMapper&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="mapper-padrao-defaultattrmapusermapper">
+<h2>Mapper Padrão: <code class="docutils literal notranslate"><span class="pre">DefaultAttrMapUserMapper</span></code><a class="headerlink" href="#mapper-padrao-defaultattrmapusermapper" title="Link para este cabeçalho">¶</a></h2>
+<p>O mapper padrão interpreta as regras do dicionário <code class="docutils literal notranslate"><span class="pre">USER_ATTR_MAP</span></code> definido em <code class="docutils literal notranslate"><span class="pre">SUAP_AUTH</span></code>.</p>
+<section id="formatos-de-regras-em-user-attr-map">
+<h3>Formatos de Regras em <code class="docutils literal notranslate"><span class="pre">USER_ATTR_MAP</span></code><a class="headerlink" href="#formatos-de-regras-em-user-attr-map" title="Link para este cabeçalho">¶</a></h3>
+<section id="mapeamento-direto-ou-dotted-path">
+<h4>1. Mapeamento Direto ou Dotted Path<a class="headerlink" href="#mapeamento-direto-ou-dotted-path" title="Link para este cabeçalho">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;USER_ATTR_MAP&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="s2">&quot;identificacao&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="s2">&quot;email&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cargo&quot;</span><span class="p">:</span> <span class="s2">&quot;vinculo.cargo&quot;</span><span class="p">,</span>  <span class="c1"># extrai do dicionário aninhado user_info[&#39;vinculo&#39;][&#39;cargo&#39;]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="dicionario-bruto-completo-fulljson">
+<h4>2. Dicionário Bruto Completo (<code class="docutils literal notranslate"><span class="pre">fulljson</span></code>)<a class="headerlink" href="#dicionario-bruto-completo-fulljson" title="Link para este cabeçalho">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;USER_ATTR_MAP&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;suap_data&quot;</span><span class="p">:</span> <span class="s2">&quot;fulljson&quot;</span><span class="p">,</span>  <span class="c1"># atribui o dict user_info inteiro ao campo &#39;suap_data&#39;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="divisao-de-nome-em-dois-campos-tupla">
+<h4>3. Divisão de Nome em Dois Campos (Tupla)<a class="headerlink" href="#divisao-de-nome-em-dois-campos-tupla" title="Link para este cabeçalho">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;USER_ATTR_MAP&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="p">(</span><span class="s2">&quot;first_name&quot;</span><span class="p">,</span> <span class="s2">&quot;last_name&quot;</span><span class="p">):</span> <span class="s2">&quot;nome_usual&quot;</span><span class="p">,</span>
+    <span class="c1"># &quot;João Silva Santos&quot; -&gt; first_name=&quot;João&quot;, last_name=&quot;Silva Santos&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="lambdas-e-callables-customizados">
+<h4>4. Lambdas e Callables Customizados<a class="headerlink" href="#lambdas-e-callables-customizados" title="Link para este cabeçalho">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;USER_ATTR_MAP&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;is_staff&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">info</span><span class="p">:</span> <span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;tipo_vinculo&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;Servidor&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="especificacao-com-transformadores-e-valores-padrao-dict-spec">
+<h4>5. Especificação com Transformadores e Valores Padrão (dict spec)<a class="headerlink" href="#especificacao-com-transformadores-e-valores-padrao-dict-spec" title="Link para este cabeçalho">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;USER_ATTR_MAP&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;cpf&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;cpf&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;transform&quot;</span><span class="p">:</span> <span class="s2">&quot;django_suap_auth.transformers.format_cpf&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;data_nascimento&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;data_nascimento&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;transform&quot;</span><span class="p">:</span> <span class="s2">&quot;django_suap_auth.transformers.parse_date&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;foto&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;url_foto_75x100&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;transform&quot;</span><span class="p">:</span> <span class="s2">&quot;django_suap_auth.transformers.fetch_image_file&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;situacao&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;Ativo&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="transformadores-embutidos-django-suap-auth-transformers">
+<h2>Transformadores Embutidos (<code class="docutils literal notranslate"><span class="pre">django_suap_auth.transformers</span></code>)<a class="headerlink" href="#transformadores-embutidos-django-suap-auth-transformers" title="Link para este cabeçalho">¶</a></h2>
+<p>O pacote fornece as seguintes funções de transformação prontas:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 35.0%" />
+<col style="width: 65.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Transformador</p></th>
+<th class="head"><p>Descrição</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">fetch_image_file(value,</span> <span class="pre">suap_info=None)</span></code></p></td>
+<td><p>Baixa a imagem da URL e retorna um <code class="docutils literal notranslate"><span class="pre">ContentFile</span></code> para campos <code class="docutils literal notranslate"><span class="pre">ImageField</span></code>/<code class="docutils literal notranslate"><span class="pre">FileField</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">parse_date(value,</span> <span class="pre">suap_info=None)</span></code></p></td>
+<td><p>Converte string de data ISO (<code class="docutils literal notranslate"><span class="pre">YYYY-MM-DD</span></code>) para <code class="docutils literal notranslate"><span class="pre">datetime.date</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">format_cpf(value,</span> <span class="pre">suap_info=None)</span></code></p></td>
+<td><p>Formata uma string de 11 dígitos para o padrão <code class="docutils literal notranslate"><span class="pre">&quot;XXX.XXX.XXX-XX&quot;</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">to_upper(value,</span> <span class="pre">suap_info=None)</span></code></p></td>
+<td><p>Converte valor para maiúsculas.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">to_lower(value,</span> <span class="pre">suap_info=None)</span></code></p></td>
+<td><p>Converte valor para minúsculas.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">to_bool(value,</span> <span class="pre">suap_info=None)</span></code></p></td>
+<td><p>Converte valor para booleano (<code class="docutils literal notranslate"><span class="pre">True</span></code>/<code class="docutils literal notranslate"><span class="pre">False</span></code>).</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="criando-um-mapper-customizado">
+<h2>Criando um Mapper Customizado<a class="headerlink" href="#criando-um-mapper-customizado" title="Link para este cabeçalho">¶</a></h2>
+<p>Para criar um mapper customizado, herde de <code class="docutils literal notranslate"><span class="pre">BaseUserMapper</span></code> (ou de seu alias <code class="docutils literal notranslate"><span class="pre">BaseSuapUserMapper</span></code>) e sobrescreva o método <code class="docutils literal notranslate"><span class="pre">map_attributes</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># meu_app/mappers.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django_suap_auth.mappers</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseUserMapper</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomProfileUserMapper</span><span class="p">(</span><span class="n">BaseUserMapper</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Mapper para definir flags de staff e permissões com base no perfil SUAP.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">map_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_info</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">attrs</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">map_attributes</span><span class="p">(</span><span class="n">user_info</span><span class="p">,</span> <span class="n">attrs</span><span class="p">)</span>
+
+        <span class="c1"># Exemplo: concede permissão de staff para servidores do IFRN</span>
+        <span class="k">if</span> <span class="n">user_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;tipo_usuario&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;Servidor&quot;</span><span class="p">:</span>
+            <span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;is_staff&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="n">attrs</span>
+</pre></div>
+</div>
+<section id="registrando-o-mapper-customizado">
+<h3>Registrando o Mapper Customizado<a class="headerlink" href="#registrando-o-mapper-customizado" title="Link para este cabeçalho">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># settings.py</span>
+<span class="n">SUAP_AUTH</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1"># ...</span>
+    <span class="s2">&quot;USER_INFO_MAPPERS&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;django_suap_auth.mappers.DefaultAttrMapUserMapper&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;meu_app.mappers.CustomProfileUserMapper&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="funcoes-utilitarias-da-api-de-mappers">
+<h2>Funções Utilitárias da API de Mappers<a class="headerlink" href="#funcoes-utilitarias-da-api-de-mappers" title="Link para este cabeçalho">¶</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">get_user_info_mappers(cfg=None)</span></code>: instancia e retorna a lista de mappers configurados.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">run_user_info_mapper_chain(user_info,</span> <span class="pre">attr_map=None,</span> <span class="pre">cfg=None)</span></code>: executa toda a cadeia de mappers e retorna o dicionário <code class="docutils literal notranslate"><span class="pre">attrs</span></code> final para o modelo de usuário.</p></li>
+</ul>
+</section>
+</section>
+
+  </article>
+
+    </main>
+
+    
+    
+      <aside class="django-sidebar" id="django-sidebar" role="navigation" aria-label="Navegação Principal">
+        
+      </aside>
+    
+  </div>
+
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navegação</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Índice Geral"
+             >índice</a></li>
+        <li class="right" >
+          <a href="auth-flow.html" title="Fluxo de Autenticação"
+             >próximo</a> |</li>
+        <li class="right" >
+          <a href="fetchers.html" title="Fetchers (Busca de Dados de Usuário)"
+             >anterior</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Documentação django-suap-auth 1.2.0</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Mappers (Mapeamento de Atributos do Usuário)</a></li> 
+      </ul>
+    </div>
+  
+  <footer class="django-footer" role="contentinfo">
+    <div class="django-footer-inner">
+      <div>
+        
+          &copy; 2026, Kelson C. Medeiros.
+        
+        
+      </div>
+      <div>
+        Desenvolvido com inspiração na documentação oficial do
+        <a href="https://docs.djangoproject.com/" target="_blank" rel="noopener noreferrer">Django</a> &amp;
+        <a href="https://www.sphinx-doc.org/" target="_blank" rel="noopener noreferrer">Sphinx</a>.
+      </div>
+      
+        <div>
+          <a href="https://github.com/django-by-kelsoncm/django-auth-suap" target="_blank" rel="noopener noreferrer">Ver código no GitHub</a>
+        </div>
+      
+    </div>
+  </footer>
+</div> 
+
+  </body>
+</html>

@@ -1,0 +1,331 @@
+
+<!DOCTYPE html>
+
+
+<html lang="pt-BR" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Configuração do SUAP OAuth2 &#8212; Documentação django-suap-auth 1.2.0</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=29da98fa" />
+    <link rel="stylesheet" type="text/css" href="_static/css/colors.css?v=c15837ed" />
+    <link rel="stylesheet" type="text/css" href="_static/css/base.css?v=5e993626" />
+    <script src="_static/documentation_options.js?v=253ccc8f"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/js/theme.js?v=d5b7f521"></script>
+    <script src="_static/translations.js?v=71a39b36"></script>
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Buscar" href="search.html" />
+    <link rel="next" title="Escopos OAuth2 do SUAP" href="scopes.html" />
+    <link rel="prev" title="Instalação" href="installation.html" />
+   
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  
+  <script>
+    (function() {
+      try {
+        var storedTheme = localStorage.getItem('django-theme');
+        var systemPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = storedTheme || (systemPrefersDark ? 'dark' : 'light');
+        if (theme === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+          document.documentElement.removeAttribute('data-theme');
+        }
+      } catch (e) {}
+    })();
+  </script>
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+
+  
+  <style>
+    :root {
+      --django-primary: #0c4b33; --django-header-bg: #0c4b33; --django-footer-bg: #0c4b33; --django-link: #0c4b33;
+      --django-secondary: #44b78b; --django-link-hover: #44b78b;
+      --django-accent: #f8f9fa;
+      --django-text: #2b2b2b;
+      --django-bg: #ffffff;
+      --django-code-bg: #f8f9fa;
+      --django-link: #0c4b33;
+      --django-link-hover: #44b78b;
+      --django-sidebar-bg: #f8f9fa;
+    }
+  </style>
+
+  </head><body>
+<div class="django-site-wrapper">
+  
+  <header class="django-header">
+    <div class="django-header-inner">
+      
+      <div class="django-brand-group">
+        <a href="index.html" class="django-brand">
+          
+            <span class="django-brand-title">
+              django-suap-auth
+            </span>
+          
+        </a>
+        <span class="django-tagline">
+          Backend de autenticação OAuth2 do Django para SUAP
+        </span>
+      </div>
+
+      
+      <div class="django-header-tools">
+        <form action="search.html" method="get" class="django-header-search">
+          <input type="text" name="q" placeholder="Buscar..." aria-label="Buscar na documentação" required />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+          <button type="submit" title="Buscar">🔍</button>
+        </form>
+
+        
+          <button id="theme-toggle" class="theme-toggle-btn" aria-label="Alternar modo claro/escuro" title="Alternar modo claro/escuro">
+            <span id="theme-toggle-icon">🌙</span>
+          </button>
+        
+      </div>
+    </div>
+  </header>
+
+  
+  <section class="django-sub-header">
+    <div class="django-sub-header-inner">
+      <div class="django-sub-header-title">
+        <span>Documentação</span>
+        
+          <span class="django-version-badge">v1.2.0</span>
+        
+      </div>
+      <div>
+        
+          <a href="https://github.com/django-by-kelsoncm/django-auth-suap" style="color: rgba(255, 255, 255, 0.85); font-size: 0.85rem;" target="_blank" rel="noopener noreferrer">Repositório no GitHub ↗</a>
+        
+      </div>
+    </div>
+  </section>
+
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navegação</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Índice Geral"
+             accesskey="I">índice</a></li>
+        <li class="right" >
+          <a href="scopes.html" title="Escopos OAuth2 do SUAP"
+             accesskey="N">próximo</a> |</li>
+        <li class="right" >
+          <a href="installation.html" title="Instalação"
+             accesskey="P">anterior</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Documentação django-suap-auth 1.2.0</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Configuração do SUAP OAuth2</a></li> 
+      </ul>
+    </div>
+  
+  <div class="django-main-container">
+    
+    <main class="django-content" role="main">
+      
+  <article class="django-page">
+    <section id="configuracao-do-suap-oauth2">
+<h1>Configuração do SUAP OAuth2<a class="headerlink" href="#configuracao-do-suap-oauth2" title="Link para este cabeçalho">¶</a></h1>
+<section id="configuracao-basica">
+<h2>Configuração Básica<a class="headerlink" href="#configuracao-basica" title="Link para este cabeçalho">¶</a></h2>
+<p>No seu <code class="docutils literal notranslate"><span class="pre">settings.py</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SUAP_AUTH</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;CLIENT_ID&#39;</span><span class="p">:</span> <span class="s1">&#39;seu-client-id&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;CLIENT_SECRET&#39;</span><span class="p">:</span> <span class="s1">&#39;seu-client-secret&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;REDIRECT_URI&#39;</span><span class="p">:</span> <span class="s1">&#39;https://sua-aplicacao.com/auth/suap/callback/&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="opcoes-de-configuracao">
+<h2>Opções de Configuração<a class="headerlink" href="#opcoes-de-configuracao" title="Link para este cabeçalho">¶</a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25.0%" />
+<col style="width: 25.0%" />
+<col style="width: 50.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Chave</p></th>
+<th class="head"><p>Padrão</p></th>
+<th class="head"><p>Descrição</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">CLIENT_ID</span></code></p></td>
+<td><p><em>obrigatório</em></p></td>
+<td><p>ID da aplicação no SUAP</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">CLIENT_SECRET</span></code></p></td>
+<td><p><em>obrigatório</em></p></td>
+<td><p>Secret da aplicação no SUAP</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">REDIRECT_URI</span></code></p></td>
+<td><p><em>obrigatório</em></p></td>
+<td><p>URL de callback registrada no SUAP</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">BASE_URL</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;https://suap.ifrn.edu.br&quot;</span></code></p></td>
+<td><p>URL base do servidor SUAP</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SCOPES</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[&quot;identificacao&quot;,</span> <span class="pre">&quot;email&quot;]</span></code></p></td>
+<td><p>Escopos OAuth2 solicitados</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">USER_LOOKUP_FIELD</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;username&quot;</span></code></p></td>
+<td><p>Campo do modelo <code class="docutils literal notranslate"><span class="pre">User</span></code> usado como chave de busca</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">USER_ATTR_MAP</span></code></p></td>
+<td><p>ver <a class="reference internal" href="attribute-mapping.html"><span class="doc">Mapeamento de Atributos do SUAP para o Django User Model</span></a></p></td>
+<td><p>Dicionário de regras de mapeamento de campos</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">USER_INFO_FETCHERS</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[&quot;django_suap_auth.fetchers.DefaultEndpointsUserInfoFetcher&quot;]</span></code></p></td>
+<td><p>Lista de fetchers executados na Cadeia de Responsabilidade</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">USER_INFO_ENDPOINTS</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[&quot;/api/rh/eu/&quot;]</span></code></p></td>
+<td><p>Lista de endpoints do SUAP a consultar e mesclar</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">USER_INFO_MAPPERS</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[&quot;django_suap_auth.mappers.DefaultAttrMapUserMapper&quot;]</span></code></p></td>
+<td><p>Lista de mappers executados na Cadeia de Responsabilidade</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">USER_JSON_FIELD</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p></td>
+<td><p>Campo <code class="docutils literal notranslate"><span class="pre">JSONField</span></code> para gravar a resposta bruta do SUAP</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">DIRECT_REDIRECT</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">True</span></code></p></td>
+<td><p>Redirecionamento direto ao SUAP ou página intermediária</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">CREATE_USER</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">True</span></code></p></td>
+<td><p>Se <code class="docutils literal notranslate"><span class="pre">False</span></code>, não cria novos usuários e lança exceção</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">USER_DEFAULTS</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">{&quot;is_active&quot;:</span> <span class="pre">True}</span></code></p></td>
+<td><p>Valores atribuídos ao criar um novo usuário</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">FIRST_USER_DEFAULTS</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p></td>
+<td><p>Valores aplicados apenas para o primeiro usuário criado (ex: <code class="docutils literal notranslate"><span class="pre">{&quot;is_superuser&quot;:</span> <span class="pre">True,</span> <span class="pre">&quot;is_staff&quot;:</span> <span class="pre">True}</span></code>)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">UPDATE_FIELDS_ON_CREATE</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p></td>
+<td><p>Lista de campos mapeados gravados ao criar (<code class="docutils literal notranslate"><span class="pre">None</span></code> = todos)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">UPDATE_FIELDS_ON_LOGIN</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p></td>
+<td><p>Lista de campos mapeados sincronizados a cada login (<code class="docutils literal notranslate"><span class="pre">None</span></code> = todos)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">BACKEND</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;django_suap_auth.backends.SuapAuthBackend&quot;</span></code></p></td>
+<td><p>Caminho da classe backend de autenticação</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="exemplo-completo-com-multiplos-endpoints-e-mappers">
+<h2>Exemplo Completo com Múltiplos Endpoints e Mappers<a class="headerlink" href="#exemplo-completo-com-multiplos-endpoints-e-mappers" title="Link para este cabeçalho">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SUAP_AUTH</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;CLIENT_ID&#39;</span><span class="p">:</span> <span class="s1">&#39;seu-client-id&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;CLIENT_SECRET&#39;</span><span class="p">:</span> <span class="s1">&#39;seu-client-secret&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;REDIRECT_URI&#39;</span><span class="p">:</span> <span class="s1">&#39;https://sua-aplicacao.com/auth/suap/callback/&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;USER_INFO_ENDPOINTS&#39;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;/api/rh/eu/&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;/api/rh/meus-dados/&quot;</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;endpoint&quot;</span><span class="p">:</span> <span class="s2">&quot;/api/rh/meus-vinculos/&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;namespace&quot;</span><span class="p">:</span> <span class="s2">&quot;vinculos&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;extract_list&quot;</span><span class="p">:</span> <span class="s2">&quot;results&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">],</span>
+    <span class="s1">&#39;USER_INFO_MAPPERS&#39;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;django_suap_auth.mappers.DefaultAttrMapUserMapper&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;meu_app.mappers.CustomProfileUserMapper&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="s1">&#39;USER_ATTR_MAP&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="s2">&quot;identificacao&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="s2">&quot;email&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;rg&quot;</span><span class="p">:</span> <span class="s2">&quot;rg&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;cargo&quot;</span><span class="p">:</span> <span class="s2">&quot;vinculo.cargo&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;setor&quot;</span><span class="p">:</span> <span class="s2">&quot;vinculo.setor_suap&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;foto&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;url_foto_75x100&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;transform&quot;</span><span class="p">:</span> <span class="s2">&quot;django_suap_auth.transformers.fetch_image_file&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;is_servidor&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">info</span><span class="p">:</span> <span class="nb">any</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;tipo&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;servidor&quot;</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;vinculos&quot;</span><span class="p">,</span> <span class="p">[])),</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+  </article>
+
+    </main>
+
+    
+    
+      <aside class="django-sidebar" id="django-sidebar" role="navigation" aria-label="Navegação Principal">
+        
+      </aside>
+    
+  </div>
+
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navegação</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Índice Geral"
+             >índice</a></li>
+        <li class="right" >
+          <a href="scopes.html" title="Escopos OAuth2 do SUAP"
+             >próximo</a> |</li>
+        <li class="right" >
+          <a href="installation.html" title="Instalação"
+             >anterior</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Documentação django-suap-auth 1.2.0</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Configuração do SUAP OAuth2</a></li> 
+      </ul>
+    </div>
+  
+  <footer class="django-footer" role="contentinfo">
+    <div class="django-footer-inner">
+      <div>
+        
+          &copy; 2026, Kelson C. Medeiros.
+        
+        
+      </div>
+      <div>
+        Desenvolvido com inspiração na documentação oficial do
+        <a href="https://docs.djangoproject.com/" target="_blank" rel="noopener noreferrer">Django</a> &amp;
+        <a href="https://www.sphinx-doc.org/" target="_blank" rel="noopener noreferrer">Sphinx</a>.
+      </div>
+      
+        <div>
+          <a href="https://github.com/django-by-kelsoncm/django-auth-suap" target="_blank" rel="noopener noreferrer">Ver código no GitHub</a>
+        </div>
+      
+    </div>
+  </footer>
+</div> 
+
+  </body>
+</html>

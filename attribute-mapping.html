@@ -1,0 +1,328 @@
+
+<!DOCTYPE html>
+
+
+<html lang="pt-BR" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Mapeamento de Atributos do SUAP para o Django User Model &#8212; Documentação django-suap-auth 1.2.0</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=29da98fa" />
+    <link rel="stylesheet" type="text/css" href="_static/css/colors.css?v=c15837ed" />
+    <link rel="stylesheet" type="text/css" href="_static/css/base.css?v=5e993626" />
+    <script src="_static/documentation_options.js?v=253ccc8f"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/js/theme.js?v=d5b7f521"></script>
+    <script src="_static/translations.js?v=71a39b36"></script>
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Buscar" href="search.html" />
+    <link rel="next" title="Pipeline de Busca e Mapeamento do Perfil do Usuário" href="user-info-pipeline.html" />
+    <link rel="prev" title="Escopos OAuth2 do SUAP" href="scopes.html" />
+   
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  
+  <script>
+    (function() {
+      try {
+        var storedTheme = localStorage.getItem('django-theme');
+        var systemPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = storedTheme || (systemPrefersDark ? 'dark' : 'light');
+        if (theme === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+          document.documentElement.removeAttribute('data-theme');
+        }
+      } catch (e) {}
+    })();
+  </script>
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+
+  
+  <style>
+    :root {
+      --django-primary: #0c4b33; --django-header-bg: #0c4b33; --django-footer-bg: #0c4b33; --django-link: #0c4b33;
+      --django-secondary: #44b78b; --django-link-hover: #44b78b;
+      --django-accent: #f8f9fa;
+      --django-text: #2b2b2b;
+      --django-bg: #ffffff;
+      --django-code-bg: #f8f9fa;
+      --django-link: #0c4b33;
+      --django-link-hover: #44b78b;
+      --django-sidebar-bg: #f8f9fa;
+    }
+  </style>
+
+  </head><body>
+<div class="django-site-wrapper">
+  
+  <header class="django-header">
+    <div class="django-header-inner">
+      
+      <div class="django-brand-group">
+        <a href="index.html" class="django-brand">
+          
+            <span class="django-brand-title">
+              django-suap-auth
+            </span>
+          
+        </a>
+        <span class="django-tagline">
+          Backend de autenticação OAuth2 do Django para SUAP
+        </span>
+      </div>
+
+      
+      <div class="django-header-tools">
+        <form action="search.html" method="get" class="django-header-search">
+          <input type="text" name="q" placeholder="Buscar..." aria-label="Buscar na documentação" required />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+          <button type="submit" title="Buscar">🔍</button>
+        </form>
+
+        
+          <button id="theme-toggle" class="theme-toggle-btn" aria-label="Alternar modo claro/escuro" title="Alternar modo claro/escuro">
+            <span id="theme-toggle-icon">🌙</span>
+          </button>
+        
+      </div>
+    </div>
+  </header>
+
+  
+  <section class="django-sub-header">
+    <div class="django-sub-header-inner">
+      <div class="django-sub-header-title">
+        <span>Documentação</span>
+        
+          <span class="django-version-badge">v1.2.0</span>
+        
+      </div>
+      <div>
+        
+          <a href="https://github.com/django-by-kelsoncm/django-auth-suap" style="color: rgba(255, 255, 255, 0.85); font-size: 0.85rem;" target="_blank" rel="noopener noreferrer">Repositório no GitHub ↗</a>
+        
+      </div>
+    </div>
+  </section>
+
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navegação</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Índice Geral"
+             accesskey="I">índice</a></li>
+        <li class="right" >
+          <a href="user-info-pipeline.html" title="Pipeline de Busca e Mapeamento do Perfil do Usuário"
+             accesskey="N">próximo</a> |</li>
+        <li class="right" >
+          <a href="scopes.html" title="Escopos OAuth2 do SUAP"
+             accesskey="P">anterior</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Documentação django-suap-auth 1.2.0</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Mapeamento de Atributos do SUAP para o Django User Model</a></li> 
+      </ul>
+    </div>
+  
+  <div class="django-main-container">
+    
+    <main class="django-content" role="main">
+      
+  <article class="django-page">
+    <section id="mapeamento-de-atributos-do-suap-para-o-django-user-model">
+<h1>Mapeamento de Atributos do SUAP para o Django User Model<a class="headerlink" href="#mapeamento-de-atributos-do-suap-para-o-django-user-model" title="Link para este cabeçalho">¶</a></h1>
+<p>O dicionário <code class="docutils literal notranslate"><span class="pre">USER_ATTR_MAP</span></code> define como os campos retornados pelas APIs do SUAP são gravados no model <code class="docutils literal notranslate"><span class="pre">User</span></code> do Django (seja o padrão ou um customizado via <code class="docutils literal notranslate"><span class="pre">AUTH_USER_MODEL</span></code>).</p>
+<section id="mapeamento-padrao">
+<h2>Mapeamento Padrão<a class="headerlink" href="#mapeamento-padrao" title="Link para este cabeçalho">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SUAP_AUTH</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1"># ...</span>
+    <span class="s1">&#39;USER_ATTR_MAP&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="s1">&#39;identificacao&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;email&#39;</span><span class="p">:</span> <span class="s1">&#39;email&#39;</span><span class="p">,</span>
+        <span class="p">(</span><span class="s1">&#39;first_name&#39;</span><span class="p">,</span> <span class="s1">&#39;last_name&#39;</span><span class="p">):</span> <span class="s1">&#39;nome_usual&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="formatos-de-mapeamento-suportados">
+<h2>Formatos de Mapeamento Suportados<a class="headerlink" href="#formatos-de-mapeamento-suportados" title="Link para este cabeçalho">¶</a></h2>
+<section id="campo-simples-ou-aninhado-dotted-path">
+<h3>1. Campo Simples ou Aninhado (Dotted Path)<a class="headerlink" href="#campo-simples-ou-aninhado-dotted-path" title="Link para este cabeçalho">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;USER_ATTR_MAP&#39;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="s1">&#39;identificacao&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;email&#39;</span><span class="p">:</span> <span class="s1">&#39;email&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;cpf&#39;</span><span class="p">:</span> <span class="s1">&#39;dados_pessoais.cpf&#39;</span><span class="p">,</span>   <span class="c1"># extrai do dicionário aninhado</span>
+    <span class="s1">&#39;suap_raw&#39;</span><span class="p">:</span> <span class="s1">&#39;fulljson&#39;</span><span class="p">,</span>        <span class="c1"># atribui o dicionário user_info completo ao campo</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="divisao-de-nome-em-dois-campos-tupla">
+<h3>2. Divisão de Nome em Dois Campos (Tupla)<a class="headerlink" href="#divisao-de-nome-em-dois-campos-tupla" title="Link para este cabeçalho">¶</a></h3>
+<p>Quando a chave do mapeamento é uma <strong>tupla</strong>, o valor retornado pelo SUAP é dividido no primeiro espaço:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="s1">&#39;first_name&#39;</span><span class="p">,</span> <span class="s1">&#39;last_name&#39;</span><span class="p">):</span> <span class="s1">&#39;nome_usual&#39;</span>
+<span class="c1"># &quot;João Silva Santos&quot; → first_name=&quot;João&quot;, last_name=&quot;Silva Santos&quot;</span>
+<span class="c1"># &quot;João&quot;              → first_name=&quot;João&quot;, last_name=&quot;&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="lambdas-e-callables-customizadas">
+<h3>3. Lambdas e Callables Customizadas<a class="headerlink" href="#lambdas-e-callables-customizadas" title="Link para este cabeçalho">¶</a></h3>
+<p>Você pode passar um <code class="docutils literal notranslate"><span class="pre">callable</span></code> ou <code class="docutils literal notranslate"><span class="pre">lambda</span></code> que recebe o dicionário completo de informações do SUAP (<code class="docutils literal notranslate"><span class="pre">suap_user_info</span></code>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;USER_ATTR_MAP&#39;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="s1">&#39;identificacao&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;full_name&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">info</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;primeiro_nome&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ultimo_nome&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span>
+    <span class="s1">&#39;is_student&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">info</span><span class="p">:</span> <span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tipo_vinculo&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;Aluno&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="dicionarios-de-especificacao-com-transformadores-e-valor-padrao-dict-spec">
+<h3>4. Dicionários de Especificação com Transformadores e Valor Padrão (dict spec)<a class="headerlink" href="#dicionarios-de-especificacao-com-transformadores-e-valor-padrao-dict-spec" title="Link para este cabeçalho">¶</a></h3>
+<p>Permite definir a chave de origem, valor padrão (<code class="docutils literal notranslate"><span class="pre">default</span></code>) e uma função de transformação (<code class="docutils literal notranslate"><span class="pre">transform</span></code>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;USER_ATTR_MAP&#39;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="s1">&#39;identificacao&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;cpf&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;key&#39;</span><span class="p">:</span> <span class="s1">&#39;cpf&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;transform&#39;</span><span class="p">:</span> <span class="s1">&#39;django_suap_auth.transformers.format_cpf&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;data_nascimento&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;key&#39;</span><span class="p">:</span> <span class="s1">&#39;data_nascimento&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;transform&#39;</span><span class="p">:</span> <span class="s1">&#39;django_suap_auth.transformers.parse_date&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;campus&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;key&#39;</span><span class="p">:</span> <span class="s1">&#39;vinculo.campus&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="s1">&#39;Campus Geral&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="mapeamento-de-fotos-url-vs-download-para-imagefield">
+<h2>Mapeamento de Fotos (URL vs Download para ImageField)<a class="headerlink" href="#mapeamento-de-fotos-url-vs-download-para-imagefield" title="Link para este cabeçalho">¶</a></h2>
+<p>O SUAP retorna a URL da foto no campo <code class="docutils literal notranslate"><span class="pre">url_foto_75x100</span></code>.</p>
+<section id="caso-a-mapear-apenas-a-url-charfield-urlfield">
+<h3>Caso A: Mapear apenas a URL (CharField / URLField)<a class="headerlink" href="#caso-a-mapear-apenas-a-url-charfield-urlfield" title="Link para este cabeçalho">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;USER_ATTR_MAP&#39;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s1">&#39;foto_url&#39;</span><span class="p">:</span> <span class="s1">&#39;url_foto_75x100&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="caso-b-baixar-a-foto-e-salvar-num-imagefield-filefield">
+<h3>Caso B: Baixar a foto e salvar num ImageField / FileField<a class="headerlink" href="#caso-b-baixar-a-foto-e-salvar-num-imagefield-filefield" title="Link para este cabeçalho">¶</a></h3>
+<p>Utilize o transformador <code class="docutils literal notranslate"><span class="pre">fetch_image_file</span></code> fornecido pelo pacote:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;USER_ATTR_MAP&#39;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s1">&#39;foto&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;key&#39;</span><span class="p">:</span> <span class="s1">&#39;url_foto_75x100&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;transform&#39;</span><span class="p">:</span> <span class="s1">&#39;django_suap_auth.transformers.fetch_image_file&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Ou via lambda customizada:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">django_suap_auth.transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">fetch_image_file</span>
+
+<span class="s1">&#39;USER_ATTR_MAP&#39;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s1">&#39;foto&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">info</span><span class="p">:</span> <span class="n">fetch_image_file</span><span class="p">(</span><span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;url_foto_75x100&#39;</span><span class="p">)),</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="utilitarios-de-transformacao-embutidos-django-suap-auth-transformers">
+<h2>Utilitários de Transformação Embutidos (<code class="docutils literal notranslate"><span class="pre">django_suap_auth.transformers</span></code>)<a class="headerlink" href="#utilitarios-de-transformacao-embutidos-django-suap-auth-transformers" title="Link para este cabeçalho">¶</a></h2>
+<p>O pacote já disponibiliza as seguintes funções prontas:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">fetch_image_file(value,</span> <span class="pre">suap_info=None)</span></code>: baixa a imagem da URL informada e retorna um <code class="docutils literal notranslate"><span class="pre">ContentFile</span></code> do Django pronto para ser salvo em <code class="docutils literal notranslate"><span class="pre">ImageField</span></code> / <code class="docutils literal notranslate"><span class="pre">FileField</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">parse_date(value,</span> <span class="pre">suap_info=None)</span></code>: converte string ISO (<code class="docutils literal notranslate"><span class="pre">YYYY-MM-DD</span></code>) para <code class="docutils literal notranslate"><span class="pre">datetime.date</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">format_cpf(value,</span> <span class="pre">suap_info=None)</span></code>: formata uma string de 11 dígitos para o padrão <code class="docutils literal notranslate"><span class="pre">&quot;XXX.XXX.XXX-XX&quot;</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">to_upper(value,</span> <span class="pre">suap_info=None)</span></code> / <code class="docutils literal notranslate"><span class="pre">to_lower(value,</span> <span class="pre">suap_info=None)</span></code>: converte caixas de texto.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">to_bool(value,</span> <span class="pre">suap_info=None)</span></code>: converte valores variados para booleano.</p></li>
+</ul>
+</section>
+<section id="class-based-mapper-customizado-user-mapper">
+<h2>Class-Based Mapper Customizado (<code class="docutils literal notranslate"><span class="pre">USER_MAPPER</span></code>)<a class="headerlink" href="#class-based-mapper-customizado-user-mapper" title="Link para este cabeçalho">¶</a></h2>
+<p>Para cenários complexos (como registrar perfis em tabelas vinculadas), você pode implementar uma classe customizada derivada de <code class="docutils literal notranslate"><span class="pre">BaseSuapUserMapper</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># mappers.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django_suap_auth.mappers</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseSuapUserMapper</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomSuapUserMapper</span><span class="p">(</span><span class="n">BaseSuapUserMapper</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">map_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_info</span><span class="p">,</span> <span class="n">attr_map</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">attrs</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">map_attributes</span><span class="p">(</span><span class="n">user_info</span><span class="p">,</span> <span class="n">attr_map</span><span class="p">)</span>
+        <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;is_servidor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">user_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tipo_vinculo&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;Servidor&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">attrs</span>
+</pre></div>
+</div>
+<p>E ativá-la nas configurações do Django:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SUAP_AUTH</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1"># ...</span>
+    <span class="s1">&#39;USER_MAPPER&#39;</span><span class="p">:</span> <span class="s1">&#39;meu_app.mappers.CustomSuapUserMapper&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+  </article>
+
+    </main>
+
+    
+    
+      <aside class="django-sidebar" id="django-sidebar" role="navigation" aria-label="Navegação Principal">
+        
+      </aside>
+    
+  </div>
+
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navegação</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Índice Geral"
+             >índice</a></li>
+        <li class="right" >
+          <a href="user-info-pipeline.html" title="Pipeline de Busca e Mapeamento do Perfil do Usuário"
+             >próximo</a> |</li>
+        <li class="right" >
+          <a href="scopes.html" title="Escopos OAuth2 do SUAP"
+             >anterior</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Documentação django-suap-auth 1.2.0</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Mapeamento de Atributos do SUAP para o Django User Model</a></li> 
+      </ul>
+    </div>
+  
+  <footer class="django-footer" role="contentinfo">
+    <div class="django-footer-inner">
+      <div>
+        
+          &copy; 2026, Kelson C. Medeiros.
+        
+        
+      </div>
+      <div>
+        Desenvolvido com inspiração na documentação oficial do
+        <a href="https://docs.djangoproject.com/" target="_blank" rel="noopener noreferrer">Django</a> &amp;
+        <a href="https://www.sphinx-doc.org/" target="_blank" rel="noopener noreferrer">Sphinx</a>.
+      </div>
+      
+        <div>
+          <a href="https://github.com/django-by-kelsoncm/django-auth-suap" target="_blank" rel="noopener noreferrer">Ver código no GitHub</a>
+        </div>
+      
+    </div>
+  </footer>
+</div> 
+
+  </body>
+</html>

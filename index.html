@@ -1,198 +1,298 @@
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
+
+
+<html lang="pt-BR" data-content_root="./">
+  <head>
     <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="Django OAuth2 authentication backend for SUAP (IFRN's System)" /><meta name="author" content="kelsoncm" /><link rel="canonical" href="https://django-by-kelsoncm.github.io/django-auth-suap/" />
-      <link rel="shortcut icon" href="img/favicon.ico" />
-    <title>django-auth-suap</title>
-    <link rel="stylesheet" href="css/theme.css" />
-    <link rel="stylesheet" href="css/theme_extra.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
-    
-      <script>
-        // Current page data
-        var mkdocs_page_name = "In\u00edcio";
-        var mkdocs_page_input_path = "index.md";
-        var mkdocs_page_url = "/django-auth-suap/";
-      </script>
-    
-    <!--[if lt IE 9]>
-      <script src="js/html5shiv.min.js"></script>
-    <![endif]-->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-      <script>hljs.highlightAll();</script> 
-</head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<body class="wy-body-for-nav" role="document">
+    <title>django-suap-auth &#8212; Documentação django-suap-auth 1.2.0</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=29da98fa" />
+    <link rel="stylesheet" type="text/css" href="_static/css/colors.css?v=c15837ed" />
+    <link rel="stylesheet" type="text/css" href="_static/css/base.css?v=5e993626" />
+    <script src="_static/documentation_options.js?v=253ccc8f"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/js/theme.js?v=d5b7f521"></script>
+    <script src="_static/translations.js?v=71a39b36"></script>
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Buscar" href="search.html" />
+    <link rel="next" title="Instalação" href="installation.html" />
+   
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
-    <div class="wy-side-scroll">
-      <div class="wy-side-nav-search">
-          <a href="." class="icon icon-home"> django-auth-suap
-        </a><div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
-      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
-  </form>
-</div>
-      </div>
+  
+  <script>
+    (function() {
+      try {
+        var storedTheme = localStorage.getItem('django-theme');
+        var systemPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = storedTheme || (systemPrefersDark ? 'dark' : 'light');
+        if (theme === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+          document.documentElement.removeAttribute('data-theme');
+        }
+      } catch (e) {}
+    })();
+  </script>
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
 
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul class="current">
-                <li class="toctree-l1 current"><a class="reference internal current" href="#">Início</a>
-    <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#funcionalidades">Funcionalidades</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#links-rapidos">Links Rápidos</a>
-    </li>
-    </ul>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="installation/">Instalação</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="configuration/">Configuração</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="scopes/">Escopos</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="attribute-mapping/">Mapeamento de Atributos</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="user-info-pipeline/">Pipeline de Perfil de Usuário</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="fetchers/">Fetchers (Busca de Dados)</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="mappers/">Mappers (Mapeamento)</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="auth-flow/">Fluxo de Autenticação</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="sandboxes/">Ambiente Sandbox</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="development/">Desenvolvimento</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="release/">Processo de Release</a>
-                </li>
-              </ul>
-      </div>
-    </div>
-    </nav>
+  
+  <style>
+    :root {
+      --django-primary: #0c4b33; --django-header-bg: #0c4b33; --django-footer-bg: #0c4b33; --django-link: #0c4b33;
+      --django-secondary: #44b78b; --django-link-hover: #44b78b;
+      --django-accent: #f8f9fa;
+      --django-text: #2b2b2b;
+      --django-bg: #ffffff;
+      --django-code-bg: #f8f9fa;
+      --django-link: #0c4b33;
+      --django-link-hover: #44b78b;
+      --django-sidebar-bg: #f8f9fa;
+    }
+  </style>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href=".">django-auth-suap</a>
-        
-      </nav>
-      <div class="wy-nav-content">
-        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
-  <ul class="wy-breadcrumbs">
-    <li><a href="." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">Início</li>
-    <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/django-by-kelsoncm/django-auth-suap/edit/master/docs/index.md">Edit on django-by-kelsoncm/django-auth-suap</a>
-    </li>
-  </ul>
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-            <div class="section" itemprop="articleBody">
-              
-                <h1 id="django-suap-auth">django-suap-auth<a class="headerlink" href="#django-suap-auth" title="Permanent link">&para;</a></h1>
-<p>Backend de autenticação OAuth2 do Django para <strong>SUAP</strong> (Sistema Unificado de Administração Pública), o sistema de gestão acadêmica do IFRN.</p>
-<h2 id="funcionalidades">Funcionalidades<a class="headerlink" href="#funcionalidades" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Fluxo de autorização de código OAuth2 com SUAP</li>
-<li>Escopos configuráveis (<code>identificacao</code>, <code>email</code>, <code>documentos_pessoais</code>, <code>dados_academicos</code>, <code>dados_pessoais</code>, <code>reitoria</code>)</li>
-<li>Mapeamento flexível de atributos da resposta SUAP para campos do modelo de usuário do Django</li>
-<li>Armazenamento opcional em campo JSON para a resposta completa do SUAP</li>
-<li>Página de login intermediária configurável (<code>SUAP_AUTH['DIRECT_REDIRECT']</code>)</li>
-<li>Proteção CSRF via validação do parâmetro de estado</li>
-</ul>
-<h2 id="links-rapidos">Links Rápidos<a class="headerlink" href="#links-rapidos" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="installation/">Instalação</a></li>
-<li><a href="configuration/">Configuração</a></li>
-<li><a href="scopes/">Escopos</a></li>
-<li><a href="attribute-mapping/">Mapeamento de atributos</a></li>
-<li><a href="user-info-pipeline/">Pipeline de perfil de usuário</a></li>
-<li><a href="fetchers/">Fetchers (Busca de dados)</a></li>
-<li><a href="mappers/">Mappers (Mapeamento)</a></li>
-<li><a href="auth-flow/">Fluxo de autenticação</a></li>
-<li><a href="sandboxes/">Sandboxes</a></li>
-<li><a href="development/">Desenvolvimento</a></li>
-<li><a href="release/">Release</a></li>
-</ul>
-              
-            </div>
-          </div><footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="installation/" class="btn btn-neutral float-right" title="Instalação">Next <span class="icon icon-circle-arrow-right"></span></a>
-    </div>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <!-- Copyright etc -->
-  </div>
-
-  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-</footer>
+  </head><body>
+<div class="django-site-wrapper">
+  
+  <header class="django-header">
+    <div class="django-header-inner">
+      
+      <div class="django-brand-group">
+        <a href="#" class="django-brand">
           
-        </div>
+            <span class="django-brand-title">
+              django-suap-auth
+            </span>
+          
+        </a>
+        <span class="django-tagline">
+          Backend de autenticação OAuth2 do Django para SUAP
+        </span>
       </div>
 
-    </section>
+      
+      <div class="django-header-tools">
+        <form action="search.html" method="get" class="django-header-search">
+          <input type="text" name="q" placeholder="Buscar..." aria-label="Buscar na documentação" required />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+          <button type="submit" title="Buscar">🔍</button>
+        </form>
 
+        
+          <button id="theme-toggle" class="theme-toggle-btn" aria-label="Alternar modo claro/escuro" title="Alternar modo claro/escuro">
+            <span id="theme-toggle-icon">🌙</span>
+          </button>
+        
+      </div>
+    </div>
+  </header>
+
+  
+  <section class="django-sub-header">
+    <div class="django-sub-header-inner">
+      <div class="django-sub-header-title">
+        <span>Documentação</span>
+        
+          <span class="django-version-badge">v1.2.0</span>
+        
+      </div>
+      <div>
+        
+          <a href="https://github.com/django-by-kelsoncm/django-auth-suap" style="color: rgba(255, 255, 255, 0.85); font-size: 0.85rem;" target="_blank" rel="noopener noreferrer">Repositório no GitHub ↗</a>
+        
+      </div>
+    </div>
+  </section>
+
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navegação</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Índice Geral"
+             accesskey="I">índice</a></li>
+        <li class="right" >
+          <a href="installation.html" title="Instalação"
+             accesskey="N">próximo</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">Documentação django-suap-auth 1.2.0</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">django-suap-auth</a></li> 
+      </ul>
+    </div>
+  
+  <div class="django-main-container">
+    
+    <main class="django-content" role="main">
+      
+  <article class="django-page">
+    <section id="django-suap-auth">
+<h1>django-suap-auth<a class="headerlink" href="#django-suap-auth" title="Link para este cabeçalho">¶</a></h1>
+<p>Backend de autenticação OAuth2 do Django para <strong>SUAP</strong> (Sistema Unificado de Administração Pública), o sistema de gestão acadêmica do IFRN.</p>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Sumário de Conteúdos:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Instalação</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#requisitos">Requisitos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#instalar-do-pypi">Instalar do PyPI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#adicionar-a-installed-apps">Adicionar a INSTALLED_APPS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#configurar-urls">Configurar URLs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuração do SUAP OAuth2</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#configuracao-basica">Configuração Básica</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#opcoes-de-configuracao">Opções de Configuração</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#exemplo-completo-com-multiplos-endpoints-e-mappers">Exemplo Completo com Múltiplos Endpoints e Mappers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="scopes.html">Escopos OAuth2 do SUAP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="scopes.html#escopos-disponiveis">Escopos Disponíveis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scopes.html#exemplo-de-resposta-suap">Exemplo de Resposta SUAP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scopes.html#configurando-escopos">Configurando Escopos</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="attribute-mapping.html">Mapeamento de Atributos do SUAP para o Django User Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="attribute-mapping.html#mapeamento-padrao">Mapeamento Padrão</a></li>
+<li class="toctree-l2"><a class="reference internal" href="attribute-mapping.html#formatos-de-mapeamento-suportados">Formatos de Mapeamento Suportados</a></li>
+<li class="toctree-l2"><a class="reference internal" href="attribute-mapping.html#mapeamento-de-fotos-url-vs-download-para-imagefield">Mapeamento de Fotos (URL vs Download para ImageField)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="attribute-mapping.html#utilitarios-de-transformacao-embutidos-django-suap-auth-transformers">Utilitários de Transformação Embutidos (<code class="docutils literal notranslate"><span class="pre">django_suap_auth.transformers</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="attribute-mapping.html#class-based-mapper-customizado-user-mapper">Class-Based Mapper Customizado (<code class="docutils literal notranslate"><span class="pre">USER_MAPPER</span></code>)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="user-info-pipeline.html">Pipeline de Busca e Mapeamento do Perfil do Usuário</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="user-info-pipeline.html#arquitetura-geral">Arquitetura Geral</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user-info-pipeline.html#cadeia-de-busca-de-dados-user-info-fetchers">1. Cadeia de Busca de Dados (<code class="docutils literal notranslate"><span class="pre">USER_INFO_FETCHERS</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user-info-pipeline.html#cadeia-de-mapeamento-user-info-mappers">2. Cadeia de Mapeamento (<code class="docutils literal notranslate"><span class="pre">USER_INFO_MAPPERS</span></code>)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="fetchers.html">Fetchers (Busca de Dados de Usuário)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="fetchers.html#como-funcionam-os-fetchers">Como Funcionam os Fetchers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fetchers.html#configuracao-user-info-fetchers">Configuração: <code class="docutils literal notranslate"><span class="pre">USER_INFO_FETCHERS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="fetchers.html#fetcher-padrao-defaultendpointsuserinfofetcher">Fetcher Padrão: <code class="docutils literal notranslate"><span class="pre">DefaultEndpointsUserInfoFetcher</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="fetchers.html#criando-um-fetcher-customizado">Criando um Fetcher Customizado</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fetchers.html#funcoes-utilitarias-da-api-de-fetchers">Funções Utilitárias da API de Fetchers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="mappers.html">Mappers (Mapeamento de Atributos do Usuário)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="mappers.html#como-funcionam-os-mappers">Como Funcionam os Mappers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mappers.html#configuracao-user-info-mappers">Configuração: <code class="docutils literal notranslate"><span class="pre">USER_INFO_MAPPERS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="mappers.html#mapper-padrao-defaultattrmapusermapper">Mapper Padrão: <code class="docutils literal notranslate"><span class="pre">DefaultAttrMapUserMapper</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="mappers.html#transformadores-embutidos-django-suap-auth-transformers">Transformadores Embutidos (<code class="docutils literal notranslate"><span class="pre">django_suap_auth.transformers</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mappers.html#criando-um-mapper-customizado">Criando um Mapper Customizado</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mappers.html#funcoes-utilitarias-da-api-de-mappers">Funções Utilitárias da API de Mappers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="auth-flow.html">Fluxo de Autenticação</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="auth-flow.html#visao-geral">Visão Geral</a></li>
+<li class="toctree-l2"><a class="reference internal" href="auth-flow.html#redirecionamento-direto-padrao">Redirecionamento Direto (Padrão)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="auth-flow.html#pagina-intermediaria">Página Intermediária</a></li>
+<li class="toctree-l2"><a class="reference internal" href="auth-flow.html#protecao-csrf">Proteção CSRF</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sandboxes.html">Sandboxes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sandboxes.html#sandbox-django52">sandbox/django52</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sandboxes.html#sandbox-django60">sandbox/django60</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sandboxes.html#comparando-versoes-do-django">Comparando Versões do Django</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="development.html">Desenvolvimento</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="development.html#configuracao">Configuração</a></li>
+<li class="toctree-l2"><a class="reference internal" href="development.html#executando-testes">Executando Testes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="development.html#estilo-de-codigo">Estilo de Código</a></li>
+<li class="toctree-l2"><a class="reference internal" href="development.html#pre-commit">pre-commit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="development.html#documentacao">Documentação</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="release.html">Processo de Lançamento</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="release.html#versionamento">Versionamento</a></li>
+<li class="toctree-l2"><a class="reference internal" href="release.html#etapas">Etapas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="release.html#trusted-publisher">Trusted Publisher</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<section id="funcionalidades">
+<h2>Funcionalidades<a class="headerlink" href="#funcionalidades" title="Link para este cabeçalho">¶</a></h2>
+<ul class="simple">
+<li><p>Fluxo de autorização de código OAuth2 com SUAP</p></li>
+<li><p>Escopos configuráveis (<code class="docutils literal notranslate"><span class="pre">identificacao</span></code>, <code class="docutils literal notranslate"><span class="pre">email</span></code>, <code class="docutils literal notranslate"><span class="pre">documentos_pessoais</span></code>, <code class="docutils literal notranslate"><span class="pre">dados_academicos</span></code>, <code class="docutils literal notranslate"><span class="pre">dados_pessoais</span></code>, <code class="docutils literal notranslate"><span class="pre">reitoria</span></code>)</p></li>
+<li><p>Mapeamento flexível de atributos da resposta SUAP para campos do modelo de usuário do Django</p></li>
+<li><p>Armazenamento opcional em campo JSON para a resposta completa do SUAP</p></li>
+<li><p>Página de login intermediária configurável (<code class="docutils literal notranslate"><span class="pre">SUAP_AUTH['DIRECT_REDIRECT']</span></code>)</p></li>
+<li><p>Proteção CSRF via validação do parâmetro de estado</p></li>
+</ul>
+</section>
+<section id="links-rapidos">
+<h2>Links Rápidos<a class="headerlink" href="#links-rapidos" title="Link para este cabeçalho">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="installation.html"><span class="doc">Instalação</span></a></p></li>
+<li><p><a class="reference internal" href="configuration.html"><span class="doc">Configuração</span></a></p></li>
+<li><p><a class="reference internal" href="scopes.html"><span class="doc">Escopos</span></a></p></li>
+<li><p><a class="reference internal" href="attribute-mapping.html"><span class="doc">Mapeamento de atributos</span></a></p></li>
+<li><p><a class="reference internal" href="user-info-pipeline.html"><span class="doc">Pipeline de perfil de usuário</span></a></p></li>
+<li><p><a class="reference internal" href="fetchers.html"><span class="doc">Fetchers (Busca de dados)</span></a></p></li>
+<li><p><a class="reference internal" href="mappers.html"><span class="doc">Mappers (Mapeamento)</span></a></p></li>
+<li><p><a class="reference internal" href="auth-flow.html"><span class="doc">Fluxo de autenticação</span></a></p></li>
+<li><p><a class="reference internal" href="sandboxes.html"><span class="doc">Sandboxes</span></a></p></li>
+<li><p><a class="reference internal" href="development.html"><span class="doc">Desenvolvimento</span></a></p></li>
+<li><p><a class="reference internal" href="release.html"><span class="doc">Processo de Release</span></a></p></li>
+</ul>
+</section>
+</section>
+
+  </article>
+
+    </main>
+
+    
+    
+      <aside class="django-sidebar" id="django-sidebar" role="navigation" aria-label="Navegação Principal">
+        
+      </aside>
+    
   </div>
 
-  <div class="rst-versions" role="note" aria-label="Versions">
-  <span class="rst-current-version" data-toggle="rst-current-version">
-    
-        <span>
-          <a href="https://github.com/django-by-kelsoncm/django-auth-suap" class="fa fa-code-fork" style="color: #fcfcfc"> django-by-kelsoncm/django-auth-suap</a>
-        </span>
-    
-    
-    
-      <span><a href="installation/" style="color: #fcfcfc">Next &raquo;</a></span>
-    
-  </span>
-</div>
-    <script src="js/jquery-3.6.0.min.js"></script>
-    <script>var base_url = ".";</script>
-    <script src="js/theme_extra.js"></script>
-    <script src="js/theme.js"></script>
-      <script src="search/main.js"></script>
-    <script>
-        jQuery(function () {
-            SphinxRtdTheme.Navigation.enable(true);
-        });
-    </script>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navegação</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Índice Geral"
+             >índice</a></li>
+        <li class="right" >
+          <a href="installation.html" title="Instalação"
+             >próximo</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">Documentação django-suap-auth 1.2.0</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">django-suap-auth</a></li> 
+      </ul>
+    </div>
+  
+  <footer class="django-footer" role="contentinfo">
+    <div class="django-footer-inner">
+      <div>
+        
+          &copy; 2026, Kelson C. Medeiros.
+        
+        
+      </div>
+      <div>
+        Desenvolvido com inspiração na documentação oficial do
+        <a href="https://docs.djangoproject.com/" target="_blank" rel="noopener noreferrer">Django</a> &amp;
+        <a href="https://www.sphinx-doc.org/" target="_blank" rel="noopener noreferrer">Sphinx</a>.
+      </div>
+      
+        <div>
+          <a href="https://github.com/django-by-kelsoncm/django-auth-suap" target="_blank" rel="noopener noreferrer">Ver código no GitHub</a>
+        </div>
+      
+    </div>
+  </footer>
+</div> 
 
-</body>
+  </body>
 </html>
-
-<!--
-MkDocs version : 1.6.1
-Build Date UTC : 2026-08-06 18:29:54.127128+00:00
--->

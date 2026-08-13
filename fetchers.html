@@ -1,0 +1,311 @@
+
+<!DOCTYPE html>
+
+
+<html lang="pt-BR" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Fetchers (Busca de Dados de Usuário) &#8212; Documentação django-suap-auth 1.2.0</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=29da98fa" />
+    <link rel="stylesheet" type="text/css" href="_static/css/colors.css?v=c15837ed" />
+    <link rel="stylesheet" type="text/css" href="_static/css/base.css?v=5e993626" />
+    <script src="_static/documentation_options.js?v=253ccc8f"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/js/theme.js?v=d5b7f521"></script>
+    <script src="_static/translations.js?v=71a39b36"></script>
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Buscar" href="search.html" />
+    <link rel="next" title="Mappers (Mapeamento de Atributos do Usuário)" href="mappers.html" />
+    <link rel="prev" title="Pipeline de Busca e Mapeamento do Perfil do Usuário" href="user-info-pipeline.html" />
+   
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  
+  <script>
+    (function() {
+      try {
+        var storedTheme = localStorage.getItem('django-theme');
+        var systemPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = storedTheme || (systemPrefersDark ? 'dark' : 'light');
+        if (theme === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+          document.documentElement.removeAttribute('data-theme');
+        }
+      } catch (e) {}
+    })();
+  </script>
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+
+  
+  <style>
+    :root {
+      --django-primary: #0c4b33; --django-header-bg: #0c4b33; --django-footer-bg: #0c4b33; --django-link: #0c4b33;
+      --django-secondary: #44b78b; --django-link-hover: #44b78b;
+      --django-accent: #f8f9fa;
+      --django-text: #2b2b2b;
+      --django-bg: #ffffff;
+      --django-code-bg: #f8f9fa;
+      --django-link: #0c4b33;
+      --django-link-hover: #44b78b;
+      --django-sidebar-bg: #f8f9fa;
+    }
+  </style>
+
+  </head><body>
+<div class="django-site-wrapper">
+  
+  <header class="django-header">
+    <div class="django-header-inner">
+      
+      <div class="django-brand-group">
+        <a href="index.html" class="django-brand">
+          
+            <span class="django-brand-title">
+              django-suap-auth
+            </span>
+          
+        </a>
+        <span class="django-tagline">
+          Backend de autenticação OAuth2 do Django para SUAP
+        </span>
+      </div>
+
+      
+      <div class="django-header-tools">
+        <form action="search.html" method="get" class="django-header-search">
+          <input type="text" name="q" placeholder="Buscar..." aria-label="Buscar na documentação" required />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+          <button type="submit" title="Buscar">🔍</button>
+        </form>
+
+        
+          <button id="theme-toggle" class="theme-toggle-btn" aria-label="Alternar modo claro/escuro" title="Alternar modo claro/escuro">
+            <span id="theme-toggle-icon">🌙</span>
+          </button>
+        
+      </div>
+    </div>
+  </header>
+
+  
+  <section class="django-sub-header">
+    <div class="django-sub-header-inner">
+      <div class="django-sub-header-title">
+        <span>Documentação</span>
+        
+          <span class="django-version-badge">v1.2.0</span>
+        
+      </div>
+      <div>
+        
+          <a href="https://github.com/django-by-kelsoncm/django-auth-suap" style="color: rgba(255, 255, 255, 0.85); font-size: 0.85rem;" target="_blank" rel="noopener noreferrer">Repositório no GitHub ↗</a>
+        
+      </div>
+    </div>
+  </section>
+
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navegação</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Índice Geral"
+             accesskey="I">índice</a></li>
+        <li class="right" >
+          <a href="mappers.html" title="Mappers (Mapeamento de Atributos do Usuário)"
+             accesskey="N">próximo</a> |</li>
+        <li class="right" >
+          <a href="user-info-pipeline.html" title="Pipeline de Busca e Mapeamento do Perfil do Usuário"
+             accesskey="P">anterior</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Documentação django-suap-auth 1.2.0</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Fetchers (Busca de Dados de Usuário)</a></li> 
+      </ul>
+    </div>
+  
+  <div class="django-main-container">
+    
+    <main class="django-content" role="main">
+      
+  <article class="django-page">
+    <section id="fetchers-busca-de-dados-de-usuario">
+<h1>Fetchers (Busca de Dados de Usuário)<a class="headerlink" href="#fetchers-busca-de-dados-de-usuario" title="Link para este cabeçalho">¶</a></h1>
+<p>O <code class="docutils literal notranslate"><span class="pre">django-suap-auth</span></code> utiliza o padrão <strong>Chain of Responsibility (Cadeia de Responsabilidade)</strong> para buscar e consolidar dados de perfil do usuário a partir de múltiplos endpoints do SUAP ou sistemas externos.</p>
+<section id="como-funcionam-os-fetchers">
+<h2>Como Funcionam os Fetchers<a class="headerlink" href="#como-funcionam-os-fetchers" title="Link para este cabeçalho">¶</a></h2>
+<p>Quando o usuário é autenticado via OAuth2, o <code class="docutils literal notranslate"><span class="pre">access_token</span></code> é obtido e a cadeia de fetchers (<code class="docutils literal notranslate"><span class="pre">USER_INFO_FETCHERS</span></code>) é executada em sequência. Cada fetcher recebe o dicionário acumulado <code class="docutils literal notranslate"><span class="pre">user_info</span></code> e pode enriquecê-lo com novos dados.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[Access Token] ──&gt; Fetcher 1 (DefaultEndpointsUserInfoFetcher)
+                       │ user_info acumulado
+                       ▼
+                   Fetcher 2 (Fetcher Customizado / LDAP)
+                       │ user_info final
+                       ▼
+                   Cadeia de Mappers
+</pre></div>
+</div>
+</section>
+<section id="configuracao-user-info-fetchers">
+<h2>Configuração: <code class="docutils literal notranslate"><span class="pre">USER_INFO_FETCHERS</span></code><a class="headerlink" href="#configuracao-user-info-fetchers" title="Link para este cabeçalho">¶</a></h2>
+<p>No <code class="docutils literal notranslate"><span class="pre">settings.py</span></code>, configure a lista de fetchers em <code class="docutils literal notranslate"><span class="pre">SUAP_AUTH</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SUAP_AUTH</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;CLIENT_ID&quot;</span><span class="p">:</span> <span class="s2">&quot;seu-client-id&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CLIENT_SECRET&quot;</span><span class="p">:</span> <span class="s2">&quot;seu-client-secret&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;REDIRECT_URI&quot;</span><span class="p">:</span> <span class="s2">&quot;https://sua-app.com/auth/suap/callback/&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;USER_INFO_FETCHERS&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;django_suap_auth.fetchers.DefaultEndpointsUserInfoFetcher&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;meu_app.fetchers.ExternalLdapUserInfoFetcher&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="fetcher-padrao-defaultendpointsuserinfofetcher">
+<h2>Fetcher Padrão: <code class="docutils literal notranslate"><span class="pre">DefaultEndpointsUserInfoFetcher</span></code><a class="headerlink" href="#fetcher-padrao-defaultendpointsuserinfofetcher" title="Link para este cabeçalho">¶</a></h2>
+<p>O fetcher padrão consome a lista <code class="docutils literal notranslate"><span class="pre">USER_INFO_ENDPOINTS</span></code> definida em <code class="docutils literal notranslate"><span class="pre">SUAP_AUTH</span></code> e executa requisições HTTP para cada endpoint.</p>
+<section id="formatos-de-endpoints-suportados-user-info-endpoints">
+<h3>Formatos de Endpoints Suportados (<code class="docutils literal notranslate"><span class="pre">USER_INFO_ENDPOINTS</span></code>)<a class="headerlink" href="#formatos-de-endpoints-suportados-user-info-endpoints" title="Link para este cabeçalho">¶</a></h3>
+<section id="endpoint-simples-string">
+<h4>1. Endpoint Simples (String)<a class="headerlink" href="#endpoint-simples-string" title="Link para este cabeçalho">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;USER_INFO_ENDPOINTS&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">&quot;/api/rh/eu/&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;/api/rh/meus-dados/&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>Os dados retornados na raiz da resposta JSON são mesclados diretamente na raiz do dicionário <code class="docutils literal notranslate"><span class="pre">user_info</span></code>.</p>
+</section>
+<section id="endpoint-com-formatacao-dinamica-string-com-chave">
+<h4>2. Endpoint com Formatação Dinâmica (String com <code class="docutils literal notranslate"><span class="pre">{chave}</span></code>)<a class="headerlink" href="#endpoint-com-formatacao-dinamica-string-com-chave" title="Link para este cabeçalho">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;USER_INFO_ENDPOINTS&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">&quot;/api/rh/eu/&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;/api/v2/alunos/</span><span class="si">{matricula}</span><span class="s2">/&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>Chaves entre chaves <code class="docutils literal notranslate"><span class="pre">{...}</span></code> são substituídas pelos valores existentes em <code class="docutils literal notranslate"><span class="pre">user_info</span></code>.</p>
+</section>
+<section id="especificacao-por-dicionario-dict-spec">
+<h4>3. Especificação por Dicionário (dict spec)<a class="headerlink" href="#especificacao-por-dicionario-dict-spec" title="Link para este cabeçalho">¶</a></h4>
+<p>Permite isolar a resposta sob um <em>namespace</em>, extrair listas de respostas paginadas ou iterar sobre coleções:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;USER_INFO_ENDPOINTS&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">&quot;/api/rh/eu/&quot;</span><span class="p">,</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;endpoint&quot;</span><span class="p">:</span> <span class="s2">&quot;/api/rh/meus-vinculos/&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;namespace&quot;</span><span class="p">:</span> <span class="s2">&quot;vinculos&quot;</span><span class="p">,</span>   <span class="c1"># Injeta sob user_info[&#39;vinculos&#39;]</span>
+        <span class="s2">&quot;extract_list&quot;</span><span class="p">:</span> <span class="s2">&quot;results&quot;</span><span class="p">,</span> <span class="c1"># Extrai do campo paginado &#39;results&#39;</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;endpoint&quot;</span><span class="p">:</span> <span class="s2">&quot;/api/rh/meu-vinculo/</span><span class="si">{id}</span><span class="s2">/&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;namespace&quot;</span><span class="p">:</span> <span class="s2">&quot;detalhes_vinculos&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;for_each&quot;</span><span class="p">:</span> <span class="s2">&quot;vinculos&quot;</span><span class="p">,</span>    <span class="c1"># Itera sobre cada item em user_info[&#39;vinculos&#39;]</span>
+    <span class="p">},</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="criando-um-fetcher-customizado">
+<h2>Criando um Fetcher Customizado<a class="headerlink" href="#criando-um-fetcher-customizado" title="Link para este cabeçalho">¶</a></h2>
+<p>Para criar um fetcher customizado, herde de <code class="docutils literal notranslate"><span class="pre">BaseUserInfoFetcher</span></code> e sobrescreva o método <code class="docutils literal notranslate"><span class="pre">fetch</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># meu_app/fetchers.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django_suap_auth.fetchers</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseUserInfoFetcher</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ExternalLdapUserInfoFetcher</span><span class="p">(</span><span class="n">BaseUserInfoFetcher</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetcher que busca informações adicionais no LDAP corporativo a partir do CPF do usuário.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">fetch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">access_token</span><span class="p">,</span> <span class="n">user_info</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">user_info</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">access_token</span><span class="p">,</span> <span class="n">user_info</span><span class="p">)</span>
+
+        <span class="n">cpf</span> <span class="o">=</span> <span class="n">user_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;cpf&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cpf</span><span class="p">:</span>
+            <span class="c1"># Consulta serviço externo</span>
+            <span class="n">user_info</span><span class="p">[</span><span class="s2">&quot;ldap_data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">meu_servico_ldap</span><span class="o">.</span><span class="n">buscar_por_cpf</span><span class="p">(</span><span class="n">cpf</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">user_info</span>
+</pre></div>
+</div>
+<section id="registrando-o-fetcher-customizado">
+<h3>Registrando o Fetcher Customizado<a class="headerlink" href="#registrando-o-fetcher-customizado" title="Link para este cabeçalho">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># settings.py</span>
+<span class="n">SUAP_AUTH</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1"># ...</span>
+    <span class="s2">&quot;USER_INFO_FETCHERS&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;django_suap_auth.fetchers.DefaultEndpointsUserInfoFetcher&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;meu_app.fetchers.ExternalLdapUserInfoFetcher&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="funcoes-utilitarias-da-api-de-fetchers">
+<h2>Funções Utilitárias da API de Fetchers<a class="headerlink" href="#funcoes-utilitarias-da-api-de-fetchers" title="Link para este cabeçalho">¶</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">get_user_info_fetchers(cfg=None)</span></code>: instancia e retorna a lista de objetos fetchers configurados.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">run_user_info_fetcher_chain(client,</span> <span class="pre">access_token,</span> <span class="pre">cfg=None)</span></code>: executa toda a cadeia de fetchers e retorna o dicionário <code class="docutils literal notranslate"><span class="pre">user_info</span></code> final.</p></li>
+</ul>
+</section>
+</section>
+
+  </article>
+
+    </main>
+
+    
+    
+      <aside class="django-sidebar" id="django-sidebar" role="navigation" aria-label="Navegação Principal">
+        
+      </aside>
+    
+  </div>
+
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navegação</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Índice Geral"
+             >índice</a></li>
+        <li class="right" >
+          <a href="mappers.html" title="Mappers (Mapeamento de Atributos do Usuário)"
+             >próximo</a> |</li>
+        <li class="right" >
+          <a href="user-info-pipeline.html" title="Pipeline de Busca e Mapeamento do Perfil do Usuário"
+             >anterior</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Documentação django-suap-auth 1.2.0</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Fetchers (Busca de Dados de Usuário)</a></li> 
+      </ul>
+    </div>
+  
+  <footer class="django-footer" role="contentinfo">
+    <div class="django-footer-inner">
+      <div>
+        
+          &copy; 2026, Kelson C. Medeiros.
+        
+        
+      </div>
+      <div>
+        Desenvolvido com inspiração na documentação oficial do
+        <a href="https://docs.djangoproject.com/" target="_blank" rel="noopener noreferrer">Django</a> &amp;
+        <a href="https://www.sphinx-doc.org/" target="_blank" rel="noopener noreferrer">Sphinx</a>.
+      </div>
+      
+        <div>
+          <a href="https://github.com/django-by-kelsoncm/django-auth-suap" target="_blank" rel="noopener noreferrer">Ver código no GitHub</a>
+        </div>
+      
+    </div>
+  </footer>
+</div> 
+
+  </body>
+</html>

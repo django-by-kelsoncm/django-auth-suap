@@ -5,25 +5,21 @@
 <html lang="pt-BR" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Buscar &#8212; Documentação django-suap-auth 1.2.0</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Processo de Lançamento &#8212; Documentação django-suap-auth 1.2.0</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=29da98fa" />
     <link rel="stylesheet" type="text/css" href="_static/css/colors.css?v=c15837ed" />
     <link rel="stylesheet" type="text/css" href="_static/css/base.css?v=5e993626" />
-    
     <script src="_static/documentation_options.js?v=253ccc8f"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js?v=d5b7f521"></script>
     <script src="_static/translations.js?v=71a39b36"></script>
-    <script src="_static/searchtools.js"></script>
-    <script src="_static/language_data.js"></script>
     <link rel="index" title="Índice" href="genindex.html" />
-    <link rel="search" title="Buscar" href="#" />
-    <script src="searchindex.js" defer="defer"></script>
-    <meta name="robots" content="noindex" />
-    
+    <link rel="search" title="Buscar" href="search.html" />
+    <link rel="prev" title="Desenvolvimento" href="development.html" />
    
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -63,7 +59,6 @@
     }
   </style>
 
-
   </head><body>
 <div class="django-site-wrapper">
   
@@ -85,7 +80,7 @@
 
       
       <div class="django-header-tools">
-        <form action="#" method="get" class="django-header-search">
+        <form action="search.html" method="get" class="django-header-search">
           <input type="text" name="q" placeholder="Buscar..." aria-label="Buscar na documentação" required />
           <input type="hidden" name="check_keywords" value="yes" />
           <input type="hidden" name="area" value="default" />
@@ -124,8 +119,11 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="Índice Geral"
              accesskey="I">índice</a></li>
+        <li class="right" >
+          <a href="development.html" title="Desenvolvimento"
+             accesskey="P">anterior</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">Documentação django-suap-auth 1.2.0</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Buscar</a></li> 
+        <li class="nav-item nav-item-this"><a href="">Processo de Lançamento</a></li> 
       </ul>
     </div>
   
@@ -133,33 +131,30 @@
     
     <main class="django-content" role="main">
       
-  <h1 id="search-documentation">Buscar</h1>
-  
-  <noscript>
-  <div class="admonition warning">
-  <p>
-    Por favor, ativar JavaScript para habilitar a
-funcionalidade de busca.
-  </p>
-  </div>
-  </noscript>
-  
-  
-  <p>
-    Pesquisando por várias palavras só mostra correspondências
-que contêm todas as palavras.
-  </p>
-  
-  
-  <form action="" method="get">
-    <input type="text" name="q" aria-labelledby="search-documentation" value="" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-    <input type="submit" value="buscar" />
-    <span id="search-progress" style="padding-left: 10px"></span>
-  </form>
-  
-  
-  <div id="search-results"></div>
-  
+  <article class="django-page">
+    <section id="processo-de-lancamento">
+<h1>Processo de Lançamento<a class="headerlink" href="#processo-de-lancamento" title="Link para este cabeçalho">¶</a></h1>
+<section id="versionamento">
+<h2>Versionamento<a class="headerlink" href="#versionamento" title="Link para este cabeçalho">¶</a></h2>
+<p>Este projeto segue <a class="reference external" href="https://semver.org/">Versionamento Semântico</a>.</p>
+</section>
+<section id="etapas">
+<h2>Etapas<a class="headerlink" href="#etapas" title="Link para este cabeçalho">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Atualizar <code class="docutils literal notranslate"><span class="pre">version</span></code> em <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code></p></li>
+<li><p>Atualizar o changelog</p></li>
+<li><p>Criar uma tag git: <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">tag</span> <span class="pre">v1.2.0</span></code></p></li>
+<li><p>Enviar a tag: <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">push</span> <span class="pre">origin</span> <span class="pre">v1.2.0</span></code></p></li>
+<li><p>O workflow <code class="docutils literal notranslate"><span class="pre">publish.yml</span></code> do GitHub Actions publicará automaticamente no PyPI via Trusted Publisher</p></li>
+</ol>
+</section>
+<section id="trusted-publisher">
+<h2>Trusted Publisher<a class="headerlink" href="#trusted-publisher" title="Link para este cabeçalho">¶</a></h2>
+<p>A publicação no PyPI usa <a class="reference external" href="https://docs.pypi.org/trusted-publishers/">Trusted Publisher</a> do GitHub Actions — nenhum segredo necessário.</p>
+</section>
+</section>
+
+  </article>
 
     </main>
 
@@ -177,8 +172,11 @@ que contêm todas as palavras.
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="Índice Geral"
              >índice</a></li>
+        <li class="right" >
+          <a href="development.html" title="Desenvolvimento"
+             >anterior</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">Documentação django-suap-auth 1.2.0</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Buscar</a></li> 
+        <li class="nav-item nav-item-this"><a href="">Processo de Lançamento</a></li> 
       </ul>
     </div>
   

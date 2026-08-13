@@ -1,0 +1,162 @@
+/* 
+ * django_docs_theme - Variáveis CSS Oficiais
+ * Inspirado fielmente na paleta de cores e tipografia da documentação oficial do Django (docs.djangoproject.com)
+ */
+
+/* Importação da fonte oficial Roboto do Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap');
+
+:root {
+  /* Cores Principais do Django (Oficiais) */
+  --django-primary: #0c4b33;          /* Deep Django Green */
+  --django-secondary: #44b78b;        /* Light Django Green */
+  --django-dark-green: #092e20;       /* Dark Banner Background */
+  --django-accent: #f8f9fa;           /* Off-white background */
+  
+  /* Texto e Tipografia */
+  --django-text: #2b2b2b;             /* Cor do texto principal */
+  --django-text-muted: #555555;       /* Cor de metadados / subtítulos */
+  --django-bg: #ffffff;               /* Fundo principal da página */
+  --django-sidebar-bg: #f8f9fa;       /* Fundo do menu lateral */
+  --django-border: #e2e8f0;           /* Divisores e bordas */
+  
+  /* Código e Sintaxe */
+  --django-code-bg: #f8f9fa;          /* Fundo dos blocos de código */
+  --django-code-text: #24292e;        /* Cor do texto em código */
+  --django-code-border: #e1e4e8;      /* Borda dos blocos de código */
+  --django-inline-code-bg: #eef6f3;   /* Fundo de código inline */
+  --django-inline-code-text: #0c4b33; /* Texto de código inline */
+  
+  /* Links */
+  --django-link: #0c4b33;             /* Cor padrão dos links */
+  --django-link-hover: #44b78b;       /* Cor dos links no hover */
+  
+  /* Header, Banner e Footer */
+  --django-header-bg: #0c4b33;        /* Cabeçalho principal */
+  --django-header-text: #ffffff;
+  --django-sub-header-bg: #092e20;    /* Banner secundário (copy-banner) */
+  --django-sub-header-text: #ffffff;
+  --django-footer-bg: #0c4b33;
+  --django-footer-text: #ffffff;
+  
+  /* Admonitions / Callouts (Estilo Oficial Django) */
+  --admonition-note-bg: #eef6f3;
+  --admonition-note-border: #0c4b33;
+  --admonition-note-text: #0c4b33;
+  
+  --admonition-warning-bg: #fff8e6;
+  --admonition-warning-border: #f59e0b;
+  --admonition-warning-text: #92400e;
+  
+  --admonition-danger-bg: #fef2f2;
+  --admonition-danger-border: #ef4444;
+  --admonition-danger-text: #991b1b;
+  
+  --admonition-tip-bg: #f0fdf4;
+  --admonition-tip-border: #10b981;
+  --admonition-tip-text: #065f46;
+
+  /* Fontes Oficiais */
+  --font-sans: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+}
+
+/* Modo Escuro (Dark Mode) - Usando alta especificidade html[data-theme="dark"] para se sobrepor a :root inline */
+html[data-theme="dark"] {
+  --django-primary: #44b78b;
+  --django-secondary: #34d399;
+  --django-dark-green: #062318;
+  --django-accent: #1e293b;
+  
+  --django-text: #e2e8f0;
+  --django-text-muted: #94a3b8;
+  --django-bg: #0f172a;
+  --django-sidebar-bg: #1e293b;
+  --django-border: #334155;
+  
+  --django-code-bg: #1e293b;
+  --django-code-text: #f8fafc;
+  --django-code-border: #334155;
+  --django-inline-code-bg: #11382b;
+  --django-inline-code-text: #6ee7b7;
+  
+  --django-link: #44b78b;
+  --django-link-hover: #6ee7b7;
+  
+  --django-header-bg: #062318;
+  --django-header-text: #ffffff;
+  --django-sub-header-bg: #041810;
+  --django-sub-header-text: #e2e8f0;
+  --django-footer-bg: #062318;
+  --django-footer-text: #cbd5e1;
+
+  --admonition-note-bg: #064e3b;
+  --admonition-note-border: #34d399;
+  --admonition-note-text: #ecfdf5;
+  
+  --admonition-warning-bg: #451a03;
+  --admonition-warning-border: #fbbf24;
+  --admonition-warning-text: #fffbeb;
+  
+  --admonition-danger-bg: #450a0a;
+  --admonition-danger-border: #f87171;
+  --admonition-danger-text: #fef2f2;
+  
+  --admonition-tip-bg: #064e3b;
+  --admonition-tip-border: #34d399;
+  --admonition-tip-text: #ecfdf5;
+}
+
+/* Estilos de realce de código Pygments para Dark Mode */
+html[data-theme="dark"] div.highlight {
+  background-color: #1e293b !important;
+  color: #f8fafc !important;
+  border-color: #334155 !important;
+}
+
+html[data-theme="dark"] div.highlight pre {
+  color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .highlight .k,
+html[data-theme="dark"] .highlight .kn,
+html[data-theme="dark"] .highlight .kp,
+html[data-theme="dark"] .highlight .kr,
+html[data-theme="dark"] .highlight .kd { color: #f472b6 !important; font-weight: bold; } /* Keywords */
+
+html[data-theme="dark"] .highlight .s,
+html[data-theme="dark"] .highlight .sa,
+html[data-theme="dark"] .highlight .sb,
+html[data-theme="dark"] .highlight .sc,
+html[data-theme="dark"] .highlight .dl,
+html[data-theme="dark"] .highlight .sd,
+html[data-theme="dark"] .highlight .s2,
+html[data-theme="dark"] .highlight .se,
+html[data-theme="dark"] .highlight .sh,
+html[data-theme="dark"] .highlight .si,
+html[data-theme="dark"] .highlight .sx,
+html[data-theme="dark"] .highlight .sr,
+html[data-theme="dark"] .highlight .s1,
+html[data-theme="dark"] .highlight .ss { color: #34d399 !important; } /* Strings */
+
+html[data-theme="dark"] .highlight .c,
+html[data-theme="dark"] .highlight .ch,
+html[data-theme="dark"] .highlight .cm,
+html[data-theme="dark"] .highlight .cp,
+html[data-theme="dark"] .highlight .cpf,
+html[data-theme="dark"] .highlight .c1,
+html[data-theme="dark"] .highlight .cs { color: #94a3b8 !important; font-style: italic; } /* Comments */
+
+html[data-theme="dark"] .highlight .nf,
+html[data-theme="dark"] .highlight .fm { color: #60a5fa !important; } /* Functions */
+
+html[data-theme="dark"] .highlight .nn,
+html[data-theme="dark"] .highlight .nc { color: #f59e0b !important; } /* Classes/Modules */
+
+html[data-theme="dark"] .highlight .m,
+html[data-theme="dark"] .highlight .mb,
+html[data-theme="dark"] .highlight .mf,
+html[data-theme="dark"] .highlight .mh,
+html[data-theme="dark"] .highlight .mi,
+html[data-theme="dark"] .highlight .il,
+html[data-theme="dark"] .highlight .mo { color: #a78bfa !important; } /* Numbers */

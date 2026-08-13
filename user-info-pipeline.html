@@ -1,0 +1,316 @@
+
+<!DOCTYPE html>
+
+
+<html lang="pt-BR" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Pipeline de Busca e Mapeamento do Perfil do Usuário &#8212; Documentação django-suap-auth 1.2.0</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=29da98fa" />
+    <link rel="stylesheet" type="text/css" href="_static/css/colors.css?v=c15837ed" />
+    <link rel="stylesheet" type="text/css" href="_static/css/base.css?v=5e993626" />
+    <script src="_static/documentation_options.js?v=253ccc8f"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/js/theme.js?v=d5b7f521"></script>
+    <script src="_static/translations.js?v=71a39b36"></script>
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Buscar" href="search.html" />
+    <link rel="next" title="Fetchers (Busca de Dados de Usuário)" href="fetchers.html" />
+    <link rel="prev" title="Mapeamento de Atributos do SUAP para o Django User Model" href="attribute-mapping.html" />
+   
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  
+  <script>
+    (function() {
+      try {
+        var storedTheme = localStorage.getItem('django-theme');
+        var systemPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = storedTheme || (systemPrefersDark ? 'dark' : 'light');
+        if (theme === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+          document.documentElement.removeAttribute('data-theme');
+        }
+      } catch (e) {}
+    })();
+  </script>
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+
+  
+  <style>
+    :root {
+      --django-primary: #0c4b33; --django-header-bg: #0c4b33; --django-footer-bg: #0c4b33; --django-link: #0c4b33;
+      --django-secondary: #44b78b; --django-link-hover: #44b78b;
+      --django-accent: #f8f9fa;
+      --django-text: #2b2b2b;
+      --django-bg: #ffffff;
+      --django-code-bg: #f8f9fa;
+      --django-link: #0c4b33;
+      --django-link-hover: #44b78b;
+      --django-sidebar-bg: #f8f9fa;
+    }
+  </style>
+
+  </head><body>
+<div class="django-site-wrapper">
+  
+  <header class="django-header">
+    <div class="django-header-inner">
+      
+      <div class="django-brand-group">
+        <a href="index.html" class="django-brand">
+          
+            <span class="django-brand-title">
+              django-suap-auth
+            </span>
+          
+        </a>
+        <span class="django-tagline">
+          Backend de autenticação OAuth2 do Django para SUAP
+        </span>
+      </div>
+
+      
+      <div class="django-header-tools">
+        <form action="search.html" method="get" class="django-header-search">
+          <input type="text" name="q" placeholder="Buscar..." aria-label="Buscar na documentação" required />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+          <button type="submit" title="Buscar">🔍</button>
+        </form>
+
+        
+          <button id="theme-toggle" class="theme-toggle-btn" aria-label="Alternar modo claro/escuro" title="Alternar modo claro/escuro">
+            <span id="theme-toggle-icon">🌙</span>
+          </button>
+        
+      </div>
+    </div>
+  </header>
+
+  
+  <section class="django-sub-header">
+    <div class="django-sub-header-inner">
+      <div class="django-sub-header-title">
+        <span>Documentação</span>
+        
+          <span class="django-version-badge">v1.2.0</span>
+        
+      </div>
+      <div>
+        
+          <a href="https://github.com/django-by-kelsoncm/django-auth-suap" style="color: rgba(255, 255, 255, 0.85); font-size: 0.85rem;" target="_blank" rel="noopener noreferrer">Repositório no GitHub ↗</a>
+        
+      </div>
+    </div>
+  </section>
+
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navegação</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Índice Geral"
+             accesskey="I">índice</a></li>
+        <li class="right" >
+          <a href="fetchers.html" title="Fetchers (Busca de Dados de Usuário)"
+             accesskey="N">próximo</a> |</li>
+        <li class="right" >
+          <a href="attribute-mapping.html" title="Mapeamento de Atributos do SUAP para o Django User Model"
+             accesskey="P">anterior</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Documentação django-suap-auth 1.2.0</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Pipeline de Busca e Mapeamento do Perfil do Usuário</a></li> 
+      </ul>
+    </div>
+  
+  <div class="django-main-container">
+    
+    <main class="django-content" role="main">
+      
+  <article class="django-page">
+    <section id="pipeline-de-busca-e-mapeamento-do-perfil-do-usuario">
+<h1>Pipeline de Busca e Mapeamento do Perfil do Usuário<a class="headerlink" href="#pipeline-de-busca-e-mapeamento-do-perfil-do-usuario" title="Link para este cabeçalho">¶</a></h1>
+<p>O <code class="docutils literal notranslate"><span class="pre">django-suap-auth</span></code> utiliza o padrão de projeto <strong>Chain of Responsibility (Cadeia de Responsabilidade)</strong> para os subsistemas de busca de dados (<code class="docutils literal notranslate"><span class="pre">USER_INFO_FETCHERS</span></code>) e mapeamento de atributos (<code class="docutils literal notranslate"><span class="pre">USER_INFO_MAPPERS</span></code>).</p>
+<section id="arquitetura-geral">
+<h2>Arquitetura Geral<a class="headerlink" href="#arquitetura-geral" title="Link para este cabeçalho">¶</a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>1. OAuth2 Code Swap ──&gt; Access Token
+                             │
+                             ▼
+2. USER_INFO_FETCHERS Chain ──&gt; Dicionário user_info acumulado
+                             │
+                             ▼
+3. USER_INFO_MAPPERS Chain  ──&gt; Dicionário attrs para o Django Model
+                             │
+                             ▼
+4. User Model (get_or_create) ──&gt; Usuário Autenticado
+</pre></div>
+</div>
+</section>
+<section id="cadeia-de-busca-de-dados-user-info-fetchers">
+<h2>1. Cadeia de Busca de Dados (<code class="docutils literal notranslate"><span class="pre">USER_INFO_FETCHERS</span></code>)<a class="headerlink" href="#cadeia-de-busca-de-dados-user-info-fetchers" title="Link para este cabeçalho">¶</a></h2>
+<p>O SUAP possui múltiplos endpoints de API (<code class="docutils literal notranslate"><span class="pre">/api/rh/eu/</span></code>, <code class="docutils literal notranslate"><span class="pre">/api/rh/meus-dados/</span></code>, <code class="docutils literal notranslate"><span class="pre">/api/rh/meus-vinculos/</span></code>). A cadeia de fetchers é responsável por consultar esses endpoints e mesclar as informações em um único dicionário <code class="docutils literal notranslate"><span class="pre">user_info</span></code>.</p>
+<section id="elo-padrao-defaultendpointsuserinfofetcher">
+<h3>Elo Padrão: <code class="docutils literal notranslate"><span class="pre">DefaultEndpointsUserInfoFetcher</span></code><a class="headerlink" href="#elo-padrao-defaultendpointsuserinfofetcher" title="Link para este cabeçalho">¶</a></h3>
+<p>Consome a lista <code class="docutils literal notranslate"><span class="pre">USER_INFO_ENDPOINTS</span></code> do <code class="docutils literal notranslate"><span class="pre">settings.py</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SUAP_AUTH</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1"># Lista de endpoints do SUAP a serem consultados e mesclados</span>
+    <span class="s2">&quot;USER_INFO_ENDPOINTS&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;/api/rh/eu/&quot;</span><span class="p">,</span>          <span class="c1"># Dados básicos na raiz do dict</span>
+        <span class="s2">&quot;/api/rh/meus-dados/&quot;</span><span class="p">,</span>  <span class="c1"># Mescla rg, filiação, vinculo.cargo, etc.</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;endpoint&quot;</span><span class="p">:</span> <span class="s2">&quot;/api/rh/meus-vinculos/&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;namespace&quot;</span><span class="p">:</span> <span class="s2">&quot;vinculos&quot;</span><span class="p">,</span>   <span class="c1"># Injeta sob user_info[&#39;vinculos&#39;]</span>
+            <span class="s2">&quot;extract_list&quot;</span><span class="p">:</span> <span class="s2">&quot;results&quot;</span><span class="p">,</span> <span class="c1"># Extrai a lista do campo paginado &#39;results&#39;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;endpoint&quot;</span><span class="p">:</span> <span class="s2">&quot;/api/rh/meu-vinculo/</span><span class="si">{id}</span><span class="s2">/&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;namespace&quot;</span><span class="p">:</span> <span class="s2">&quot;detalhes_vinculos&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;for_each&quot;</span><span class="p">:</span> <span class="s2">&quot;vinculos&quot;</span><span class="p">,</span>    <span class="c1"># Itera sobre cada item em user_info[&#39;vinculos&#39;]</span>
+        <span class="p">},</span>
+    <span class="p">],</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="criando-um-fetcher-customizado-para-fontes-externas">
+<h3>Criando um Fetcher Customizado para Fontes Externas<a class="headerlink" href="#criando-um-fetcher-customizado-para-fontes-externas" title="Link para este cabeçalho">¶</a></h3>
+<p>Você pode adicionar elos à cadeia <code class="docutils literal notranslate"><span class="pre">USER_INFO_FETCHERS</span></code> para consultar sistemas de RH internos, LDAP ou bancos corporativos:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># meu_app/fetchers.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django_suap_auth.fetchers</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseUserInfoFetcher</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ExternalLdapUserInfoFetcher</span><span class="p">(</span><span class="n">BaseUserInfoFetcher</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fetch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">access_token</span><span class="p">,</span> <span class="n">user_info</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">user_info</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">access_token</span><span class="p">,</span> <span class="n">user_info</span><span class="p">)</span>
+
+        <span class="n">cpf</span> <span class="o">=</span> <span class="n">user_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;cpf&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cpf</span><span class="p">:</span>
+            <span class="c1"># Enriquece o dicionário com dados de outra fonte</span>
+            <span class="n">user_info</span><span class="p">[</span><span class="s2">&quot;ldap&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">meu_servico_ldap</span><span class="o">.</span><span class="n">buscar_por_cpf</span><span class="p">(</span><span class="n">cpf</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">user_info</span>
+</pre></div>
+</div>
+<p>Configuração no <code class="docutils literal notranslate"><span class="pre">settings.py</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SUAP_AUTH</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;USER_INFO_FETCHERS&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;django_suap_auth.fetchers.DefaultEndpointsUserInfoFetcher&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;meu_app.fetchers.ExternalLdapUserInfoFetcher&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="cadeia-de-mapeamento-user-info-mappers">
+<h2>2. Cadeia de Mapeamento (<code class="docutils literal notranslate"><span class="pre">USER_INFO_MAPPERS</span></code>)<a class="headerlink" href="#cadeia-de-mapeamento-user-info-mappers" title="Link para este cabeçalho">¶</a></h2>
+<p>Após a busca, a cadeia de mappers recebe o <code class="docutils literal notranslate"><span class="pre">user_info</span></code> unificado e constrói os atributos do modelo de usuário do Django.</p>
+<section id="elo-padrao-defaultattrmapusermapper">
+<h3>Elo Padrão: <code class="docutils literal notranslate"><span class="pre">DefaultAttrMapUserMapper</span></code><a class="headerlink" href="#elo-padrao-defaultattrmapusermapper" title="Link para este cabeçalho">¶</a></h3>
+<p>Aplica as regras configuradas no <code class="docutils literal notranslate"><span class="pre">USER_ATTR_MAP</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SUAP_AUTH</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;USER_INFO_MAPPERS&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;django_suap_auth.mappers.DefaultAttrMapUserMapper&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;USER_ATTR_MAP&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="s2">&quot;identificacao&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="s2">&quot;email&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;rg&quot;</span><span class="p">:</span> <span class="s2">&quot;rg&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;cargo&quot;</span><span class="p">:</span> <span class="s2">&quot;vinculo.cargo&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;foto&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;url_foto_75x100&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;transform&quot;</span><span class="p">:</span> <span class="s2">&quot;django_suap_auth.transformers.fetch_image_file&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;is_servidor&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">info</span><span class="p">:</span> <span class="nb">any</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;tipo&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;servidor&quot;</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;vinculos&quot;</span><span class="p">,</span> <span class="p">[])),</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="criando-um-mapper-customizado">
+<h3>Criando um Mapper Customizado<a class="headerlink" href="#criando-um-mapper-customizado" title="Link para este cabeçalho">¶</a></h3>
+<p>Para adicionar lógica complexa ou manipular o modelo de usuário diretamente:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># meu_app/mappers.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django_suap_auth.mappers</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseUserMapper</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ProfileUserMapper</span><span class="p">(</span><span class="n">BaseUserMapper</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">map_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_info</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">attrs</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">map_attributes</span><span class="p">(</span><span class="n">user_info</span><span class="p">,</span> <span class="n">attrs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">user_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ldap&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;is_admin&quot;</span><span class="p">):</span>
+            <span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;is_staff&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="n">attrs</span>
+</pre></div>
+</div>
+<p>Configuração no <code class="docutils literal notranslate"><span class="pre">settings.py</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SUAP_AUTH</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;USER_INFO_MAPPERS&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;django_suap_auth.mappers.DefaultAttrMapUserMapper&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;meu_app.mappers.ProfileUserMapper&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+  </article>
+
+    </main>
+
+    
+    
+      <aside class="django-sidebar" id="django-sidebar" role="navigation" aria-label="Navegação Principal">
+        
+      </aside>
+    
+  </div>
+
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navegação</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Índice Geral"
+             >índice</a></li>
+        <li class="right" >
+          <a href="fetchers.html" title="Fetchers (Busca de Dados de Usuário)"
+             >próximo</a> |</li>
+        <li class="right" >
+          <a href="attribute-mapping.html" title="Mapeamento de Atributos do SUAP para o Django User Model"
+             >anterior</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Documentação django-suap-auth 1.2.0</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Pipeline de Busca e Mapeamento do Perfil do Usuário</a></li> 
+      </ul>
+    </div>
+  
+  <footer class="django-footer" role="contentinfo">
+    <div class="django-footer-inner">
+      <div>
+        
+          &copy; 2026, Kelson C. Medeiros.
+        
+        
+      </div>
+      <div>
+        Desenvolvido com inspiração na documentação oficial do
+        <a href="https://docs.djangoproject.com/" target="_blank" rel="noopener noreferrer">Django</a> &amp;
+        <a href="https://www.sphinx-doc.org/" target="_blank" rel="noopener noreferrer">Sphinx</a>.
+      </div>
+      
+        <div>
+          <a href="https://github.com/django-by-kelsoncm/django-auth-suap" target="_blank" rel="noopener noreferrer">Ver código no GitHub</a>
+        </div>
+      
+    </div>
+  </footer>
+</div> 
+
+  </body>
+</html>
