@@ -1,11 +1,12 @@
 from unittest.mock import MagicMock, patch
+
 import pytest
 import responses
 from django.contrib.auth import get_user_model
 
 from django_suap_auth.backends import SuapAuthBackend, _filter_fields
-from django_suap_auth.client import SuapOAuth2Client, SuapUserInfoError
-from django_suap_auth.exceptions import SuapUserNotAllowedError, SuapTokenError
+from django_suap_auth.client import SuapOAuth2Client
+from django_suap_auth.exceptions import SuapUserNotAllowedError
 from django_suap_auth.fetchers import (
     BaseUserInfoFetcher,
     DefaultEndpointsUserInfoFetcher,
@@ -335,11 +336,12 @@ def test_callback_view_token_exchange_generic_exception(mock_get_client, client)
 
 @pytest.mark.django_db
 @patch("django_suap_auth.views.get_oauth2_client")
-def test_callback_view_handles_user_not_allowed_error(mock_get_client, client):
+@patch("django_suap_auth.views.authenticate")
+def test_callback_view_handles_user_not_allowed_error(mock_auth, mock_get_client, client):
     mock_oauth = MagicMock()
     mock_oauth.exchange_code_for_token.return_value = {"access_token": "tok"}
-    mock_oauth.get_user_info.side_effect = SuapUserNotAllowedError("User not allowed")
     mock_get_client.return_value = mock_oauth
+    mock_auth.side_effect = SuapUserNotAllowedError("User not allowed")
 
     session = client.session
     session["suap_oauth2_state"] = "valid-state"
@@ -348,6 +350,30 @@ def test_callback_view_handles_user_not_allowed_error(mock_get_client, client):
     response = client.get("/auth/suap/callback/?code=code&state=valid-state")
     assert response.status_code == 302
     assert response["Location"] == "/login/"
+
+
+def test_fetcher_dict_spec_without_namespace_dict_store():
+    mock_client = MagicMock()
+    mock_client.get_endpoint_data.side_effect = lambda token, path: {
+        "/api/rh/eu/": {"identificacao": "2080882"},
+        "/api/rh/detalhes/": {"cargo": "Professor", "campus": "CNAT"},
+    }.get(path, {})
+
+    cfg = {
+        "user_info_endpoints": [
+            "/api/rh/eu/",
+            {
+                "endpoint": "/api/rh/detalhes/",
+            },
+        ]
+    }
+
+    fetcher = DefaultEndpointsUserInfoFetcher(suap_settings=cfg)
+    result = fetcher.fetch(mock_client, "fake-token")
+
+    assert result["identificacao"] == "2080882"
+    assert result["cargo"] == "Professor"
+    assert result["campus"] == "CNAT"
 
 
 @pytest.mark.django_db
