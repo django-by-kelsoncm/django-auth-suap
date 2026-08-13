@@ -36,6 +36,7 @@ html_theme_options = {
     "doc_path": "docs/",
     "show_edit_on_github": True,
     "enable_dark_mode": True,
+    "navigation_links": "Início|index.html, Instalação|installation.html, Configuração|configuration.html, Escopos|scopes.html, Mapeamento|attribute-mapping.html, Pipeline|user-info-pipeline.html, GitHub|https://github.com/django-by-kelsoncm/django-auth-suap",
 }
 
 html_static_path = ["_static"]
