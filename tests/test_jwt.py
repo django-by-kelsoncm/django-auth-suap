@@ -374,6 +374,78 @@ def test_token_verify_method_not_allowed(client):
 
 
 # ---------------------------------------------------------------------------
+# SuapUserInfoFetchView tests
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.django_db
+@patch.object(SuapOAuth2Client, "get_endpoint_data")
+def test_user_info_fetch_success_bearer_header(mock_get_data, client):
+    mock_get_data.return_value = {"identificacao": "2080882", "email": "kelson@ifrn.edu.br"}
+
+    response = client.get(
+        "/api/rh/eu/",
+        HTTP_AUTHORIZATION="Bearer valid_jwt_access_token",
+    )
+    assert response.status_code == 200
+    assert response.json()["identificacao"] == "2080882"
+    mock_get_data.assert_called_once_with("valid_jwt_access_token", "/api/rh/eu/")
+
+
+@pytest.mark.django_db
+@patch.object(SuapOAuth2Client, "get_endpoint_data")
+def test_user_info_fetch_success_json_body(mock_get_data, client):
+    mock_get_data.return_value = {"identificacao": "2080882", "email": "kelson@ifrn.edu.br"}
+
+    response = client.post(
+        "/api/token/user-info/",
+        data=json.dumps({"token": "jwt_token_123", "endpoint": "/api/rh/eu/"}),
+        content_type="application/json",
+    )
+    assert response.status_code == 200
+    assert response.json()["identificacao"] == "2080882"
+    mock_get_data.assert_called_once_with("jwt_token_123", "/api/rh/eu/")
+
+
+@pytest.mark.django_db
+def test_user_info_fetch_missing_token(client):
+    response = client.get("/api/rh/eu/")
+    assert response.status_code == 400
+    assert "token" in response.json()
+
+
+@pytest.mark.django_db
+def test_user_info_fetch_method_not_allowed(client):
+    response = client.delete("/api/rh/eu/")
+    assert response.status_code == 405
+
+
+@pytest.mark.django_db
+def test_user_info_fetch_invalid_json(client):
+    response = client.post("/api/rh/eu/", data="invalid-json-body", content_type="application/json")
+    assert response.status_code == 400
+    assert "Invalid JSON" in response.json().get("detail", "")
+
+
+@pytest.mark.django_db
+@patch.object(SuapOAuth2Client, "get_endpoint_data")
+def test_user_info_fetch_query_params(mock_get_data, client):
+    mock_get_data.return_value = {"dados": "ok"}
+    response = client.get("/api/rh/eu/?token=query_tok&endpoint=/api/rh/meus-dados/")
+    assert response.status_code == 200
+    mock_get_data.assert_called_once_with("query_tok", "/api/rh/meus-dados/")
+
+
+@pytest.mark.django_db
+@patch.object(SuapOAuth2Client, "get_endpoint_data")
+def test_user_info_fetch_exception(mock_get_data, client):
+    mock_get_data.side_effect = Exception("SUAP request failed")
+    response = client.get("/api/rh/eu/", HTTP_AUTHORIZATION="Bearer valid_token")
+    assert response.status_code == 400
+    assert response.json() == {"detail": "SUAP request failed"}
+
+
+# ---------------------------------------------------------------------------
 # URL reversing and view aliases tests
 # ---------------------------------------------------------------------------
 

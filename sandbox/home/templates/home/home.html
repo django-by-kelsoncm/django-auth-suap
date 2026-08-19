@@ -37,6 +37,178 @@
       <li>O pacote valida o <code>state</code>, troca o código pelo token, busca o perfil e cria/atualiza a instância de <code>Perfil</code> do <code>django_suap_auth.profile</code>.</li>
       <li>Você é redirecionado para <code>/dashboard/</code> já autenticado.</li>
     </ol>
+
+    <hr class="mt-4">
+
+    <!-- Seção: Teste da Autenticação JWT -->
+    <div class="card border-dark text-start mb-4 shadow-sm">
+      <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+        <h5 class="card-title mb-0">🔐 Exemplo de Autenticação JWT (SUAP)</h5>
+        <span class="badge bg-secondary">/api/token/*</span>
+      </div>
+      <div class="card-body">
+        <p class="card-text text-muted small">
+          Teste os endpoints nativos de JWT disponibilizados pela rota <code>django_suap_auth.jwt_urls</code>.
+        </p>
+
+        <!-- Abas do JWT -->
+        <ul class="nav nav-tabs mb-3" id="jwtTab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="pair-tab" data-bs-toggle="tab" data-bs-target="#pair-pane" type="button" role="tab">1. Obter Pair Token</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="refresh-tab" data-bs-toggle="tab" data-bs-target="#refresh-pane" type="button" role="tab">2. Renovar Token</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="verify-tab" data-bs-toggle="tab" data-bs-target="#verify-pane" type="button" role="tab">3. Verificar Token</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="fetch-tab" data-bs-toggle="tab" data-bs-target="#fetch-pane" type="button" role="tab">4. Consumir API com Token</button>
+          </li>
+        </ul>
+
+        <div class="tab-content" id="jwtTabContent">
+          <!-- 1. Obter Token Pair -->
+          <div class="tab-pane fade show active" id="pair-pane" role="tabpanel">
+            <form id="jwt-pair-form" onsubmit="event.preventDefault(); handleJwtPair();">
+              <div class="row g-2 mb-3">
+                <div class="col-md-6">
+                  <label for="jwt-user" class="form-label small fw-bold">Usuário (Matrícula/CPF SUAP)</label>
+                  <input type="text" id="jwt-user" class="form-control" placeholder="ex: 201521510470063" required>
+                </div>
+                <div class="col-md-6">
+                  <label for="jwt-pass" class="form-label small fw-bold">Senha SUAP</label>
+                  <input type="password" id="jwt-pass" class="form-control" placeholder="Senha de acesso ao SUAP" required>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-dark btn-sm">POST /api/token/pair/</button>
+            </form>
+          </div>
+
+          <!-- 2. Renovar Token -->
+          <div class="tab-pane fade" id="refresh-pane" role="tabpanel">
+            <form id="jwt-refresh-form" onsubmit="event.preventDefault(); handleJwtRefresh();">
+              <div class="mb-3">
+                <label for="jwt-refresh-token" class="form-label small fw-bold">Refresh Token</label>
+                <textarea id="jwt-refresh-token" class="form-control font-monospace small" rows="2" placeholder="Cole aqui o refresh token..." required></textarea>
+              </div>
+              <button type="submit" class="btn btn-secondary btn-sm">POST /api/token/refresh/</button>
+            </form>
+          </div>
+
+          <!-- 3. Verificar Token -->
+          <div class="tab-pane fade" id="verify-pane" role="tabpanel">
+            <form id="jwt-verify-form" onsubmit="event.preventDefault(); handleJwtVerify();">
+              <div class="mb-3">
+                <label for="jwt-verify-token" class="form-label small fw-bold">Token (Access ou Refresh)</label>
+                <textarea id="jwt-verify-token" class="form-control font-monospace small" rows="2" placeholder="Cole aqui o token para verificação..." required></textarea>
+              </div>
+              <button type="submit" class="btn btn-info text-white btn-sm">POST /api/token/verify/</button>
+            </form>
+          </div>
+
+          <!-- 4. Consumir API com Token -->
+          <div class="tab-pane fade" id="fetch-pane" role="tabpanel">
+            <form id="jwt-fetch-form" onsubmit="event.preventDefault(); handleJwtFetchData();">
+              <div class="mb-2">
+                <label for="jwt-access-token" class="form-label small fw-bold">Access Token JWT</label>
+                <textarea id="jwt-access-token" class="form-control font-monospace small" rows="2" placeholder="Cole aqui o access token retornado..." required></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="jwt-api-endpoint" class="form-label small fw-bold">Endpoint SUAP</label>
+                <input type="text" id="jwt-api-endpoint" class="form-control font-monospace small" value="/api/rh/eu/" placeholder="/api/rh/eu/ ou /api/rh/meus-dados/" required>
+              </div>
+              <button type="submit" class="btn btn-success btn-sm">Buscar Dados com Token (GET /api/rh/eu/)</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Área de Resultado do Teste JWT -->
+        <div id="jwt-result-container" class="mt-4 d-none">
+          <div class="d-flex justify-content-between align-items-center mb-1">
+            <span class="small fw-bold text-muted">Resposta do Servidor:</span>
+            <span id="jwt-status-badge" class="badge bg-secondary">HTTP 200</span>
+          </div>
+          <pre id="jwt-result-output" class="bg-light p-3 border rounded text-dark overflow-auto mb-0" style="max-height: 250px; font-size: 0.85rem;"></pre>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      async function sendJwtRequest(url, payload, customHeaders = {}) {
+        const resultContainer = document.getElementById('jwt-result-container');
+        const statusBadge = document.getElementById('jwt-status-badge');
+        const output = document.getElementById('jwt-result-output');
+
+        resultContainer.classList.remove('d-none');
+        statusBadge.className = 'badge bg-warning text-dark';
+        statusBadge.innerText = 'Enviando...';
+        output.innerText = 'Processando requisição...';
+
+        try {
+          const headers = {
+            'Content-Type': 'application/json',
+            ...customHeaders
+          };
+          const options = {
+            method: 'POST',
+            headers: headers
+          };
+          if (payload) {
+            options.body = JSON.stringify(payload);
+          }
+
+          const res = await fetch(url, options);
+          const status = res.status;
+          let data;
+          try {
+            data = await res.json();
+          } catch (e) {
+            data = await res.text();
+          }
+
+          statusBadge.innerText = `HTTP ${status}`;
+          statusBadge.className = status >= 200 && status < 300 ? 'badge bg-success' : 'badge bg-danger';
+          output.innerText = typeof data === 'object' ? JSON.stringify(data, null, 2) : data;
+
+          // Preenche automaticamente os tokens retornados nos formulários
+          if (data && data.refresh) {
+            document.getElementById('jwt-refresh-token').value = data.refresh;
+          }
+          if (data && data.access) {
+            document.getElementById('jwt-verify-token').value = data.access;
+            document.getElementById('jwt-access-token').value = data.access;
+          }
+        } catch (err) {
+          statusBadge.innerText = 'Erro de Conexão';
+          statusBadge.className = 'badge bg-danger';
+          output.innerText = String(err);
+        }
+      }
+
+      function handleJwtPair() {
+        const username = document.getElementById('jwt-user').value.trim();
+        const password = document.getElementById('jwt-pass').value;
+        sendJwtRequest('/api/token/pair/', { username, password });
+      }
+
+      function handleJwtRefresh() {
+        const refresh = document.getElementById('jwt-refresh-token').value.trim();
+        sendJwtRequest('/api/token/refresh/', { refresh });
+      }
+
+      function handleJwtVerify() {
+        const token = document.getElementById('jwt-verify-token').value.trim();
+        sendJwtRequest('/api/token/verify/', { token });
+      }
+
+      function handleJwtFetchData() {
+        const token = document.getElementById('jwt-access-token').value.trim();
+        const endpoint = document.getElementById('jwt-api-endpoint').value.trim();
+        sendJwtRequest('/api/token/user-info/', { token, endpoint }, { 'Authorization': `Bearer ${token}` });
+      }
+    </script>
+
     <div class="card mt-3 border-warning">
       <div class="card-body p-3">
         <h6 class="card-title text-warning">ℹ️ Configurações SUAP (DEBUG)</h6>

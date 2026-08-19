@@ -137,8 +137,68 @@ class SuapTokenVerifyView(BaseSuapTokenView):
         return JsonResponse(response_data, status=status_code)
 
 
+@method_decorator(csrf_exempt, name="dispatch")
+class SuapUserInfoFetchView(BaseSuapTokenView):
+    """
+    Entrypoint for fetching SUAP data with a JWT access token (/api/rh/eu/ or /api/token/user-info).
+
+    Accepts GET/POST with 'Authorization: Bearer <access_token>' header
+    OR POST with JSON payload:
+        {"token": "<access_token>", "endpoint": "/api/rh/eu/"}
+    """
+
+    http_method_names = ["get", "post", "options"]
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.method.lower() not in self.http_method_names:
+            return self.http_method_not_allowed(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
+
+    def handle_request(self, request, *args, **kwargs):
+        token = None
+        endpoint = "/api/rh/eu/"
+
+        auth_header = request.headers.get("Authorization", "")
+        if auth_header.startswith("Bearer "):
+            token = auth_header[7:].strip()
+
+        if request.body:
+            data, error_response = self.parse_json_body(request)
+            if error_response and not token:
+                return error_response
+            if isinstance(data, dict):
+                token = token or data.get("token") or data.get("access")
+                if data.get("endpoint"):
+                    endpoint = data.get("endpoint")
+
+        if not token and request.GET.get("token"):
+            token = request.GET.get("token")
+        if request.GET.get("endpoint"):
+            endpoint = request.GET.get("endpoint")
+
+        if not token:
+            return JsonResponse(
+                {"token": ["This field is required in request header (Authorization: Bearer <token>) or JSON body."]},
+                status=400,
+            )
+
+        client = self.get_client()
+        try:
+            response_data = client.get_endpoint_data(token, endpoint)
+            return JsonResponse(response_data, status=200, safe=False)
+        except Exception as exc:
+            return JsonResponse({"detail": str(exc)}, status=400)
+
+    def get(self, request, *args, **kwargs):
+        return self.handle_request(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.handle_request(request, *args, **kwargs)
+
+
 # Aliases for convenience and compatibility
 TokenObtainPairView = SuapTokenPairView
 SuapTokenObtainPairView = SuapTokenPairView
 TokenRefreshView = SuapTokenRefreshView
 TokenVerifyView = SuapTokenVerifyView
+SuapApiFetchView = SuapUserInfoFetchView

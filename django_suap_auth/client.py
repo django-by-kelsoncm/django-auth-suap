@@ -10,8 +10,8 @@ logger = logging.getLogger(__name__)
 DEFAULT_BASE_URL = "https://suap.ifrn.edu.br"
 
 AUTHORIZE_PATH = "/o/authorize/"
-TOKEN_PATH = "/o/token/"
 USER_INFO_PATH = "/api/rh/eu/"
+TOKEN_PATH = "/o/token/"
 TOKEN_PAIR_PATH = "/api/token/pair"
 TOKEN_REFRESH_PATH = "/api/token/refresh"
 TOKEN_VERIFY_PATH = "/api/token/verify"

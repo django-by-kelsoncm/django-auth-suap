@@ -11,10 +11,12 @@ from django.views import View
 from .exceptions import SuapStateMismatchError, SuapTokenError, SuapUserInfoError, SuapUserNotAllowedError
 from .jwt_views import (
     BaseSuapTokenView,
+    SuapApiFetchView,
     SuapTokenObtainPairView,
     SuapTokenPairView,
     SuapTokenRefreshView,
     SuapTokenVerifyView,
+    SuapUserInfoFetchView,
     TokenObtainPairView,
     TokenRefreshView,
     TokenVerifyView,
@@ -31,6 +33,8 @@ __all__ = [
     "SuapTokenPairView",
     "SuapTokenRefreshView",
     "SuapTokenVerifyView",
+    "SuapUserInfoFetchView",
+    "SuapApiFetchView",
     "TokenObtainPairView",
     "SuapTokenObtainPairView",
     "TokenRefreshView",

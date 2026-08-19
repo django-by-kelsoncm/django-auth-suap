@@ -147,6 +147,32 @@ Detalhes dos Endpoints
 
    {}
 
+4. Consumir Dados da API SUAP (``/api/rh/eu/`` ou ``/api/token/user-info``)
+---------------------------------------------------------------------------
+
+- **Método**: ``GET`` ou ``POST``
+- **Header**: ``Authorization: Bearer <access_token>``
+- **Corpo da requisição (opcional para POST)**:
+
+.. code-block:: json
+
+   {
+     "token": "eyJhbGciOi...",
+     "endpoint": "/api/rh/eu/"
+   }
+
+- **Resposta de Sucesso (200 OK)**:
+
+.. code-block:: json
+
+   {
+     "identificacao": "2080882",
+     "nome_usual": "Kelson Medeiros",
+     "email": "kelson.medeiros@ifrn.edu.br",
+     "campus": "ZL",
+     "tipo_usuario": "Servidor (Técnico-Administrativo)"
+   }
+
 Uso Programático via Python
 ===========================
 
@@ -160,9 +186,13 @@ Você também pode utilizar os métodos de JWT diretamente através do cliente:
 
    # Obter tokens
    status, data = client.obtain_token_pair("username", "password")
+   access_token = data.get("access")
 
    # Renovar token
    status, data = client.refresh_token("refresh_token")
 
    # Verificar token
    status, data = client.verify_token("access_token")
+
+   # Consumir dados da API com o access token JWT
+   user_info = client.get_endpoint_data(access_token, "/api/rh/eu/")
