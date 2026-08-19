@@ -98,3 +98,22 @@ def test_authenticate_with_unsupported_json_field(settings):
     user = backend.authenticate(None, suap_user_info=user_info)
     assert user is not None
     assert user.username == "20219999999"
+
+
+@pytest.mark.django_db
+def test_first_user_defaults_to_staff_and_superuser():
+    User = get_user_model()
+    User.objects.all().delete()
+    backend = SuapAuthBackend()
+    user_info = {"identificacao": "first_user", "email": "first@ifrn.edu.br"}
+    user = backend.authenticate(None, suap_user_info=user_info)
+    assert user is not None
+    assert user.is_staff is True
+    assert user.is_superuser is True
+
+    # Second user created should not get first_user_defaults
+    user2_info = {"identificacao": "second_user", "email": "second@ifrn.edu.br"}
+    user2 = backend.authenticate(None, suap_user_info=user2_info)
+    assert user2 is not None
+    assert user2.is_staff is False
+    assert user2.is_superuser is False

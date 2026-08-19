@@ -72,7 +72,7 @@ def get_suap_settings(require_oauth=True):
         "backend": suap_auth.get("BACKEND", "django_suap_auth.backends.SuapAuthBackend"),
         "create_user": suap_auth.get("CREATE_USER", True),
         "user_defaults": suap_auth.get("USER_DEFAULTS", {"is_active": True}),
-        "first_user_defaults": suap_auth.get("FIRST_USER_DEFAULTS", None),
+        "first_user_defaults": suap_auth.get("FIRST_USER_DEFAULTS", {"is_staff": True, "is_superuser": True}),
         "update_fields_on_create": suap_auth.get("UPDATE_FIELDS_ON_CREATE", None),
         "update_fields_on_login": suap_auth.get("UPDATE_FIELDS_ON_LOGIN", None),
     }

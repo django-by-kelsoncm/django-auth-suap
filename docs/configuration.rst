@@ -68,8 +68,8 @@ Opções de Configuração
      - ``{"is_active": True}``
      - Valores atribuídos ao criar um novo usuário
    * - ``FIRST_USER_DEFAULTS``
-     - ``None``
-     - Valores aplicados apenas para o primeiro usuário criado (ex: ``{"is_superuser": True, "is_staff": True}``)
+     - ``{"is_staff": True, "is_superuser": True}``
+     - Valores adicionais aplicados apenas ao primeiro usuário criado no banco de dados.
    * - ``UPDATE_FIELDS_ON_CREATE``
      - ``None``
      - Lista de campos mapeados gravados ao criar (``None`` = todos)
@@ -115,3 +115,57 @@ Exemplo Completo com Múltiplos Endpoints e Mappers
            "is_servidor": lambda info: any(v.get("tipo") == "servidor" for v in info.get("vinculos", [])),
        },
    }
+
+Controle de Criação de Usuários
+===============================
+
+Por padrão, a biblioteca cria automaticamente um usuário no Django no primeiro login efetuado via SUAP. Esse comportamento é totalmente configurável:
+
+1. Desabilitar Criação Automática via Configuração
+--------------------------------------------------
+
+Se a opção ``CREATE_USER`` for definida como ``False``, o login será negado para usuários que não possuem conta local previamente cadastrada no Django, lançando a exceção ``django_suap_auth.exceptions.SuapUserNotAllowedError``:
+
+.. code-block:: python
+
+   SUAP_AUTH = {
+       'CLIENT_ID': 'seu-client-id',
+       'CLIENT_SECRET': 'seu-client-secret',
+       'REDIRECT_URI': 'https://sua-aplicacao.com/auth/suap/callback/',
+       'CREATE_USER': False,  # Impede cadastro automático no login
+   }
+
+2. Primeiro Usuário como Superusuário (`FIRST_USER_DEFAULTS`)
+-------------------------------------------------------------
+
+Por padrão, se nenhum usuário existir no banco de dados no momento do primeiro login, o primeiro usuário criado receberá automaticamente ``is_staff = True`` e ``is_superuser = True`` (através de ``FIRST_USER_DEFAULTS = {"is_staff": True, "is_superuser": True}``).
+
+Caso deseje desabilitar essa promoção automática do primeiro usuário, defina a chave como ``None`` em seu ``settings.py``:
+
+.. code-block:: python
+
+   SUAP_AUTH = {
+       'CLIENT_ID': 'seu-client-id',
+       'CLIENT_SECRET': 'seu-client-secret',
+       'REDIRECT_URI': 'https://sua-aplicacao.com/auth/suap/callback/',
+       'FIRST_USER_DEFAULTS': None,  # O primeiro usuário criado não será superuser/staff
+   }
+
+3. Decisão Dinâmica via Backend Customizado
+-------------------------------------------
+
+Para aplicar regras condicionais dinâmicas durante o login (por exemplo, autorizar o cadastro apenas para servidores ou determinados vínculos), herde de ``SuapAuthBackend`` ou ``SuapProfileAuthBackend`` e sobrescreva o método ``get_or_create_user`` ou ``create_user``:
+
+.. code-block:: python
+
+   from django_suap_auth.profile.backends import SuapProfileAuthBackend
+   from django_suap_auth.exceptions import SuapUserNotAllowedError
+
+   class CustomSuapAuthBackend(SuapProfileAuthBackend):
+       def get_or_create_user(self, lookup_field, lookup_value, mapped_attrs, cfg):
+           raw_info = mapped_attrs.get("suap_data", {})
+           # Exemplo: só permite criação automática se o usuário for Servidor
+           if raw_info.get("tipo_vinculo") != "Servidor":
+               raise SuapUserNotAllowedError("Cadastro automático permitido apenas para servidores.")
+
+           return super().get_or_create_user(lookup_field, lookup_value, mapped_attrs, cfg)

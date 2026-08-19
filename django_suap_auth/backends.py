@@ -113,11 +113,10 @@ class SuapAuthBackend:
         assign groups, etc.).
         """
         User = get_user_model()
+        defaults = dict(cfg["user_defaults"])
         first_defaults = cfg["first_user_defaults"]
         if first_defaults is not None and not User.objects.exists():
-            defaults = dict(first_defaults)
-        else:
-            defaults = dict(cfg["user_defaults"])
+            defaults.update(first_defaults)
         defaults.update(_filter_fields(mapped_attrs, cfg["update_fields_on_create"]))
 
         user_fields = {f.name for f in User._meta.get_fields()}
