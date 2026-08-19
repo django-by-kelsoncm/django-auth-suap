@@ -7,15 +7,13 @@ O ``django-suap-auth`` utiliza o padrão de projeto **Chain of Responsibility (C
 Arquitetura Geral
 =================
 
-.. mermaid::
-   :caption: Arquitetura Geral do Pipeline de Usuários
-   :alt: Diagrama da arquitetura do pipeline de busca e mapeamento
 
-   flowchart TD
-       A["1. OAuth2 Code Swap"] -->|Retorna access_token| B["2. USER_INFO_FETCHERS Chain"]
-       B -->|Gera user_info acumulado| C["3. USER_INFO_MAPPERS Chain"]
-       C -->|Gera attrs para Django Model| D["4. User Model (get_or_create)"]
-       D -->|Persiste / Autentica| E["Usuário Autenticado"]
+.. figure:: user-info-pipeline.svg
+   :alt: Diagrama da arquitetura do pipeline de busca e mapeamento
+   :align: center
+   :width: 320px
+
+   Arquitetura Geral do Pipeline de Usuários
 
 
 1. Cadeia de Busca de Dados (``USER_INFO_FETCHERS``)

@@ -18,7 +18,6 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinx.ext.intersphinx",
     "sphinx.ext.githubpages",
-    "sphinxcontrib.mermaid",
     "django_docs_theme",
 ]
 
