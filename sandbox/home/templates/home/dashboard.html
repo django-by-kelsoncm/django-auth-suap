@@ -102,7 +102,14 @@
               </div>
               <div class="col-md-12">
                 <span class="text-muted d-block small">Currículo Lattes</span>
-                <strong><a href="{{ profile.curriculo_lattes }}" target="_blank">{{ profile.curriculo_lattes | default:"-" }}</a></strong>
+                <strong>
+                  {% if profile.curriculo_lattes %}
+                    <!-- nosemgrep: generic.html-templates.security.var-in-href.var-in-href -->
+                    <a href="{{ profile.curriculo_lattes }}" target="_blank" rel="noopener noreferrer">{{ profile.curriculo_lattes }}</a>
+                  {% else %}
+                    -
+                  {% endif %}
+                </strong>
               </div>
             </div>
           </div>
