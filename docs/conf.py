@@ -37,7 +37,10 @@ html_theme_options = {
     "show_edit_on_github": True,
     "navigation_links": (
         "Início|index.html, Instalação|installation.html, Configuração|configuration.html, "
+        "Modelos de Perfil|profile-models.html, Endpoints JWT|jwt-endpoints.html, "
         "Escopos|scopes.html, Mapeamento|attribute-mapping.html, Pipeline|user-info-pipeline.html, "
+        "Fetchers|fetchers.html, Mappers|mappers.html, Fluxo de Autenticação|auth-flow.html, "
+        "Sandboxes|sandboxes.html, Desenvolvimento|development.html, Release|release.html, "
         "GitHub|https://github.com/django-by-kelsoncm/django-auth-suap"
     ),
 }
