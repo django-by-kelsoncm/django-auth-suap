@@ -10,7 +10,7 @@ import django_docs_theme
 project = "django-suap-auth"
 copyright = "2026, Kelson C. Medeiros"
 author = "Kelson C. Medeiros"
-release = "1.2.0"
+release = "1.3.0"
 language = "pt_BR"
 
 extensions = [
@@ -18,6 +18,7 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinx.ext.intersphinx",
     "sphinx.ext.githubpages",
+    "sphinxcontrib.mermaid",
     "django_docs_theme",
 ]
 

@@ -7,7 +7,9 @@ Visão Geral
 
 ``django-suap-auth`` implementa o fluxo de autorização de código OAuth2.
 
-.. code-block:: text
+.. mermaid::
+   :caption: Fluxo de autenticação via SUAP
+   :alt: Diagrama do fluxo de login e autenticação via SUAP
 
    flowchart TD
        A["Usuário"] -->|Clica em Entrar| B["GET /auth/suap/login/"]
