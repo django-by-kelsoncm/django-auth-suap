@@ -10,6 +10,8 @@ Backend de autenticação OAuth2 do Django para **SUAP** (Sistema Unificado de A
 
    installation
    configuration
+   profile-models
+   jwt-endpoints
    scopes
    attribute-mapping
    user-info-pipeline
@@ -24,6 +26,8 @@ Funcionalidades
 ===============
 
 - Fluxo de autorização de código OAuth2 com SUAP
+- Entrypoints opcionais para autenticação JWT (``/api/token/pair``, ``/api/token/refresh``, ``/api/token/verify``)
+- Submódulo ``django_suap_auth.profile`` com modelos de perfil prontos (``Perfil``, ``DadosBrutos``, ``Vinculo``)
 - Escopos configuráveis (``identificacao``, ``email``, ``documentos_pessoais``, ``dados_academicos``, ``dados_pessoais``, ``reitoria``)
 - Mapeamento flexível de atributos da resposta SUAP para campos do modelo de usuário do Django
 - Armazenamento opcional em campo JSON para a resposta completa do SUAP
@@ -35,6 +39,8 @@ Links Rápidos
 
 - :doc:`Instalação <installation>`
 - :doc:`Configuração <configuration>`
+- :doc:`Modelos de Perfil <profile-models>`
+- :doc:`Endpoints JWT <jwt-endpoints>`
 - :doc:`Escopos <scopes>`
 - :doc:`Mapeamento de atributos <attribute-mapping>`
 - :doc:`Pipeline de perfil de usuário <user-info-pipeline>`

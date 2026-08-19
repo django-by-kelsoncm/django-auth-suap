@@ -1,0 +1,409 @@
+{% extends "home/base.html" %}
+
+{% block title %}Dashboard - SUAP Auth Sandbox{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-11">
+    <h1 class="mb-4">Dashboard SUAP</h1>
+
+    {% if profile %}
+    <!-- Identificação -->
+    <div class="card mb-4 border-primary shadow-sm">
+      <div class="card-body">
+        <div class="row align-items-center">
+          <div class="col-auto text-center">
+            {% if profile.url_foto_150x200 or profile.url_foto_75x100 %}
+              <img src="{{ profile.url_foto_150x200|default:profile.url_foto_75x100 }}" alt="Foto de Perfil" class="img-thumbnail rounded-circle mb-2" style="width: 110px; height: 110px; object-fit: cover;">
+            {% else %}
+              <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center mb-2 mx-auto" style="width: 100px; height: 100px; font-size: 2rem;">
+                👤
+              </div>
+            {% endif %}
+          </div>
+          <div class="col">
+            <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
+              <h2 class="h3 mb-0">{{ user.get_full_name|default:user.username }}</h2>
+              {% if profile.matricula %}
+                <span class="text-muted fs-5">({{ profile.matricula }})</span>
+              {% endif %}
+              {% if profile.tipo_vinculo == "Servidor" %}
+                <span class="badge bg-primary">{{ profile.tipo_vinculo }}</span>
+              {% else %}
+                {% if profile.tipo_vinculo == "Aluno" %}
+                  <span class="badge bg-success">{{ profile.tipo_vinculo }}</span>
+                {% else %}
+                  <span class="badge bg-info">{{ profile.tipo_vinculo }}</span>
+                {% endif %}
+              {% endif %}
+            </div>
+
+            <div class="row g-3 mt-1">
+              <div class="col-md-4">
+                <span class="text-muted d-block small">Registro</span>
+                <strong>{{ profile.nome_registro|default:"-" }}</strong>
+              </div>
+              <div class="col-md-4">
+                <span class="text-muted d-block small">Usual</span>
+                <strong>{{ profile.nome_usual|default:"-" }}</strong>
+              </div>
+              <div class="col-md-4">
+                <span class="text-muted d-block small">Social</span>
+                <strong>{{ profile.nome_social|default:"-" }}</strong>
+              </div>
+              <div class="col-md-4">
+                <span class="text-muted d-block small">Primeiro</span>
+                <strong>{{ user.first_name|default:"-" }}</strong>
+              </div>
+              <div class="col-md-4">
+                <span class="text-muted d-block small">Último</span>
+                <strong>{{ user.last_name|default:"-" }}</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Contatos -->
+    <div class="card mb-4 border-primary shadow-sm">
+      <div class="card-body">
+        <div class="row align-items-center">
+          <div class="col">
+            <div class="row g-3 mt-1">
+              <div class="col-md-4">
+                <span class="text-muted d-block small">Preferencial</span>
+                <strong>{{ profile.email_preferencial|default:"-" }}</strong>
+              </div>
+              <div class="col-md-4">
+                <span class="text-muted d-block small">Secundário</span>
+                <strong>{{ profile.email_secundario|default:"-" }}</strong>
+              </div>
+              <div class="col-md-4">
+                <span class="text-muted d-block small">Institucional</span>
+                <strong>{{ user.email|default:profile.email_academico|default:"-" }}</strong>
+              </div>
+              <div class="col-md-4">
+                <span class="text-muted d-block small">Acadêmico</span>
+                <strong>{{ profile.email_academico|default:"-" }}</strong>
+              </div>
+              <div class="col-md-4">
+                <span class="text-muted d-block small">Escolar</span>
+                <strong>{{ profile.email_google_classroom|default:"-" }}</strong>
+              </div>
+              <div class="col-md-4">
+                <span class="text-muted d-block small">Telefones</span>
+                <strong>
+                  {% if profile.telefones_institucionais %}
+                    {{ profile.telefones_institucionais|join:", " }}
+                  {% else %}
+                    -
+                  {% endif %}
+                </strong>
+              </div>
+              <div class="col-md-12">
+                <span class="text-muted d-block small">Currículo Lattes</span>
+                <strong><a href="{{ profile.curriculo_lattes }}" target="_blank">{{ profile.curriculo_lattes | default:"-" }}</a></strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seção: Dados pessoais -->
+    <div class="card mb-4 shadow-sm">
+      <div class="card-header bg-light border-bottom">
+        <h5 class="card-title mb-0 text-primary fw-bold">Dados pessoais</h5>
+      </div>
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-md-4">
+            <span class="text-muted d-block small">CPF</span>
+            <strong>{{ profile.cpf|default:"-" }}</strong>
+          </div>
+          <div class="col-md-4">
+            <span class="text-muted d-block small">Nascimento</span>
+            <strong>{{ profile.data_nascimento|default:"-" }}</strong>
+          </div>
+          <div class="col-md-4">
+            <span class="text-muted d-block small">Naturalidade</span>
+            <strong>{{ profile.naturalidade|default:"-" }}</strong>
+          </div>
+          <div class="col-md-4">
+            <span class="text-muted d-block small">Sexo</span>
+            <strong>{{ profile.sexo|default:"-" }}</strong>
+          </div>
+          <div class="col-md-4">
+            <span class="text-muted d-block small">Tipo Sanguíneo / Rh</span>
+            <strong>{{ profile.tipo_sanguineo|default:"-" }}</strong>
+          </div>
+          <div class="col-md-4">
+            <span class="text-muted d-block small">Passaporte</span>
+            <strong>{{ profile.passaporte|default:"-" }}</strong>
+          </div>
+          <div class="col-md-6">
+            <span class="text-muted d-block small">Registro Geral (RG)</span>
+            <strong>{{ profile.rg|default:"-" }}</strong>
+          </div>
+          <div class="col-md-6">
+            <span class="text-muted d-block small">Filiação</span>
+            {% if profile.filiacao %}
+              <strong>{{ profile.filiacao|join:", " }}</strong>
+            {% else %}
+              <strong>-</strong>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seção: Dados funcionais -->
+    <div class="card mb-4 shadow-sm">
+      <div class="card-header bg-light border-bottom">
+        <h5 class="card-title mb-0 text-success fw-bold">Vínculo</h5>
+      </div>
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-md-4">
+            <span class="text-muted d-block small">Matrícula</span>
+            <strong>{{ profile.matricula|default:"-" }}</strong>
+          </div>
+          <div class="col-md-4">
+            <span class="text-muted d-block small">Setor SUAP</span>
+            <strong>{{ profile.setor_suap|default:"-" }}</strong>
+          </div>
+          <div class="col-md-4">
+            <span class="text-muted d-block small">Setor SIAPE</span>
+            <strong>{{ profile.setor_siape|default:"-" }}</strong>
+          </div>
+          <div class="col-md-4">
+            <span class="text-muted d-block small">Cargo</span>
+            <strong>{{ profile.cargo|default:"-" }}</strong>
+          </div>
+          <div class="col-md-4">
+            <span class="text-muted d-block small">Categoria</span>
+            <strong>{{ profile.categoria|default:"-" }}</strong>
+          </div>
+          <div class="col-md-4">
+            <span class="text-muted d-block small">Jornada de Trabalho</span>
+            <strong>{{ profile.jornada_trabalho|default:"-" }}</strong>
+          </div>
+          <div class="col-md-4">
+            <span class="text-muted d-block small">Campus</span>
+            <strong>{{ profile.campus|default:"-" }}</strong>
+          </div>
+          <div class="col-md-4">
+            <span class="text-muted d-block small">Tipo de Usuário</span>
+            <strong>{{ profile.tipo_usuario|default:"-" }}</strong>
+          </div>
+          <div class="col-md-4">
+            <span class="text-muted d-block small">Tipo de Vínculo</span>
+            <strong>{{ profile.tipo_vinculo|default:"-" }}</strong>
+          </div>
+          {% if profile.disciplina_ingresso %}
+          <div class="col-md-4">
+            <span class="text-muted d-block small">Disciplina Ingresso</span>
+            <strong>{{ profile.disciplina_ingresso }}</strong>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Seção: Atributos de Aluno -->
+    {% if profile.curso or profile.situacao or profile.ingresso or profile.ira or profile.matriz or profile.situacao_sistemica or profile.educasenso or profile.periodo_referencia or profile.qtd_periodos or profile.data_migracao %}
+    <div class="card mb-4 shadow-sm">
+      <div class="card-header bg-light border-bottom">
+        <h5 class="card-title mb-0 text-warning text-dark fw-bold">Atributos de Aluno</h5>
+      </div>
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <span class="text-muted d-block small">Curso</span>
+            <strong>{{ profile.curso|default:"-" }}</strong>
+          </div>
+          <div class="col-md-6">
+            <span class="text-muted d-block small">Matriz Curricular</span>
+            <strong>{{ profile.matriz|default:"-" }}</strong>
+          </div>
+          <div class="col-md-4">
+            <span class="text-muted d-block small">Ingresso</span>
+            <strong>{{ profile.ingresso|default:"-" }}</strong>
+          </div>
+          <div class="col-md-4">
+            <span class="text-muted d-block small">Situação</span>
+            <strong>{{ profile.situacao|default:"-" }}</strong>
+          </div>
+          <div class="col-md-4">
+            <span class="text-muted d-block small">Situação Sistêmica</span>
+            <strong>{{ profile.situacao_sistemica|default:"-" }}</strong>
+          </div>
+          <div class="col-md-4">
+            <span class="text-muted d-block small">Período de Referência</span>
+            <strong>{{ profile.periodo_referencia|default:"-" }}</strong>
+          </div>
+          <div class="col-md-4">
+            <span class="text-muted d-block small">Qtd. Períodos</span>
+            <strong>{{ profile.qtd_periodos|default:"-" }}</strong>
+          </div>
+          <div class="col-md-4">
+            <span class="text-muted d-block small">IRA</span>
+            <strong>{{ profile.ira|default:"-" }}</strong>
+          </div>
+          <div class="col-md-4">
+            <span class="text-muted d-block small">Data de Migração</span>
+            <strong>{{ profile.data_migracao|default:"-" }}</strong>
+          </div>
+          <div class="col-md-4">
+            <span class="text-muted d-block small">Turno</span>
+            <strong>{{ profile.turno|default:"-" }}</strong>
+          </div>
+          <div class="col-md-4">
+            <span class="text-muted d-block small">Educacenso</span>
+            <strong>{{ profile.educasenso|default:"-" }}</strong>
+          </div>
+          <div class="col-md-4">
+            <span class="text-muted d-block small">Emitiu Diploma</span>
+            <strong>
+              {% if profile.emitiu_diploma %}
+                <span class="badge bg-success">Sim</span>
+              {% else %}
+                <span class="badge bg-secondary">Não</span>
+              {% endif %}
+            </strong>
+          </div>
+          <div class="col-md-4">
+            <span class="text-muted d-block small">Matrícula Regular</span>
+            <strong>
+              {% if profile.matricula_regular is True %}
+                <span class="badge bg-success">Sim</span>
+              {% elif profile.matricula_regular is False %}
+                <span class="badge bg-secondary">Não</span>
+              {% else %}
+                -
+              {% endif %}
+            </strong>
+          </div>
+          <div class="col-md-4">
+            <span class="text-muted d-block small">Impressão digital</span>
+            <strong>
+              {% if profile.impressao_digital is True %}
+                <span class="badge bg-success">Sim</span>
+              {% elif profile.impressao_digital is False %}
+                <span class="badge bg-secondary">Não</span>
+              {% else %}
+                -
+              {% endif %}
+            </strong>
+          </div>
+          <div class="col-md-4">
+            <span class="text-muted d-block small">Cota Sistec</span>
+            <strong>{{ profile.cota_sistec|default:"-" }}</strong>
+          </div>
+          <div class="col-md-4">
+            <span class="text-muted d-block small">Cota MEC</span>
+            <strong>{{ profile.cota_mec|default:"-" }}</strong>
+          </div>
+          <div class="col-md-4">
+            <span class="text-muted d-block small">Linha de Pesquisa</span>
+            <strong>{{ profile.linha_pesquisa|default:"-" }}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Vínculos do Usuário -->
+    <div class="card mb-4 shadow-sm">
+      <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+        <h5 class="card-title mb-0">Vínculos do Usuário</h5>
+        <span class="badge bg-light text-dark">{{ profile.vinculos.count }} vínculo(s)</span>
+      </div>
+      <div class="card-body">
+        {% if profile.vinculos.all %}
+        <div class="row row-cols-1 row-cols-md-2 g-3">
+          {% for v in profile.vinculos.all %}
+          <div class="col">
+            <div class="card h-100 border">
+              <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                <strong>Vínculo: {{ v.identificador }}</strong>
+                <span class="badge {% if v.tipo == 'servidor' %}bg-primary{% elif v.tipo == 'aluno' %}bg-success{% else %}bg-info{% endif %}">
+                  {{ v.tipo|upper }}
+                </span>
+              </div>
+              <div class="card-body small">
+                <p class="mb-1"><strong>SUAP ID:</strong> {{ v.suap_id|default:"-" }}</p>
+                <p class="mb-1"><strong>Campus:</strong> {{ v.campus|default:"-" }}</p>
+                <p class="mb-1"><strong>Cargo:</strong> {{ v.cargo|default:"-" }}</p>
+                <p class="mb-1"><strong>Categoria:</strong> {{ v.categoria|default:"-" }}</p>
+                <p class="mb-1"><strong>Curso:</strong> {{ v.curso|default:"-" }}</p>
+                <p class="mb-1"><strong>Modalidade:</strong> {{ v.modalidade|default:"-" }}</p>
+                <p class="mb-1"><strong>Nível Ensino:</strong> {{ v.nivel_ensino|default:"-" }}</p>
+                <p class="mb-1"><strong>Ativo:</strong>
+                  {% if v.ativo is True %}
+                    <span class="badge bg-success">Sim</span>
+                  {% elif v.ativo is False %}
+                    <span class="badge bg-danger">Não</span>
+                  {% else %}
+                    <span class="text-muted">Não informado</span>
+                  {% endif %}
+                </p>
+                <p class="mb-1"><strong>Estrangeiro:</strong> {{ v.estrangeiro|yesno:"Sim,Não" }}</p>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-muted mb-0">Nenhum vínculo registrado.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Dados do Usuário Django -->
+    <div class="card mb-4 shadow-sm border-dark">
+      <div class="card-header bg-dark text-white">
+        <h5 class="card-title mb-0">Dados do Usuário (Django Auth Model)</h5>
+      </div>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><strong>ID:</strong> {{ user.id }}</li>
+          <li class="list-group-item text-center fw-bold bg-light">Autenticação</li>
+          <li class="list-group-item"><strong>Username:</strong> {{ user.username }}</li>
+          <li class="list-group-item"><strong>Senha:</strong> {% if user.password %}Tem{% else %}Não tem{% endif %}</li>
+
+          <li class="list-group-item text-center fw-bold bg-light">Dados Pessoais</li>
+          <li class="list-group-item"><strong>Email:</strong> {{ user.email|default:"Não informado" }}</li>
+          <li class="list-group-item"><strong>Nome completo:</strong> {{ user.get_full_name|default:"Não informado" }}</li>
+          <li class="list-group-item"><strong>Primeiro nome:</strong> {{ user.first_name|default:"Não informado" }}</li>
+          <li class="list-group-item"><strong>Último nome:</strong> {{ user.last_name|default:"Não informado" }}</li>
+
+          <li class="list-group-item text-center fw-bold bg-light">Histórico</li>
+          <li class="list-group-item"><strong>Cadastrado em:</strong> {{ user.date_joined }}</li>
+          <li class="list-group-item"><strong>Último login:</strong> {{ user.last_login }}</li>
+
+          <li class="list-group-item text-center fw-bold bg-light">Autorização</li>
+          <li class="list-group-item"><strong>Ativo:</strong> {{ user.is_active|yesno:"Sim,Não" }}</li>
+          <li class="list-group-item"><strong>Staff:</strong> {{ user.is_staff|yesno:"Sim,Não" }}</li>
+          <li class="list-group-item"><strong>Super Usuário:</strong> {{ user.is_superuser|yesno:"Sim,Não" }}</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Dados Brutos Retornados (JSON Formatado) -->
+    {% if raw_json_pretty %}
+    <div class="card mb-4 shadow-sm border-dark">
+      <div class="card-header bg-dark text-white">
+        <h5 class="card-title mb-0">Dados Brutos dos Endpoints SUAP (JSON)</h5>
+      </div>
+      <div class="card-body">
+        <pre class="bg-light p-3 border rounded text-dark overflow-auto" style="max-height: 400px;"><code>{{ raw_json_pretty }}</code></pre>
+      </div>
+    </div>
+    {% endif %}
+
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}

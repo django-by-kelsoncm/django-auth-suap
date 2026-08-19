@@ -104,12 +104,12 @@ Para criar um fetcher customizado, herde de ``BaseUserInfoFetcher`` e sobrescrev
 
        def fetch(self, client, access_token, user_info=None):
            user_info = super().fetch(client, access_token, user_info)
-           
+
            cpf = user_info.get("cpf")
            if cpf:
                # Consulta serviço externo
                user_info["ldap_data"] = meu_servico_ldap.buscar_por_cpf(cpf)
-               
+
            return user_info
 
 Registrando o Fetcher Customizado

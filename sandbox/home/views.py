@@ -17,7 +17,8 @@ def home(request):
 @login_required
 def dashboard(request):
     raw_json_pretty = ""
-    profile = getattr(request.user, "profile", None)
+    # Retrieve profile from suap_profile (django_suap_auth.profile) or profile
+    profile = getattr(request.user, "suap_profile", getattr(request.user, "profile", None))
     if profile and hasattr(profile, "raw_data") and profile.raw_data:
         raw_json_pretty = json.dumps(profile.raw_data.data, indent=2, ensure_ascii=False)
 
@@ -26,6 +27,7 @@ def dashboard(request):
         "home/dashboard.html",
         {
             "user": request.user,
+            "profile": profile,
             "raw_json_pretty": raw_json_pretty,
         },
     )

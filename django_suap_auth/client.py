@@ -1,14 +1,20 @@
+import logging
 from urllib.parse import urlencode
 
 import requests
 
 from .exceptions import SuapTokenError, SuapUserInfoError
 
+logger = logging.getLogger(__name__)
+
 DEFAULT_BASE_URL = "https://suap.ifrn.edu.br"
 
 AUTHORIZE_PATH = "/o/authorize/"
 TOKEN_PATH = "/o/token/"
 USER_INFO_PATH = "/api/rh/eu/"
+TOKEN_PAIR_PATH = "/api/token/pair"
+TOKEN_REFRESH_PATH = "/api/token/refresh"
+TOKEN_VERIFY_PATH = "/api/token/verify"
 
 AVAILABLE_SCOPES = [
     "identificacao",
@@ -21,9 +27,9 @@ AVAILABLE_SCOPES = [
 
 
 class SuapOAuth2Client:
-    """Handles the OAuth2 authorization code flow with SUAP."""
+    """Handles OAuth2 authorization code flow and API / JWT requests with SUAP."""
 
-    def __init__(self, client_id, client_secret, redirect_uri, scopes=None, base_url=None):
+    def __init__(self, client_id=None, client_secret=None, redirect_uri=None, scopes=None, base_url=None):
         self.client_id = client_id
         self.client_secret = client_secret
         self.redirect_uri = redirect_uri
@@ -81,8 +87,63 @@ class SuapOAuth2Client:
         except Exception as exc:
             raise SuapUserInfoError(f"Endpoint '{path_or_url}' unexpected error: {exc}") from exc
 
+    def _post_json_endpoint(self, path_or_url, payload, timeout=30):
+        """Send a POST request with JSON payload to a SUAP endpoint.
+
+        Returns a tuple of ``(status_code, data_dict)``.
+        """
+        if path_or_url.startswith("http://") or path_or_url.startswith("https://"):
+            url = path_or_url
+        else:
+            url = f"{self.base_url}/{path_or_url.lstrip('/')}"
+        headers = {"Content-Type": "application/json"}
+        try:
+            response = self._session.post(url, json=payload, headers=headers, timeout=timeout)
+            try:
+                data = response.json()
+            except Exception:
+                data = {"detail": response.text} if response.text else {}
+            return response.status_code, data
+        except requests.Timeout as exc:
+            logger.warning("Timeout communicating with SUAP at '%s': %s", url, exc)
+            return 504, {"detail": f"Gateway timeout connecting to SUAP: {exc}"}
+        except requests.RequestException as exc:
+            logger.warning("Error communicating with SUAP at '%s': %s", url, exc)
+            return 503, {"detail": f"SUAP service unavailable: {exc}"}
+        except Exception as exc:
+            logger.exception("Unexpected error communicating with SUAP at '%s': %s", url, exc)
+            return 500, {"detail": f"Internal server error communicating with SUAP: {exc}"}
+
+    def obtain_token_pair(self, username, password, timeout=30):
+        """Request a JWT token pair (access, refresh) from SUAP.
+
+        Returns a tuple of ``(status_code, data_dict)``.
+        """
+        return self._post_json_endpoint(TOKEN_PAIR_PATH, {"username": username, "password": password}, timeout=timeout)
+
+    def refresh_token(self, refresh, timeout=30):
+        """Refresh a JWT access token using a refresh token from SUAP.
+
+        Returns a tuple of ``(status_code, data_dict)``.
+        """
+        return self._post_json_endpoint(TOKEN_REFRESH_PATH, {"refresh": refresh}, timeout=timeout)
+
+    def verify_token(self, token, timeout=30):
+        """Verify a JWT token with SUAP.
+
+        Returns a tuple of ``(status_code, data_dict)``.
+        """
+        return self._post_json_endpoint(TOKEN_VERIFY_PATH, {"token": token}, timeout=timeout)
+
+    post_token_pair = obtain_token_pair
+    post_token_refresh = refresh_token
+    post_token_verify = verify_token
+
     def get_user_info(self, access_token, timeout=30):
         """Fetch the authenticated user's profile from SUAP via the fetcher chain."""
         from .fetchers import run_user_info_fetcher_chain
 
         return run_user_info_fetcher_chain(self, access_token)
+
+
+SuapClient = SuapOAuth2Client

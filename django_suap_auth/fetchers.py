@@ -47,7 +47,7 @@ class DefaultEndpointsUserInfoFetcher(BaseUserInfoFetcher):
 
         endpoints = self.suap_settings.get("user_info_endpoints", DEFAULT_SUAP_ENDPOINTS)
 
-        for endpoint_spec in endpoints:
+        for idx, endpoint_spec in enumerate(endpoints):
             try:
                 if isinstance(endpoint_spec, str):
                     url_path = endpoint_spec
@@ -81,7 +81,12 @@ class DefaultEndpointsUserInfoFetcher(BaseUserInfoFetcher):
                                     try:
                                         formatted_url = url_path.format(**ctx)
                                     except KeyError as exc:
-                                        logger.warning("Could not format SUAP endpoint '%s' with item %s: %s", url_path, item, exc)
+                                        logger.warning(
+                                            "Could not format SUAP endpoint '%s' with item %s: %s",
+                                            url_path,
+                                            item,
+                                            exc,
+                                        )
                                         continue
                                     try:
                                         data = client.get_endpoint_data(access_token, formatted_url)
@@ -95,7 +100,11 @@ class DefaultEndpointsUserInfoFetcher(BaseUserInfoFetcher):
                                         elif isinstance(extracted, dict):
                                             aggregated.append(extracted)
                                     except Exception as exc:
-                                        logger.warning("Failed to fetch SUAP user info endpoint '%s': %s", formatted_url, exc)
+                                        logger.warning(
+                                            "Failed to fetch SUAP user info endpoint '%s': %s",
+                                            formatted_url,
+                                            exc,
+                                        )
                             if namespace:
                                 user_info[namespace] = aggregated
                         continue
@@ -120,6 +129,17 @@ class DefaultEndpointsUserInfoFetcher(BaseUserInfoFetcher):
                         user_info.update(data_to_store)
             except Exception as exc:
                 if isinstance(exc, SuapUserInfoError):
+                    if isinstance(endpoint_spec, dict):
+                        if endpoint_spec.get("ignore_errors") or endpoint_spec.get("required") is False:
+                            logger.warning("Optional SUAP user info endpoint failed: %s: %s", endpoint_spec, exc)
+                            continue
+                        if idx > 0 and endpoint_spec.get("required") is not True:
+                            logger.warning("Secondary SUAP user info endpoint failed: %s: %s", endpoint_spec, exc)
+                            continue
+                    else:
+                        if idx > 0:
+                            logger.warning("Secondary SUAP user info endpoint failed '%s': %s", endpoint_spec, exc)
+                            continue
                     raise
                 logger.warning("Failed to fetch SUAP user info endpoint '%s': %s", endpoint_spec, exc)
 

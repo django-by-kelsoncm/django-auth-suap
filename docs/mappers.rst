@@ -68,8 +68,8 @@ Formatos de Regras em ``USER_ATTR_MAP``
 .. code-block:: python
 
    "USER_ATTR_MAP": {
-       ("first_name", "last_name"): "nome_usual",
-       # "João Silva Santos" -> first_name="João", last_name="Silva Santos"
+       ("first_name", "last_name"): "nome_registro",
+       # "João Silva Santos" -> first_name="João Silva", last_name="Santos"
    }
 
 4. Lambdas e Callables Customizados
@@ -144,11 +144,11 @@ Para criar um mapper customizado, herde de ``BaseUserMapper`` (ou de seu alias `
 
        def map_attributes(self, user_info, attrs=None):
            attrs = super().map_attributes(user_info, attrs)
-           
+
            # Exemplo: concede permissão de staff para servidores do IFRN
            if user_info.get("tipo_usuario") == "Servidor":
                attrs["is_staff"] = True
-               
+
            return attrs
 
 Registrando o Mapper Customizado

@@ -143,7 +143,7 @@ Se os scopes solicitados não estão disponíveis para seu usuário SUAP:
 SUAP_AUTH_SCOPES = ["identificacao", "email"]  # Você tem acesso a esses?
 ```
 
-**Solução**: 
+**Solução**:
 - Ajuste os scopes para apenas os que você tem acesso
 - Ou solicite acesso no SUAP
 
@@ -190,5 +190,3 @@ Você mencionou que retorna para `/auth/suap/login/` **depois do callback**. Iss
 Esse é um problema do **mapeamento de usuário** ou **configuração do backend**, não do SUAP em si.
 
 Com os logs detalhados agora disponíveis, você conseguirá diagnosticar exatamente qual campo está faltando ou incorreto.
-
-

@@ -9,9 +9,33 @@ from django.utils.http import url_has_allowed_host_and_scheme
 from django.views import View
 
 from .exceptions import SuapStateMismatchError, SuapTokenError, SuapUserInfoError, SuapUserNotAllowedError
+from .jwt_views import (
+    BaseSuapTokenView,
+    SuapTokenObtainPairView,
+    SuapTokenPairView,
+    SuapTokenRefreshView,
+    SuapTokenVerifyView,
+    TokenObtainPairView,
+    TokenRefreshView,
+    TokenVerifyView,
+)
 from .utils import generate_state, get_oauth2_client, get_suap_settings
 
 logger = logging.getLogger(__name__)
+
+__all__ = [
+    "SuapLoginView",
+    "SuapCallbackView",
+    "SuapAuthenticationError",
+    "BaseSuapTokenView",
+    "SuapTokenPairView",
+    "SuapTokenRefreshView",
+    "SuapTokenVerifyView",
+    "TokenObtainPairView",
+    "SuapTokenObtainPairView",
+    "TokenRefreshView",
+    "TokenVerifyView",
+]
 
 
 class SuapLoginView(View):
@@ -28,8 +52,10 @@ class SuapLoginView(View):
 
     def get(self, request):
         cfg = get_suap_settings()
-        if not cfg["direct_redirect"]:
+        storage = messages.get_messages(request)
+        if not cfg["direct_redirect"] or bool(storage):
             from django.shortcuts import render
+
             return render(request, self.intermediate_template)
 
         client = get_oauth2_client()
@@ -46,6 +72,7 @@ class SuapLoginView(View):
         authorization_url = client.get_authorization_url(state)
         return redirect(authorization_url)
 
+
 class SuapAuthenticationError(Exception):
     """Raised when SUAP authentication fails."""
 
@@ -55,7 +82,6 @@ class SuapCallbackView(View):
 
     def get(self, request):
         from django.conf import settings
-
 
         cfg = get_suap_settings()
         error = request.GET.get("error")

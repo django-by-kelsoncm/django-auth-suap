@@ -6,7 +6,7 @@ from django.core.exceptions import ImproperlyConfigured
 DEFAULT_USER_ATTR_MAP = {
     "username": "identificacao",
     "email": "email",
-    ("first_name", "last_name"): "nome_usual",
+    ("first_name", "last_name"): "nome_registro",
 }
 
 DEFAULT_USER_INFO_ENDPOINTS = [
@@ -14,7 +14,7 @@ DEFAULT_USER_INFO_ENDPOINTS = [
 ]
 
 
-def get_suap_settings():
+def get_suap_settings(require_oauth=True):
     """Read and validate SUAP settings from Django settings.
 
     Expects a single SUAP_AUTH dictionary with all configuration:
@@ -38,15 +38,16 @@ def get_suap_settings():
 
     suap_auth = getattr(settings, "SUAP_AUTH", {})
 
-    # Validate required fields
-    required = ['CLIENT_ID', 'CLIENT_SECRET', 'REDIRECT_URI']
-    missing = [field for field in required if not suap_auth.get(field)]
+    if require_oauth:
+        # Validate required fields
+        required = ["CLIENT_ID", "CLIENT_SECRET", "REDIRECT_URI"]
+        missing = [field for field in required if not suap_auth.get(field)]
 
-    if missing:
-        raise ImproperlyConfigured(
-            f"Missing required SUAP_AUTH settings: {', '.join(missing)}. "
-            f"Configure SUAP_AUTH dictionary in settings.py"
-        )
+        if missing:
+            raise ImproperlyConfigured(
+                f"Missing required SUAP_AUTH settings: {', '.join(missing)}. "
+                f"Configure SUAP_AUTH dictionary in settings.py"
+            )
 
     # Legacy USER_MAPPER compatibility
     default_mappers = ["django_suap_auth.mappers.DefaultAttrMapUserMapper"]
@@ -54,9 +55,9 @@ def get_suap_settings():
         default_mappers = [suap_auth["USER_MAPPER"]]
 
     return {
-        "client_id": suap_auth["CLIENT_ID"],
-        "client_secret": suap_auth["CLIENT_SECRET"],
-        "redirect_uri": suap_auth["REDIRECT_URI"],
+        "client_id": suap_auth.get("CLIENT_ID", ""),
+        "client_secret": suap_auth.get("CLIENT_SECRET", ""),
+        "redirect_uri": suap_auth.get("REDIRECT_URI", ""),
         "scopes": suap_auth.get("SCOPES", ["identificacao", "email"]),
         "base_url": suap_auth.get("BASE_URL", "https://suap.ifrn.edu.br"),
         "user_lookup_field": suap_auth.get("USER_LOOKUP_FIELD", "username"),
@@ -80,12 +81,14 @@ def get_suap_settings():
 def _extract_nested(data, dotted_key):
     """Extract a value from a (possibly nested) dict using a dotted key path."""
     from .mappers import _extract_nested as mapper_extract
+
     return mapper_extract(data, dotted_key)
 
 
 def get_user_mapper(cfg=None):
     """Instantiate and return the configured SUAP user mapper chain or first mapper."""
     from .mappers import get_user_info_mappers
+
     mappers = get_user_info_mappers(cfg)
     return mappers[0] if mappers else None
 
@@ -96,14 +99,15 @@ def apply_user_attr_map(user_info, attr_map, cfg=None):
     Executes the configured USER_INFO_MAPPERS Chain of Responsibility.
     """
     from .mappers import run_user_info_mapper_chain
+
     return run_user_info_mapper_chain(user_info, attr_map, cfg=cfg)
 
 
-def get_oauth2_client():
+def get_oauth2_client(require_oauth=True):
     """Return a SuapOAuth2Client configured from Django settings."""
     from .client import SuapOAuth2Client
 
-    cfg = get_suap_settings()
+    cfg = get_suap_settings(require_oauth=require_oauth)
     return SuapOAuth2Client(
         client_id=cfg["client_id"],
         client_secret=cfg["client_secret"],

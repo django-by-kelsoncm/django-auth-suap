@@ -63,12 +63,12 @@ Você pode adicionar elos à cadeia ``USER_INFO_FETCHERS`` para consultar sistem
    class ExternalLdapUserInfoFetcher(BaseUserInfoFetcher):
        def fetch(self, client, access_token, user_info=None):
            user_info = super().fetch(client, access_token, user_info)
-           
+
            cpf = user_info.get("cpf")
            if cpf:
                # Enriquece o dicionário com dados de outra fonte
                user_info["ldap"] = meu_servico_ldap.buscar_por_cpf(cpf)
-               
+
            return user_info
 
 Configuração no ``settings.py``:

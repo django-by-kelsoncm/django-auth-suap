@@ -1,7 +1,7 @@
 from unittest.mock import MagicMock, patch
 
 import pytest
-from django.test import Client, RequestFactory
+from django.test import Client
 
 
 @pytest.fixture
@@ -47,6 +47,7 @@ def test_callback_view_handles_state_mismatch(client):
 @patch("django_suap_auth.views.login")
 def test_callback_view_logs_in_user(mock_login, mock_auth, mock_get_client, client):
     from django.contrib.auth import get_user_model
+
     User = get_user_model()
     user = User.objects.create_user(username="20211234567", email="joao@ifrn.edu.br")
 
@@ -134,6 +135,7 @@ def test_callback_view_handles_user_info_error(mock_get_client, client):
 @patch("django_suap_auth.views.login")
 def test_callback_view_redirects_to_safe_next_url(mock_login, mock_auth, mock_get_client, client):
     from django.contrib.auth import get_user_model
+
     User = get_user_model()
     user = User.objects.create_user(username="20211234567", email="joao@ifrn.edu.br")
 
@@ -158,6 +160,7 @@ def test_callback_view_redirects_to_safe_next_url(mock_login, mock_auth, mock_ge
 @patch("django_suap_auth.views.login")
 def test_callback_view_preserves_query_params_in_next(mock_login, mock_auth, mock_get_client, client):
     from django.contrib.auth import get_user_model
+
     User = get_user_model()
     user = User.objects.create_user(username="20211234567", email="joao@ifrn.edu.br")
 
@@ -179,10 +182,10 @@ def test_callback_view_preserves_query_params_in_next(mock_login, mock_auth, moc
 @pytest.mark.django_db
 def test_login_view_intermediate_page(client, settings):
     settings.SUAP_AUTH = {
-        'CLIENT_ID': 'test-id',
-        'CLIENT_SECRET': 'test-secret',
-        'REDIRECT_URI': 'http://localhost/callback/',
-        'DIRECT_REDIRECT': False,
+        "CLIENT_ID": "test-id",
+        "CLIENT_SECRET": "test-secret",
+        "REDIRECT_URI": "http://localhost/callback/",
+        "DIRECT_REDIRECT": False,
     }
     response = client.get("/auth/suap/login/")
     assert response.status_code == 200
@@ -191,11 +194,27 @@ def test_login_view_intermediate_page(client, settings):
 @pytest.mark.django_db
 def test_login_view_post_starts_oauth(client, settings):
     settings.SUAP_AUTH = {
-        'CLIENT_ID': 'test-id',
-        'CLIENT_SECRET': 'test-secret',
-        'REDIRECT_URI': 'http://localhost/callback/',
-        'DIRECT_REDIRECT': False,
+        "CLIENT_ID": "test-id",
+        "CLIENT_SECRET": "test-secret",
+        "REDIRECT_URI": "http://localhost/callback/",
+        "DIRECT_REDIRECT": False,
     }
     response = client.post("/auth/suap/login/")
     assert response.status_code == 302
     assert "suap.ifrn.edu.br" in response["Location"]
+
+
+@pytest.mark.django_db
+def test_login_view_renders_when_messages_exist(client, settings):
+    settings.LOGIN_URL = "/auth/suap/login/"
+    settings.SUAP_AUTH = {
+        "CLIENT_ID": "test-id",
+        "CLIENT_SECRET": "test-secret",
+        "REDIRECT_URI": "http://localhost/callback/",
+        "DIRECT_REDIRECT": True,
+    }
+    # Simulate a callback error setting a message
+    response = client.get("/auth/suap/callback/?error=access_denied", follow=True)
+    # The callback view redirects to LOGIN_URL (/auth/suap/login/) with message.
+    # It should render 200 (intermediate template) instead of 302 looping redirect to SUAP.
+    assert response.status_code == 200

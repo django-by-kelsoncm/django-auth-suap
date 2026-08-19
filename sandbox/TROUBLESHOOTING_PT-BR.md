@@ -38,7 +38,7 @@ Scopes: identificacao, email
    - Abra `.env` no seu sandbox
    - Confirme que `SUAP_CLIENT_ID` e `SUAP_CLIENT_SECRET` estão corretos
    - Tente registrar um novo aplicativo em: https://suap.ifrn.edu.br/admin/oauth2_provider/application/
-   
+
 2. **Verifique o Redirect URI**:
    - Confirme que `SUAP_REDIRECT_URI=http://localhost:8000/auth/suap/callback/`
    - Deve exatamente corresponder ao registrado no SUAP
@@ -160,5 +160,3 @@ Se ainda assim não conseguir:
 2. Confirme que o usuário testado tem acesso ao SUAP
 3. Verifique se há restrições de rede/firewall
 4. Consulte a equipe do SUAP para suporte
-
-

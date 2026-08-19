@@ -31,7 +31,7 @@ python manage.py migrate  # Primeira execução
 python manage.py runserver 8001
 ```
 
-Acesse em: http://localhost:8001
+Acesse em: http://localhost:8000
 
 ## Configuração SUAP
 
@@ -151,7 +151,6 @@ Veja `requirements.txt` em cada sandbox para a lista completa. Principais:
 
 - Django 5.2+ ou 6.0+
 - django-suap-auth (editable install do pacote local)
-- python-dotenv
 - requests
 
 ## Ambiente de Desenvolvimento
@@ -181,5 +180,3 @@ Para problemas:
 3. Verifique os logs do console (DEBUG mode)
 4. Limpe cookies e cookies do navegador
 5. Reinicie o servidor Django
-
-

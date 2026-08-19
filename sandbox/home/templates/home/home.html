@@ -1,6 +1,6 @@
 {% extends "home/base.html" %}
 
-{% block title %}Home - Django 6.0 Sandbox{% endblock %}
+{% block title %}Home - SUAP Auth Sandbox{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
@@ -34,7 +34,7 @@
       <li>Na página de login, clique no botão <em>Entrar com o SUAP</em>.</li>
       <li>O pacote gera um <code>state</code>, salva na sessão e redireciona para o servidor SUAP.</li>
       <li>Após autenticar no SUAP, o servidor retorna para <code>/auth/suap/callback/</code>.</li>
-      <li>O pacote valida o <code>state</code>, troca o código pelo token, busca o perfil e cria/atualiza o usuário Django.</li>
+      <li>O pacote valida o <code>state</code>, troca o código pelo token, busca o perfil e cria/atualiza a instância de <code>Perfil</code> do <code>django_suap_auth.profile</code>.</li>
       <li>Você é redirecionado para <code>/dashboard/</code> já autenticado.</li>
     </ol>
     <div class="card mt-3 border-warning">

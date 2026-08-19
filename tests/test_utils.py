@@ -60,10 +60,10 @@ def test_apply_user_attr_map_simple_fields():
 
 
 def test_apply_user_attr_map_name_split():
-    info = {"nome_usual": "João Silva Santos"}
-    result = apply_user_attr_map(info, {("first_name", "last_name"): "nome_usual"})
-    assert result["first_name"] == "João"
-    assert result["last_name"] == "Silva Santos"
+    info = {"nome_registro": "João Silva Santos"}
+    result = apply_user_attr_map(info, {("first_name", "last_name"): "nome_registro"})
+    assert result["first_name"] == "João Silva"
+    assert result["last_name"] == "Santos"
 
 
 def test_apply_user_attr_map_name_single_word():
@@ -81,10 +81,13 @@ def test_apply_user_attr_map_name_to_single_field():
 
 def test_apply_user_attr_map_nested_dotted_key():
     info = {"dados_pessoais": {"data_nascimento": "1995-01-15", "cpf": "12345678901"}}
-    result = apply_user_attr_map(info, {
-        "data_nascimento": "dados_pessoais.data_nascimento",
-        "cpf": "dados_pessoais.cpf",
-    })
+    result = apply_user_attr_map(
+        info,
+        {
+            "data_nascimento": "dados_pessoais.data_nascimento",
+            "cpf": "dados_pessoais.cpf",
+        },
+    )
     assert result["data_nascimento"] == "1995-01-15"
     assert result["cpf"] == "12345678901"
 
@@ -109,13 +112,15 @@ def test_apply_user_attr_map_skips_none_values():
 
 def test_extract_nested_non_dict_mid_path():
     from django_suap_auth.utils import _extract_nested
+
     info = {"dados_pessoais": "not_a_dict"}
     assert _extract_nested(info, "dados_pessoais.data_nascimento") is None
 
 
 def test_get_oauth2_client_returns_client():
-    from django_suap_auth.utils import get_oauth2_client
     from django_suap_auth.client import SuapOAuth2Client
+    from django_suap_auth.utils import get_oauth2_client
+
     client = get_oauth2_client()
     assert isinstance(client, SuapOAuth2Client)
 
@@ -123,6 +128,7 @@ def test_get_oauth2_client_returns_client():
 # Tests para exceções e casos adicionais
 def test_suap_api_error_with_status_code():
     from django_suap_auth.exceptions import SuapAPIError
+
     error = SuapAPIError("API Error", status_code=400)
     assert error.status_code == 400
     assert str(error) == "API Error"
@@ -130,18 +136,20 @@ def test_suap_api_error_with_status_code():
 
 def test_suap_token_error():
     from django_suap_auth.exceptions import SuapTokenError
+
     error = SuapTokenError("Token exchange failed")
     assert str(error) == "Token exchange failed"
 
 
 def test_suap_user_info_error():
     from django_suap_auth.exceptions import SuapUserInfoError
+
     error = SuapUserInfoError("Failed to fetch user info")
     assert str(error) == "Failed to fetch user info"
 
 
 def test_suap_state_mismatch_error():
     from django_suap_auth.exceptions import SuapStateMismatchError
+
     error = SuapStateMismatchError("State mismatch - possible CSRF")
     assert str(error) == "State mismatch - possible CSRF"
-

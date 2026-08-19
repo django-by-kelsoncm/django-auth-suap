@@ -142,3 +142,65 @@ def test_default_endpoints_user_info_fetcher_for_each():
     assert result["diarios"] == [{"id": 6793, "disciplina": "FIC.0520"}]
 
 
+def test_secondary_endpoint_failure_is_non_fatal():
+    from django_suap_auth.exceptions import SuapUserInfoError
+
+    mock_client = MagicMock()
+
+    def side_effect(token, path):
+        if path == "/api/rh/eu/":
+            return {"identificacao": "2080882", "email": "kelson@ifrn.edu.br"}
+        raise SuapUserInfoError(f"Failed to fetch endpoint '{path}': 404 Not Found")
+
+    mock_client.get_endpoint_data.side_effect = side_effect
+
+    cfg = {
+        "user_info_endpoints": [
+            "/api/rh/eu/",
+            "/api/ensino/meus-dados-aluno/",
+            {"endpoint": "/api/rh/meus-dados/", "required": False},
+        ]
+    }
+
+    fetcher = DefaultEndpointsUserInfoFetcher(suap_settings=cfg)
+    result = fetcher.fetch(mock_client, "fake-token")
+
+    assert result["identificacao"] == "2080882"
+    assert result["email"] == "kelson@ifrn.edu.br"
+
+
+def test_primary_endpoint_failure_raises():
+    from django_suap_auth.exceptions import SuapUserInfoError
+
+    mock_client = MagicMock()
+    mock_client.get_endpoint_data.side_effect = SuapUserInfoError("Failed to fetch primary endpoint: 500")
+
+    cfg = {"user_info_endpoints": ["/api/rh/eu/"]}
+
+    fetcher = DefaultEndpointsUserInfoFetcher(suap_settings=cfg)
+    with pytest.raises(SuapUserInfoError):
+        fetcher.fetch(mock_client, "fake-token")
+
+
+def test_secondary_endpoint_dict_spec_failure_is_non_fatal():
+    from django_suap_auth.exceptions import SuapUserInfoError
+
+    mock_client = MagicMock()
+
+    def side_effect(token, path):
+        if path == "/api/rh/eu/":
+            return {"identificacao": "2080882"}
+        raise SuapUserInfoError(f"Failed: {path}")
+
+    mock_client.get_endpoint_data.side_effect = side_effect
+
+    cfg = {
+        "user_info_endpoints": [
+            "/api/rh/eu/",
+            {"endpoint": "/api/rh/meus-dados/"},
+        ]
+    }
+
+    fetcher = DefaultEndpointsUserInfoFetcher(suap_settings=cfg)
+    result = fetcher.fetch(mock_client, "fake-token")
+    assert result["identificacao"] == "2080882"

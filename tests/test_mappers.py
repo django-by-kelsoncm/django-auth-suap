@@ -1,8 +1,8 @@
 from datetime import date
 from unittest.mock import MagicMock, patch
 
-from django.core.files.base import ContentFile
 import pytest
+from django.core.files.base import ContentFile
 
 from django_suap_auth.mappers import BaseSuapUserMapper, DefaultSuapUserMapper, resolve_callable
 from django_suap_auth.transformers import fetch_image_file, format_cpf, parse_date, to_bool, to_lower, to_upper

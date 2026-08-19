@@ -14,7 +14,7 @@ Mapeamento Padrão
        'USER_ATTR_MAP': {
            'username': 'identificacao',
            'email': 'email',
-           ('first_name', 'last_name'): 'nome_usual',
+           ('first_name', 'last_name'): 'nome_registro',
        },
    }
 
@@ -36,12 +36,12 @@ Formatos de Mapeamento Suportados
 2. Divisão de Nome em Dois Campos (Tupla)
 -----------------------------------------
 
-Quando a chave do mapeamento é uma **tupla**, o valor retornado pelo SUAP é dividido no primeiro espaço:
+Quando a chave do mapeamento é uma **tupla**, o valor retornado pelo SUAP é dividido no último espaço:
 
 .. code-block:: python
 
-   ('first_name', 'last_name'): 'nome_usual'
-   # "João Silva Santos" → first_name="João", last_name="Silva Santos"
+   ('first_name', 'last_name'): 'nome_registro'
+   # "João Silva Santos" → first_name="João Silva", last_name="Santos"
    # "João"              → first_name="João", last_name=""
 
 3. Lambdas e Callables Customizadas

@@ -4,6 +4,7 @@ INSTALLED_APPS = [
     "django.contrib.auth",
     "django.contrib.sessions",
     "django_suap_auth",
+    "django_suap_auth.profile",
 ]
 DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory:"}}
 SUAP_AUTH = {

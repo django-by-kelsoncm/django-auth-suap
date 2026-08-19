@@ -48,7 +48,11 @@ LOGIN_URL = "/login/"
 from django.urls import path, include
 
 urlpatterns = [
+    # Fluxo OAuth2 padrão
     path("auth/suap/", include("django_suap_auth.urls")),
+
+    # Entrypoints JWT do SUAP (/api/token/pair, /api/token/refresh, /api/token/verify) (opcional)
+    path("api/token/", include("django_suap_auth.jwt_urls")),
     ...
 ]
 ```
@@ -57,6 +61,7 @@ urlpatterns = [
 <!-- template -->
 <a href="{% url 'suap_auth:login' %}">Login com SUAP</a>
 ```
+
 
 ## Escopos Disponíveis
 

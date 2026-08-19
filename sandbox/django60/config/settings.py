@@ -1,12 +1,9 @@
-import logging
 import os
+import sys
 from pathlib import Path
 
-from dotenv import load_dotenv
-
-# Load .env file at the beginning
 BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv(BASE_DIR / ".env", override=False)
+sys.path.insert(0, str(BASE_DIR.parent))
 
 SECRET_KEY = os.environ.get("SECRET_KEY", "dev-only-secret-key")
 DEBUG = os.environ.get("DEBUG", "True") == "True"
@@ -49,6 +46,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_suap_auth",
+    "django_suap_auth.profile",
     "home",
 ]
 
@@ -90,7 +88,7 @@ DATABASES = {
 }
 
 AUTHENTICATION_BACKENDS = [
-    "home.backends.SandboxSuapAuthBackend",
+    "django_suap_auth.profile.backends.SuapProfileAuthBackend",
     "django.contrib.auth.backends.ModelBackend",
 ]
 
@@ -100,7 +98,7 @@ SUAP_AUTH = {
     "REDIRECT_URI": os.environ.get("SUAP_REDIRECT_URI", "http://localhost:8000/auth/suap/callback/"),
     "SCOPES": ["identificacao", "email"],
     "DIRECT_REDIRECT": os.environ.get("SUAP_DIRECT_REDIRECT", "True") == "True",
-    "BACKEND": "home.backends.SandboxSuapAuthBackend",
+    "BACKEND": "django_suap_auth.profile.backends.SuapProfileAuthBackend",
     "USER_JSON_FIELD": "suap_data",
     "USER_INFO_ENDPOINTS": [
         # RH / Servidor

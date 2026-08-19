@@ -75,7 +75,7 @@ class BaseUserMapper:
                     continue
                 if isinstance(model_field, (list, tuple)) and len(model_field) == 2:
                     field_a, field_b = model_field
-                    parts = str(val).split(" ", 1)
+                    parts = str(val).strip().rsplit(" ", 1)
                     attrs[field_a] = parts[0]
                     attrs[field_b] = parts[1] if len(parts) > 1 else ""
                 else:

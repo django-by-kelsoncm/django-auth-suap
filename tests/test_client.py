@@ -1,7 +1,7 @@
 import pytest
 import responses as responses_lib
 
-from django_suap_auth.client import SuapOAuth2Client, AVAILABLE_SCOPES
+from django_suap_auth.client import AVAILABLE_SCOPES, SuapOAuth2Client
 from django_suap_auth.exceptions import SuapTokenError, SuapUserInfoError
 
 
@@ -136,6 +136,7 @@ def test_get_user_info_connection_error():
 def test_exchange_code_request_exception():
     """Test RequestException (not HTTPError) during token exchange"""
     import requests
+
     responses_lib.add(
         responses_lib.POST,
         "https://suap.ifrn.edu.br/o/token/",
@@ -150,6 +151,7 @@ def test_exchange_code_request_exception():
 def test_get_user_info_request_exception():
     """Test RequestException (not HTTPError) during user info fetch"""
     import requests
+
     responses_lib.add(
         responses_lib.GET,
         "https://suap.ifrn.edu.br/api/rh/eu/",

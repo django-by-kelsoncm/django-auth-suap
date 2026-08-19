@@ -1,12 +1,9 @@
-import logging
 import os
+import sys
 from pathlib import Path
 
-from dotenv import load_dotenv
-
-# Load .env file at the beginning
 BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv(BASE_DIR / ".env", override=False)
+sys.path.insert(0, str(BASE_DIR.parent))
 
 SECRET_KEY = os.environ.get("SECRET_KEY", "dev-only-secret-key")
 DEBUG = os.environ.get("DEBUG", "True") == "True"
@@ -49,6 +46,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_suap_auth",
+    "django_suap_auth.profile",
     "home",
 ]
 
@@ -90,7 +88,7 @@ DATABASES = {
 }
 
 AUTHENTICATION_BACKENDS = [
-    "django_suap_auth.backends.SuapAuthBackend",
+    "django_suap_auth.profile.backends.SuapProfileAuthBackend",
     "django.contrib.auth.backends.ModelBackend",
 ]
 

@@ -1,9 +1,9 @@
-from datetime import date, datetime
 import os
+from datetime import date, datetime
 from urllib.parse import urlparse
 
-from django.core.files.base import ContentFile
 import requests
+from django.core.files.base import ContentFile
 
 
 def parse_date(value, suap_info=None, date_format="%Y-%m-%d"):
