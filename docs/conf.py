@@ -21,7 +21,7 @@ extensions = [
     "django_docs_theme",
 ]
 
-templates_path = ["_templates"]
+templates_path = []
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 html_theme = "django_docs_theme"
@@ -46,4 +46,4 @@ html_theme_options = {
 }
 
 
-html_static_path = ["_static"]
+html_static_path = []
