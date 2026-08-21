@@ -105,6 +105,19 @@ class DefaultEndpointsUserInfoFetcher(BaseUserInfoFetcher):
                                             formatted_url,
                                             exc,
                                         )
+                                        status_code = getattr(exc, "status_code", None)
+                                        err_dict = {
+                                            "endpoint": formatted_url,
+                                            "status_code": status_code,
+                                            "mensagem_erro": str(exc),
+                                            "exc": exc,
+                                        }
+                                        user_info.setdefault("_sync_errors", []).append(err_dict)
+                                        from .erros.services import report_sync_error_to_sentry
+
+                                        report_sync_error_to_sentry(
+                                            exc, endpoint=formatted_url, status_code=status_code
+                                        )
                             if namespace:
                                 user_info[namespace] = aggregated
                         continue
@@ -128,20 +141,51 @@ class DefaultEndpointsUserInfoFetcher(BaseUserInfoFetcher):
                     elif isinstance(data_to_store, dict):
                         user_info.update(data_to_store)
             except Exception as exc:
+                endpoint_url = (
+                    url_path
+                    if "url_path" in locals() and url_path
+                    else (endpoint_spec if isinstance(endpoint_spec, str) else endpoint_spec.get("endpoint", ""))
+                )
+                status_code = getattr(exc, "status_code", None)
                 if isinstance(exc, SuapUserInfoError):
+                    is_secondary = False
                     if isinstance(endpoint_spec, dict):
                         if endpoint_spec.get("ignore_errors") or endpoint_spec.get("required") is False:
                             logger.warning("Optional SUAP user info endpoint failed: %s: %s", endpoint_spec, exc)
-                            continue
-                        if idx > 0 and endpoint_spec.get("required") is not True:
+                            is_secondary = True
+                        elif idx > 0 and endpoint_spec.get("required") is not True:
                             logger.warning("Secondary SUAP user info endpoint failed: %s: %s", endpoint_spec, exc)
-                            continue
+                            is_secondary = True
                     else:
                         if idx > 0:
                             logger.warning("Secondary SUAP user info endpoint failed '%s': %s", endpoint_spec, exc)
-                            continue
+                            is_secondary = True
+
+                    if is_secondary:
+                        err_dict = {
+                            "endpoint": endpoint_url,
+                            "status_code": status_code,
+                            "mensagem_erro": str(exc),
+                            "exc": exc,
+                        }
+                        user_info.setdefault("_sync_errors", []).append(err_dict)
+                        from .erros.services import report_sync_error_to_sentry
+
+                        report_sync_error_to_sentry(exc, endpoint=endpoint_url, status_code=status_code)
+                        continue
                     raise
-                logger.warning("Failed to fetch SUAP user info endpoint '%s': %s", endpoint_spec, exc)
+
+                logger.warning("Failed to fetch SUAP user info endpoint '%s': %s", endpoint_url, exc)
+                err_dict = {
+                    "endpoint": endpoint_url,
+                    "status_code": status_code,
+                    "mensagem_erro": str(exc),
+                    "exc": exc,
+                }
+                user_info.setdefault("_sync_errors", []).append(err_dict)
+                from .erros.services import report_sync_error_to_sentry
+
+                report_sync_error_to_sentry(exc, endpoint=endpoint_url, status_code=status_code)
 
         return user_info
 

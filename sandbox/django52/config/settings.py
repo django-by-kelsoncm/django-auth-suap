@@ -45,8 +45,10 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "simple_history",
     "django_suap_auth",
     "django_suap_auth.profile",
+    "django_suap_auth.erros",
     "home",
 ]
 

@@ -81,7 +81,10 @@ class SuapOAuth2Client:
             response.raise_for_status()
             return response.json()
         except requests.HTTPError as exc:
-            raise SuapUserInfoError(f"Failed to fetch endpoint '{path_or_url}': {exc}") from exc
+            status_code = exc.response.status_code if exc.response is not None else None
+            raise SuapUserInfoError(
+                f"Failed to fetch endpoint '{path_or_url}': {exc}", status_code=status_code
+            ) from exc
         except requests.RequestException as exc:
             raise SuapUserInfoError(f"Endpoint '{path_or_url}' request error: {exc}") from exc
         except Exception as exc:

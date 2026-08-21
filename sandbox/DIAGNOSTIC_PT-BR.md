@@ -118,9 +118,9 @@ Se no passo 4 ver:
 3. Se necessário, customize em `settings.py`:
    ```python
    SUAP_USER_ATTR_MAP = {
-       'username': 'matricula',  # Deve corresponder ao campo do SUAP
-       'email': 'email',
-       ('first_name', 'last_name'): 'nome_usual',
+       "username": "matricula",  # Deve corresponder ao campo do SUAP
+       "email": "email",
+       ("first_name", "last_name"): "nome_usual",
    }
    ```
 
@@ -167,7 +167,8 @@ Após as mudanças:
   ```python
   # Em uma view ou shell Django
   from django.contrib.auth.models import User
-  user = User.objects.get(username='12345678')
+
+  user = User.objects.get(username="12345678")
   # Adicione permissões conforme necessário
   ```
 

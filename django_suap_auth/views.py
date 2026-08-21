@@ -150,6 +150,10 @@ class SuapCallbackView(View):
                 else:
                     return redirect(settings.LOGIN_REDIRECT_URL)
             else:
+                if isinstance(user_info, dict) and "_sync_errors" in user_info:
+                    from .erros.services import save_sync_errors_for_user
+
+                    save_sync_errors_for_user(None, user_info["_sync_errors"])
                 raise SuapAuthenticationError("Authentication failed. User not found or invalid credentials.")
 
         except SuapStateMismatchError as e:

@@ -61,7 +61,14 @@ class SuapAuthBackend:
             return None
 
         mapped_attrs = {k: v for k, v in attrs.items() if k != lookup_field}
-        return self.get_or_create_user(lookup_field, lookup_value, mapped_attrs, cfg)
+        user = self.get_or_create_user(lookup_field, lookup_value, mapped_attrs, cfg)
+
+        if user is not None and "_sync_errors" in suap_user_info:
+            from .erros.services import save_sync_errors_for_user
+
+            save_sync_errors_for_user(user, suap_user_info["_sync_errors"])
+
+        return user
 
     # ------------------------------------------------------------------
     # Extension points

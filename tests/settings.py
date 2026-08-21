@@ -1,10 +1,13 @@
 SECRET_KEY = "test-secret-key-not-for-production"
 INSTALLED_APPS = [
+    "django.contrib.admin",
     "django.contrib.contenttypes",
     "django.contrib.auth",
     "django.contrib.sessions",
+    "simple_history",
     "django_suap_auth",
     "django_suap_auth.profile",
+    "django_suap_auth.erros",
 ]
 DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory:"}}
 SUAP_AUTH = {
