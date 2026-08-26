@@ -58,12 +58,111 @@ class Perfil(models.Model):
     cota_mec = models.CharField(max_length=100, null=True, blank=True)
     linha_pesquisa = models.CharField(max_length=256, null=True, blank=True)
 
+    # Preferências e Configurações do Usuário
+    settings = models.JSONField("configurações/preferências", null=True, blank=True, default=dict)
+    first_login = models.DateTimeField("primeiro login", null=True, blank=True)
+
     class Meta:
         verbose_name = "Perfil"
         verbose_name_plural = "Perfis"
 
     def __str__(self):
         return f"Perfil de {self.user.username}"
+
+    @property
+    def show_name(self):
+        if self.nome_usual:
+            return self.nome_usual
+        if self.nome_social:
+            return self.nome_social
+        if self.nome_registro:
+            return self.nome_registro
+        return getattr(self.user, "username", "")
+
+    @property
+    def campus_sigla(self) -> str:
+        return self.campus or ""
+
+    @property
+    def theme_selected(self) -> str:
+        if self.settings and isinstance(self.settings, dict):
+            theme = self.settings.get("theme")
+            if isinstance(theme, dict) and "selected" in theme:
+                return theme["selected"]
+        return "ifrn25"
+
+    @property
+    def dyslexia_friendly(self) -> bool:
+        if self.settings and isinstance(self.settings, dict):
+            return self.settings.get("accessibility", {}).get("dyslexia_friendly", False)
+        return False
+
+    @property
+    def remove_justify(self) -> bool:
+        if self.settings and isinstance(self.settings, dict):
+            return self.settings.get("accessibility", {}).get("remove_justify", False)
+        return False
+
+    @property
+    def highlight_links(self) -> bool:
+        if self.settings and isinstance(self.settings, dict):
+            return self.settings.get("accessibility", {}).get("highlight_links", False)
+        return False
+
+    @property
+    def stop_animations(self) -> bool:
+        if self.settings and isinstance(self.settings, dict):
+            return self.settings.get("accessibility", {}).get("stop_animations", False)
+        return False
+
+    @property
+    def hidden_illustrative_image(self) -> bool:
+        if self.settings and isinstance(self.settings, dict):
+            return self.settings.get("accessibility", {}).get("hidden_illustrative_image", False)
+        return False
+
+    @property
+    def big_cursor(self) -> bool:
+        if self.settings and isinstance(self.settings, dict):
+            return self.settings.get("accessibility", {}).get("big_cursor", False)
+        return False
+
+    @property
+    def vlibras_active(self) -> bool:
+        if self.settings and isinstance(self.settings, dict):
+            return self.settings.get("accessibility", {}).get("vlibras_active", True)
+        return True
+
+    @property
+    def high_line_height(self) -> bool:
+        if self.settings and isinstance(self.settings, dict):
+            return self.settings.get("accessibility", {}).get("high_line_height", False)
+        return False
+
+    @property
+    def zoom_level(self) -> int:
+        if self.settings and isinstance(self.settings, dict):
+            try:
+                return int(self.settings.get("accessibility", {}).get("zoom_level", 100))
+            except (ValueError, TypeError):
+                return 100
+        return 100
+
+    @property
+    def color_mode(self) -> str:
+        if self.settings and isinstance(self.settings, dict):
+            return self.settings.get("accessibility", {}).get("color_mode", "default")
+        return "default"
+
+    @property
+    def menu_position(self) -> str:
+        if self.settings and isinstance(self.settings, dict) and "menu_position" in self.settings:
+            return self.settings["menu_position"]
+        return "bottom"
+
+    @property
+    def foto_url(self) -> str:
+        return self.url_foto_150x200 or self.url_foto_75x100 or ""
 
 
 class DadosBrutos(models.Model):

@@ -484,3 +484,100 @@ def test_sync_suap_profile_meus_vinculos_fallback_and_detalhamento_ativo():
     perfil = sync_suap_profile(user, raw_info)
     assert perfil is not None
     assert perfil.cargo == "DET CARGO"
+
+
+@pytest.mark.django_db
+def test_sync_suap_profile_first_login():
+    user = User.objects.create_user(username="first_login_user", email="fl@ifrn.edu.br")
+    raw_info = {"identificacao": "first_login_user", "nome_usual": "Primeiro Login"}
+
+    perfil = sync_suap_profile(user, raw_info)
+    assert perfil.first_login is not None
+    initial_first_login = perfil.first_login
+
+    # Second sync should preserve initial first_login
+    raw_info_2 = {"identificacao": "first_login_user", "nome_usual": "Primeiro Login Editado"}
+    perfil_updated = sync_suap_profile(user, raw_info_2)
+    assert perfil_updated.first_login == initial_first_login
+
+
+@pytest.mark.django_db
+def test_perfil_properties():
+    from django_suap_auth.profile.models import Perfil
+
+    user = User.objects.create_user(username="user_props", email="props@ifrn.edu.br")
+
+    # Test show_name fallback chain
+    p = Perfil(user=user)
+    assert p.show_name == "user_props"
+
+    p.nome_registro = "Registro da Silva"
+    assert p.show_name == "Registro da Silva"
+
+    p.nome_social = "Social da Silva"
+    assert p.show_name == "Social da Silva"
+
+    p.nome_usual = "Usual da Silva"
+    assert p.show_name == "Usual da Silva"
+
+    # Test campus_sigla
+    p.campus = "CNAT"
+    assert p.campus_sigla == "CNAT"
+    p.campus = None
+    assert p.campus_sigla == ""
+
+    # Test foto_url
+    assert p.foto_url == ""
+    p.url_foto_75x100 = "http://example.com/75.jpg"
+    assert p.foto_url == "http://example.com/75.jpg"
+    p.url_foto_150x200 = "http://example.com/150.jpg"
+    assert p.foto_url == "http://example.com/150.jpg"
+
+    # Test settings defaults
+    p.settings = None
+    assert p.theme_selected == "ifrn25"
+    assert p.dyslexia_friendly is False
+    assert p.remove_justify is False
+    assert p.highlight_links is False
+    assert p.stop_animations is False
+    assert p.hidden_illustrative_image is False
+    assert p.big_cursor is False
+    assert p.vlibras_active is True
+    assert p.high_line_height is False
+    assert p.zoom_level == 100
+    assert p.color_mode == "default"
+    assert p.menu_position == "bottom"
+
+    # Test custom settings values
+    p.settings = {
+        "theme": {"selected": "dark"},
+        "menu_position": "top",
+        "accessibility": {
+            "dyslexia_friendly": True,
+            "remove_justify": True,
+            "highlight_links": True,
+            "stop_animations": True,
+            "hidden_illustrative_image": True,
+            "big_cursor": True,
+            "vlibras_active": False,
+            "high_line_height": True,
+            "zoom_level": "150",
+            "color_mode": "high_contrast",
+        },
+    }
+    assert p.theme_selected == "dark"
+    assert p.menu_position == "top"
+    assert p.dyslexia_friendly is True
+    assert p.remove_justify is True
+    assert p.highlight_links is True
+    assert p.stop_animations is True
+    assert p.hidden_illustrative_image is True
+    assert p.big_cursor is True
+    assert p.vlibras_active is False
+    assert p.high_line_height is True
+    assert p.zoom_level == 150
+    assert p.color_mode == "high_contrast"
+
+    # Test zoom_level invalid value fallback
+    p.settings["accessibility"]["zoom_level"] = "invalid"
+    assert p.zoom_level == 100

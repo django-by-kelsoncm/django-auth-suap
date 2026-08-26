@@ -127,6 +127,12 @@ Estes atributos são compartilhados por **Servidores**, **Alunos** e **Usuários
    * - ``curriculo_lattes``
      - CharField
      - URL ou ID do Currículo Lattes.
+   * - ``settings``
+     - JSONField
+     - Dicionário com preferências de interface e acessibilidade do usuário.
+   * - ``first_login``
+     - DateTimeField
+     - Timestamp do primeiro acesso do usuário via SUAP.
 
 2. Atributos Específicos de Servidores
 ---------------------------------------
@@ -239,3 +245,18 @@ Ao utilizar o backend ``SuapProfileAuthBackend``, em todo login (ou criação de
 1. Uma instância de ``Perfil`` é criada/atualizada para o usuário.
 2. A resposta JSON completa acumulada da API do SUAP é salva em ``DadosBrutos`` (acessível via ``user.suap_profile.raw_data.data``).
 3. A lista de vínculos em ``Vinculo`` é sincronizada (acessível via ``user.suap_profile.vinculos.all()``).
+4. O campo ``first_login`` é preenchido com a data/hora atual no primeiro acesso.
+
+Propriedades Calculadas e Acessibilidade
+========================================
+
+O modelo ``Perfil`` expõe diversas propriedades calculadas para facilitar o uso no front-end:
+
+- ``show_name``: Nome preferencial para exibição (hierarquia: ``nome_usual`` > ``nome_social`` > ``nome_registro`` > ``user.username``).
+- ``campus_sigla``: Sigla do campus (ex: ``"CNAT"``) ou string vazia.
+- ``foto_url``: URL da foto de perfil (prioriza 150x200 sobre 75x100).
+- ``theme_selected``: Tema selecionado em ``settings`` (padrão: ``"ifrn25"``).
+- ``menu_position``: Posição do menu definida em ``settings`` (padrão: ``"bottom"``).
+- ``color_mode``: Modo de cor/contraste de acessibilidade (padrão: ``"default"``).
+- ``zoom_level``: Nível de zoom de acessibilidade como inteiro (padrão: ``100``).
+- Propriedades de Acessibilidade (booleans lidos de ``settings``): ``dyslexia_friendly``, ``remove_justify``, ``highlight_links``, ``stop_animations``, ``hidden_illustrative_image``, ``big_cursor``, ``vlibras_active`` (padrão `True`), ``high_line_height``.

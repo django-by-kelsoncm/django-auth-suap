@@ -264,6 +264,11 @@ def sync_suap_profile(user, raw_info):
     perfil.cota_mec = find_value("cota_mec", *aluno_sources)
     perfil.linha_pesquisa = find_value("linha_pesquisa", *aluno_sources)
 
+    if perfil.first_login is None:
+        from django.utils.timezone import now
+
+        perfil.first_login = now()
+
     perfil.save()
 
     # Sync DadosBrutos

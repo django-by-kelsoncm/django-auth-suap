@@ -16,7 +16,7 @@ Ativação Opcional de Rotas
 ==========================
 
 Passo 1: Registrar a Sub-Aplicação em ``INSTALLED_APPS``
--------------------------------------------------------
+---------------------------------------------------------
 
 No seu arquivo ``settings.py``:
 
