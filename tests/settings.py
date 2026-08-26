@@ -7,6 +7,7 @@ INSTALLED_APPS = [
     "simple_history",
     "django_suap_auth",
     "django_suap_auth.profile",
+    "django_suap_auth.jwt",
     "django_suap_auth.erros",
 ]
 DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory:"}}

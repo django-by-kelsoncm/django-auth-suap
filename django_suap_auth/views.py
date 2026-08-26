@@ -9,18 +9,6 @@ from django.utils.http import url_has_allowed_host_and_scheme
 from django.views import View
 
 from .exceptions import SuapStateMismatchError, SuapTokenError, SuapUserInfoError, SuapUserNotAllowedError
-from .jwt_views import (
-    BaseSuapTokenView,
-    SuapApiFetchView,
-    SuapTokenObtainPairView,
-    SuapTokenPairView,
-    SuapTokenRefreshView,
-    SuapTokenVerifyView,
-    SuapUserInfoFetchView,
-    TokenObtainPairView,
-    TokenRefreshView,
-    TokenVerifyView,
-)
 from .utils import generate_state, get_oauth2_client, get_suap_settings
 
 logger = logging.getLogger(__name__)
@@ -29,16 +17,6 @@ __all__ = [
     "SuapLoginView",
     "SuapCallbackView",
     "SuapAuthenticationError",
-    "BaseSuapTokenView",
-    "SuapTokenPairView",
-    "SuapTokenRefreshView",
-    "SuapTokenVerifyView",
-    "SuapUserInfoFetchView",
-    "SuapApiFetchView",
-    "TokenObtainPairView",
-    "SuapTokenObtainPairView",
-    "TokenRefreshView",
-    "TokenVerifyView",
 ]
 
 

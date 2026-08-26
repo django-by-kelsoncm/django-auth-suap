@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "simple_history",
     "django_suap_auth",
     "django_suap_auth.profile",
+    "django_suap_auth.jwt",
     "django_suap_auth.erros",
     "home",
 ]

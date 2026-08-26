@@ -1,0 +1,13 @@
+from django.urls import re_path
+
+from .views import SuapTokenPairView, SuapTokenRefreshView, SuapTokenVerifyView, SuapUserInfoFetchView
+
+app_name = "suap_jwt"
+
+urlpatterns = [
+    re_path(r"^pair/?$", SuapTokenPairView.as_view(), name="pair"),
+    re_path(r"^refresh/?$", SuapTokenRefreshView.as_view(), name="refresh"),
+    re_path(r"^verify/?$", SuapTokenVerifyView.as_view(), name="verify"),
+    re_path(r"^user-info/?$", SuapUserInfoFetchView.as_view(), name="user_info"),
+    re_path(r"^rh/eu/?$", SuapUserInfoFetchView.as_view(), name="rh_eu"),
+]

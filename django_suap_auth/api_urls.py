@@ -1,6 +1,11 @@
 from django.urls import re_path
 
-from .jwt_views import SuapTokenPairView, SuapTokenRefreshView, SuapTokenVerifyView, SuapUserInfoFetchView
+from django_suap_auth.jwt.views import (
+    SuapTokenPairView,
+    SuapTokenRefreshView,
+    SuapTokenVerifyView,
+    SuapUserInfoFetchView,
+)
 
 app_name = "suap_api"
 

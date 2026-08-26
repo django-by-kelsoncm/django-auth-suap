@@ -8,17 +8,33 @@ O SUAP disponibiliza três endpoints para autenticação baseada em JSON Web Tok
 - ``/api/token/refresh``: Renovação do token de acesso a partir de um token de refresh válido.
 - ``/api/token/verify``: Verificação da validade de um token JWT.
 
-O ``django-suap-auth`` implementa entrypoints nativos do Django para estes endpoints, **sem necessidade de bibliotecas externas** como Django REST Framework (DRF) ou Django Ninja.
+O ``django-suap-auth`` disponibiliza uma sub-aplicação opcional ``django_suap_auth.jwt`` (seguindo o mesmo padrão modular de ``django_suap_auth.profile``) para servir estes endpoints de forma nativa no Django, **sem necessidade de bibliotecas externas** como Django REST Framework (DRF) ou Django Ninja.
 
-A ativação destes endpoints no seu projeto é **completamente opcional**.
+A ativação desta sub-aplicação no seu projeto é **completamente opcional**.
 
 Ativação Opcional de Rotas
 ==========================
 
-Opção 1: Incluir via ``django_suap_auth.jwt_urls``
---------------------------------------------------
+Passo 1: Registrar a Sub-Aplicação em ``INSTALLED_APPS``
+-------------------------------------------------------
 
-No seu ``urls.py`` principal, monte o módulo ``django_suap_auth.jwt_urls`` sob o prefixo desejado:
+No seu arquivo ``settings.py``:
+
+.. code-block:: python
+
+   INSTALLED_APPS = [
+       ...
+       "django_suap_auth",
+       "django_suap_auth.jwt",  # Ativação da sub-aplicação JWT
+   ]
+
+Passo 2: Incluir as URLs da Sub-Aplicação
+-----------------------------------------
+
+Opção 1: Incluir via ``django_suap_auth.jwt.urls`` (Recomendado)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+No seu ``urls.py`` principal, monte o módulo ``django_suap_auth.jwt.urls`` sob o prefixo desejado:
 
 .. code-block:: python
 
@@ -29,36 +45,27 @@ No seu ``urls.py`` principal, monte o módulo ``django_suap_auth.jwt_urls`` sob 
        # Fluxo OAuth2 padrão (login, callback)
        path("auth/suap/", include("django_suap_auth.urls")),
 
-       # Entrypoints JWT (opcional)
-       path("api/token/", include("django_suap_auth.jwt_urls")),
+       # Entrypoints JWT da sub-aplicação (opcional)
+       path("api/token/", include("django_suap_auth.jwt.urls")),
    ]
 
 Desta forma, as seguintes rotas ficarão disponíveis no seu projeto:
 
-- ``POST /api/token/pair`` (ou ``/api/token/pair/``)
-- ``POST /api/token/refresh`` (ou ``/api/token/refresh/``)
-- ``POST /api/token/verify`` (ou ``/api/token/verify/``)
+- ``POST /api/token/pair/``
+- ``POST /api/token/refresh/``
+- ``POST /api/token/verify/``
+- ``GET/POST /api/token/user-info/``
+- ``GET/POST /api/token/rh/eu/``
 
-Opção 2: Incluir via ``django_suap_auth.api_urls``
---------------------------------------------------
+Opção 2: Importação Direta das Views
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Se preferir incluir direto na raiz do projeto:
-
-.. code-block:: python
-
-   urlpatterns = [
-       path("", include("django_suap_auth.api_urls")),
-   ]
-
-Opção 3: Importação Direta das Views
-------------------------------------
-
-Você também pode registrar as views individualmente em qualquer rota customizada:
+Você também pode registrar as views da sub-aplicação individualmente em qualquer rota customizada:
 
 .. code-block:: python
 
    from django.urls import path
-   from django_suap_auth.jwt_views import (
+   from django_suap_auth.jwt.views import (
        SuapTokenPairView,
        SuapTokenRefreshView,
        SuapTokenVerifyView,
@@ -147,8 +154,8 @@ Detalhes dos Endpoints
 
    {}
 
-4. Consumir Dados da API SUAP (``/api/rh/eu/`` ou ``/api/token/user-info``)
----------------------------------------------------------------------------
+4. Consumir Dados da API SUAP (``/api/token/user-info`` ou ``/api/token/rh/eu``)
+---------------------------------------------------------------------------------
 
 - **Método**: ``GET`` ou ``POST``
 - **Header**: ``Authorization: Bearer <access_token>``

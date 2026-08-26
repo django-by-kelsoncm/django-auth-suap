@@ -1,0 +1,424 @@
+{% extends 'home/base.html' %}
+
+{% block title %}JWT Tester & Documentação — django-suap-auth{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+  <div class="col-12">
+    <div class="p-4 bg-dark text-white rounded-3 shadow-sm">
+      <h1 class="display-6 fw-bold mb-2">🔑 Testes Manuais & Documentação da API SUAP JWT</h1>
+      <p class="lead mb-0">
+        Esta interface permite interagir diretamente com a sub-aplicação <code>django_suap_auth.jwt</code>,
+        obter tokens, renová-los, verificá-los e consumir dados autenticados da API SUAP via Bearer Token.
+      </p>
+    </div>
+  </div>
+</div>
+
+<ul class="nav nav-tabs mb-4" id="jwtTabs" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active fw-semibold" id="tester-tab" data-bs-toggle="tab" data-bs-target="#tester-content" type="button" role="tab">
+      ⚡ Testador Interativo de Endpoints
+    </button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link fw-semibold" id="docs-tab" data-bs-toggle="tab" data-bs-target="#docs-content" type="button" role="tab">
+      📚 Documentação da API JWT
+    </button>
+  </li>
+</ul>
+
+<div class="tab-content" id="jwtTabsContent">
+  <!-- TAB 1: INTERACTIVE TESTER -->
+  <div class="tab-pane fade show active" id="tester-content" role="tabpanel">
+    <div class="row g-4">
+
+      <!-- STEP 1: OBTAIN TOKEN PAIR -->
+      <div class="col-lg-6">
+        <div class="card h-100 border-primary shadow-sm">
+          <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between">
+            <h5 class="mb-0 fw-bold">1. Obter Par de Tokens (Pair)</h5>
+            <span class="badge bg-light text-primary fs-6">POST /api/token/pair/</span>
+          </div>
+          <div class="card-body">
+            <form id="form-obtain-pair">
+              <div class="mb-3">
+                <label for="pair-username" class="form-label fw-semibold">Usuário (Matrícula/CPF SUAP)</label>
+                <input type="text" class="form-control" id="pair-username" placeholder="Ex: 2080882 ou 1234567" required>
+              </div>
+              <div class="mb-3">
+                <label for="pair-password" class="form-label fw-semibold">Senha SUAP</label>
+                <input type="password" class="form-control" id="pair-password" placeholder="Sua senha no SUAP" required>
+              </div>
+              <button type="submit" class="btn btn-primary w-100">
+                <span id="spinner-pair" class="spinner-border spinner-border-sm d-none" role="status"></span>
+                Obter Access & Refresh Tokens
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2: REFRESH TOKEN -->
+      <div class="col-lg-6">
+        <div class="card h-100 border-info shadow-sm">
+          <div class="card-header bg-info text-dark d-flex align-items-center justify-content-between">
+            <h5 class="mb-0 fw-bold">2. Renovar Token (Refresh)</h5>
+            <span class="badge bg-dark text-info fs-6">POST /api/token/refresh/</span>
+          </div>
+          <div class="card-body">
+            <form id="form-refresh">
+              <div class="mb-3">
+                <label for="refresh-token-input" class="form-label fw-semibold">Refresh Token</label>
+                <textarea class="form-control font-monospace text-break" id="refresh-token-input" rows="3" placeholder="Insira o Refresh Token aqui..." required></textarea>
+              </div>
+              <button type="submit" class="btn btn-info w-100 text-dark font-weight-bold">
+                <span id="spinner-refresh" class="spinner-border spinner-border-sm d-none" role="status"></span>
+                Renovar Access Token
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3: VERIFY TOKEN -->
+      <div class="col-lg-6">
+        <div class="card h-100 border-secondary shadow-sm">
+          <div class="card-header bg-secondary text-white d-flex align-items-center justify-content-between">
+            <h5 class="mb-0 fw-bold">3. Verificar Token (Verify)</h5>
+            <span class="badge bg-light text-dark fs-6">POST /api/token/verify/</span>
+          </div>
+          <div class="card-body">
+            <form id="form-verify">
+              <div class="mb-3">
+                <label for="verify-token-input" class="form-label fw-semibold">Token a ser verificado (Access ou Refresh)</label>
+                <textarea class="form-control font-monospace text-break" id="verify-token-input" rows="3" placeholder="Insira o token a verificar..." required></textarea>
+              </div>
+              <button type="submit" class="btn btn-secondary w-100">
+                <span id="spinner-verify" class="spinner-border spinner-border-sm d-none" role="status"></span>
+                Verificar Validade do Token
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 4: CONSUME API WITH JWT TOKEN -->
+      <div class="col-lg-6">
+        <div class="card h-100 border-success shadow-sm">
+          <div class="card-header bg-success text-white d-flex align-items-center justify-content-between">
+            <h5 class="mb-0 fw-bold">4. Consumir API SUAP via JWT</h5>
+            <span class="badge bg-light text-success fs-6">GET/POST /api/token/user-info/</span>
+          </div>
+          <div class="card-body">
+            <form id="form-consume-api">
+              <div class="mb-3">
+                <label for="access-token-input" class="form-label fw-semibold">Access Token (Bearer)</label>
+                <textarea class="form-control font-monospace text-break" id="access-token-input" rows="2" placeholder="Access Token retornado pelo pair ou refresh..." required></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="api-endpoint-input" class="form-label fw-semibold">Endpoint da API SUAP</label>
+                <input type="text" class="form-control" id="api-endpoint-input" value="/api/rh/eu/" placeholder="/api/rh/eu/">
+              </div>
+              <div class="d-flex gap-2">
+                <button type="button" id="btn-consume-header" class="btn btn-success flex-fill">
+                  <span id="spinner-consume-header" class="spinner-border spinner-border-sm d-none" role="status"></span>
+                  Enviar via Header (Authorization: Bearer)
+                </button>
+                <button type="button" id="btn-consume-json" class="btn btn-outline-success flex-fill">
+                  <span id="spinner-consume-json" class="spinner-border spinner-border-sm d-none" role="status"></span>
+                  Enviar via JSON Body
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- LIVE RESPONSE VIEWER -->
+      <div class="col-12">
+        <div class="card border-dark shadow">
+          <div class="card-header bg-dark text-white d-flex align-items-center justify-content-between">
+            <h5 class="mb-0 fw-bold">📡 Resposta da Requisição (Live JSON Viewer)</h5>
+            <span id="response-status-badge" class="badge bg-secondary">Aguardando Execução</span>
+          </div>
+          <div class="card-body bg-light">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <small class="text-muted fw-bold" id="response-url-info">Nenhuma requisição enviada ainda.</small>
+              <button class="btn btn-outline-secondary btn-sm" id="btn-copy-response" disabled>📋 Copiar Resposta</button>
+            </div>
+            <pre class="bg-dark text-success p-3 rounded font-monospace fs-6 mb-0 overflow-auto" style="max-height: 400px;" id="response-json-viewer">// Os dados JSON retornados pelo servidor aparecerão aqui...</pre>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TAB 2: DOCUMENTATION -->
+  <div class="tab-pane fade" id="docs-content" role="tabpanel">
+    <div class="card shadow-sm border-0">
+      <div class="card-body">
+        <h3 class="fw-bold mb-3">Guia de Integração e Especificação dos Endpoints JWT</h3>
+        <p>A sub-aplicação <code>django_suap_auth.jwt</code> disponibiliza endpoints para autenticação JWT direta com o SUAP sem requerer dependências como Django REST Framework (DRF).</p>
+
+        <h4 class="fw-bold text-primary mt-4 mb-3">Como Ativar no seu Projeto Django</h4>
+        <div class="bg-light p-3 rounded border font-monospace mb-4">
+          <p class="mb-1 text-muted"># 1. Em settings.py:</p>
+          <pre class="mb-3 text-dark">INSTALLED_APPS = [
+    ...,
+    "django_suap_auth",
+    "django_suap_auth.jwt",  # Ativação da sub-aplicação JWT
+]</pre>
+          <p class="mb-1 text-muted"># 2. Em urls.py:</p>
+          <pre class="mb-0 text-dark">urlpatterns = [
+    path("api/token/", include("django_suap_auth.jwt.urls")),
+]</pre>
+        </div>
+
+        <h4 class="fw-bold text-primary mt-4 mb-3">Endpoints Disponíveis</h4>
+
+        <!-- ENDPOINT 1 -->
+        <div class="card mb-3 border">
+          <div class="card-header bg-light d-flex align-items-center gap-2">
+            <span class="badge bg-primary fs-6">POST</span>
+            <code class="fs-5 text-dark">/api/token/pair/</code>
+            <span class="ms-auto text-muted small">Obtenção de Tokens</span>
+          </div>
+          <div class="card-body">
+            <p><strong>Descrição:</strong> Autentica o usuário no SUAP usando matrícula e senha e retorna um par de tokens JWT (Access e Refresh).</p>
+            <h6>Payload da Requisição (JSON):</h6>
+            <pre class="bg-dark text-white p-2 rounded"><code>{
+  "username": "1234567",
+  "password": "sua-senha-suap"
+}</code></pre>
+            <h6>Exemplo cURL:</h6>
+            <pre class="bg-dark text-warning p-2 rounded"><code>curl -X POST http://localhost:8000/api/token/pair/ \
+  -H "Content-Type: application/json" \
+  -d '{"username": "1234567", "password": "sua-senha-suap"}'</code></pre>
+          </div>
+        </div>
+
+        <!-- ENDPOINT 2 -->
+        <div class="card mb-3 border">
+          <div class="card-header bg-light d-flex align-items-center gap-2">
+            <span class="badge bg-info text-dark fs-6">POST</span>
+            <code class="fs-5 text-dark">/api/token/refresh/</code>
+            <span class="ms-auto text-muted small">Renovação de Token</span>
+          </div>
+          <div class="card-body">
+            <p><strong>Descrição:</strong> Recebe um Refresh Token válido e gera um novo Access Token.</p>
+            <h6>Payload da Requisição (JSON):</h6>
+            <pre class="bg-dark text-white p-2 rounded"><code>{
+  "refresh": "&lt;refresh_token&gt;"
+}</code></pre>
+            <h6>Exemplo cURL:</h6>
+            <pre class="bg-dark text-warning p-2 rounded"><code>curl -X POST http://localhost:8000/api/token/refresh/ \
+  -H "Content-Type: application/json" \
+  -d '{"refresh": "&lt;refresh_token&gt;"}'</code></pre>
+          </div>
+        </div>
+
+        <!-- ENDPOINT 3 -->
+        <div class="card mb-3 border">
+          <div class="card-header bg-light d-flex align-items-center gap-2">
+            <span class="badge bg-secondary fs-6">POST</span>
+            <code class="fs-5 text-dark">/api/token/verify/</code>
+            <span class="ms-auto text-muted small">Verificação de Token</span>
+          </div>
+          <div class="card-body">
+            <p><strong>Descrição:</strong> Verifica se o token JWT fornecido é válido no SUAP.</p>
+            <h6>Payload da Requisição (JSON):</h6>
+            <pre class="bg-dark text-white p-2 rounded"><code>{
+  "token": "&lt;access_or_refresh_token&gt;"
+}</code></pre>
+          </div>
+        </div>
+
+        <!-- ENDPOINT 4 -->
+        <div class="card mb-3 border">
+          <div class="card-header bg-light d-flex align-items-center gap-2">
+            <span class="badge bg-success fs-6">GET / POST</span>
+            <code class="fs-5 text-dark">/api/token/user-info/</code>
+            <span class="ms-auto text-muted small">Consumo de Dados Autenticado</span>
+          </div>
+          <div class="card-body">
+            <p><strong>Descrição:</strong> Executa requisições na API do SUAP em nome do usuário autenticado utilizando o Access Token JWT.</p>
+            <h6>Forma 1: Via Cabeçalho de Autenticação (Recomendado)</h6>
+            <pre class="bg-dark text-warning p-2 rounded"><code>curl -X GET http://localhost:8000/api/token/user-info/?endpoint=/api/rh/eu/ \
+  -H "Authorization: Bearer &lt;access_token&gt;"</code></pre>
+
+            <h6>Forma 2: Via Corpo da Requisição JSON</h6>
+            <pre class="bg-dark text-white p-2 rounded"><code>{
+  "token": "&lt;access_token&gt;",
+  "endpoint": "/api/rh/eu/"
+}</code></pre>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const viewer = document.getElementById("response-json-viewer");
+  const badge = document.getElementById("response-status-badge");
+  const urlInfo = document.getElementById("response-url-info");
+  const copyBtn = document.getElementById("btn-copy-response");
+
+  const pairInputAccess = document.getElementById("access-token-input");
+  const refreshInputToken = document.getElementById("refresh-token-input");
+  const verifyInputToken = document.getElementById("verify-token-input");
+
+  function displayResponse(status, statusText, url, data) {
+    urlInfo.textContent = `[${new Date().toLocaleTimeString()}] ${url}`;
+    badge.textContent = `HTTP ${status} ${statusText}`;
+    badge.className = status >= 200 && status < 300 ? "badge bg-success fs-6" : "badge bg-danger fs-6";
+    viewer.textContent = JSON.stringify(data, null, 2);
+    copyBtn.disabled = false;
+  }
+
+  copyBtn.addEventListener("click", function() {
+    navigator.clipboard.writeText(viewer.textContent).then(() => {
+      alert("Resposta copiada para a área de transferência!");
+    });
+  });
+
+  function updateTokensInUI(access, refresh) {
+    if (access) {
+      pairInputAccess.value = access;
+      verifyInputToken.value = access;
+    }
+    if (refresh) {
+      refreshInputToken.value = refresh;
+    }
+  }
+
+  // 1. OBTAIN PAIR
+  document.getElementById("form-obtain-pair").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const spinner = document.getElementById("spinner-pair");
+    spinner.classList.remove("d-none");
+
+    const username = document.getElementById("pair-username").value;
+    const password = document.getElementById("pair-password").value;
+
+    fetch("/api/token/pair/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: username, password: password })
+    })
+    .then(async res => {
+      const data = await res.json().catch(() => ({ detail: "Resposta não-JSON retornada" }));
+      displayResponse(res.status, res.statusText, "POST /api/token/pair/", data);
+      if (res.ok && data.access) {
+        updateTokensInUI(data.access, data.refresh);
+      }
+    })
+    .catch(err => {
+      displayResponse(500, "Error", "POST /api/token/pair/", { detail: err.message });
+    })
+    .finally(() => spinner.classList.add("d-none"));
+  });
+
+  // 2. REFRESH
+  document.getElementById("form-refresh").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const spinner = document.getElementById("spinner-refresh");
+    spinner.classList.remove("d-none");
+
+    const refresh = refreshInputToken.value;
+
+    fetch("/api/token/refresh/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ refresh: refresh })
+    })
+    .then(async res => {
+      const data = await res.json().catch(() => ({ detail: "Resposta não-JSON retornada" }));
+      displayResponse(res.status, res.statusText, "POST /api/token/refresh/", data);
+      if (res.ok && data.access) {
+        updateTokensInUI(data.access, data.refresh);
+      }
+    })
+    .catch(err => {
+      displayResponse(500, "Error", "POST /api/token/refresh/", { detail: err.message });
+    })
+    .finally(() => spinner.classList.add("d-none"));
+  });
+
+  // 3. VERIFY
+  document.getElementById("form-verify").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const spinner = document.getElementById("spinner-verify");
+    spinner.classList.remove("d-none");
+
+    const token = verifyInputToken.value;
+
+    fetch("/api/token/verify/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token: token })
+    })
+    .then(async res => {
+      const data = await res.json().catch(() => ({ detail: "Resposta não-JSON retornada" }));
+      displayResponse(res.status, res.statusText, "POST /api/token/verify/", data);
+    })
+    .catch(err => {
+      displayResponse(500, "Error", "POST /api/token/verify/", { detail: err.message });
+    })
+    .finally(() => spinner.classList.add("d-none"));
+  });
+
+  // 4. CONSUME API VIA HEADER
+  document.getElementById("btn-consume-header").addEventListener("click", function() {
+    const spinner = document.getElementById("spinner-consume-header");
+    spinner.classList.remove("d-none");
+
+    const token = pairInputAccess.value;
+    const endpoint = document.getElementById("api-endpoint-input").value;
+    const url = `/api/token/user-info/?endpoint=${encodeURIComponent(endpoint)}`;
+
+    fetch(url, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    })
+    .then(async res => {
+      const data = await res.json().catch(() => ({ detail: "Resposta não-JSON retornada" }));
+      displayResponse(res.status, res.statusText, `GET ${url}`, data);
+    })
+    .catch(err => {
+      displayResponse(500, "Error", `GET ${url}`, { detail: err.message });
+    })
+    .finally(() => spinner.classList.add("d-none"));
+  });
+
+  // 4. CONSUME API VIA JSON BODY
+  document.getElementById("btn-consume-json").addEventListener("click", function() {
+    const spinner = document.getElementById("spinner-consume-json");
+    spinner.classList.remove("d-none");
+
+    const token = pairInputAccess.value;
+    const endpoint = document.getElementById("api-endpoint-input").value;
+
+    fetch("/api/token/user-info/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token: token, endpoint: endpoint })
+    })
+    .then(async res => {
+      const data = await res.json().catch(() => ({ detail: "Resposta não-JSON retornada" }));
+      displayResponse(res.status, res.statusText, "POST /api/token/user-info/", data);
+    })
+    .catch(err => {
+      displayResponse(500, "Error", "POST /api/token/user-info/", { detail: err.message });
+    })
+    .finally(() => spinner.classList.add("d-none"));
+  });
+});
+</script>
+{% endblock %}

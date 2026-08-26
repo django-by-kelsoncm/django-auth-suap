@@ -11,6 +11,7 @@
     <div class="container">
       <a class="navbar-brand" href="/">🐦 django-suap-auth sandbox</a>
       <div class="ms-auto d-flex align-items-center gap-2">
+        <a href="{% url 'jwt_tester' %}" class="btn btn-outline-warning btn-sm">🔑 JWT Tester & Docs</a>
         {% if user.is_authenticated %}
           <span class="text-light small">{{ user.get_full_name|default:user.username }}</span>
           <a href="{% url 'dashboard' %}" class="btn btn-outline-light btn-sm">Dashboard</a>

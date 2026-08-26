@@ -31,3 +31,11 @@ def dashboard(request):
             "raw_json_pretty": raw_json_pretty,
         },
     )
+
+
+def jwt_tester(request):
+    suap_auth = getattr(settings, "SUAP_AUTH", {})
+    context = {
+        "suap_client_id": suap_auth.get("CLIENT_ID", ""),
+    }
+    return render(request, "home/jwt_test.html", context)
