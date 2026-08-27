@@ -1879,3 +1879,36 @@ def test_get_suap_settings_legacy_user_mapper(settings):
     }
     cfg = get_suap_settings()
     assert cfg["user_info_mappers"] == ["django_suap_auth.mappers.DefaultAttrMapUserMapper"]
+
+
+def test_suap_auth_templatetags(settings):
+    from django_suap_auth.templatetags.suap_auth import suap_base_url, suap_login_url
+
+    settings.SUAP_AUTH = {
+        "CLIENT_ID": "id",
+        "CLIENT_SECRET": "sec",
+        "REDIRECT_URI": "http://localhost/callback/",
+        "BASE_URL": "https://suap.custom.edu.br/",
+    }
+    assert suap_base_url() == "https://suap.custom.edu.br"
+    assert suap_login_url() == "https://suap.custom.edu.br/accounts/login/"
+
+
+def test_logged_out_template_rendering(settings):
+    from django.template.loader import render_to_string
+
+    settings.SUAP_AUTH = {
+        "CLIENT_ID": "id",
+        "CLIENT_SECRET": "sec",
+        "REDIRECT_URI": "http://localhost/callback/",
+        "BASE_URL": "https://suap.test.edu.br",
+    }
+    html = render_to_string("registration/logged_out.html")
+    assert "Sessão Encerrada" in html
+    assert "Você fez logout apenas na sessão desta aplicação" in html
+    assert "SUAP não possui um mecanismo de fazer logout seguro em TODAS as aplicações" in html
+    assert "1. Fazer logout no SUAP e depois fechar a janela" in html
+    assert "2. Fechar a janela manualmente" in html
+    assert "3. Voltar a fazer login na aplicação" in html
+    assert "4. Seguir como está" in html
+    assert "https://suap.test.edu.br/accounts/login/" in html

@@ -29,3 +29,9 @@ Proteção CSRF
 =============
 
 O parâmetro de estado é gerado usando ``secrets.token_urlsafe(32)`` e armazenado na sessão. Ele é validado no callback para prevenir ataques CSRF.
+
+Encerramento de Sessão (Logout)
+===============================
+
+Ao efetuar logout através da rota padrão (``/auth/suap/logout/``), é exibido o template ``registration/logged_out.html``.
+Este template orienta o usuário de que o logout encerra apenas a sessão da aplicação local e explica que o SUAP não possui um mecanismo centralizado de Single Sign-Out em todas as aplicações. Ele oferece opções claras de ação, incluindo link direto para o SUAP via a tag ``{% suap_login_url %}``.
