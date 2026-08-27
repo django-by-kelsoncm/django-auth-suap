@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "django-suap-auth"
-version = "1.5.2"
+version = "1.5.3"
 description = "Django OAuth2 authentication backend for SUAP (IFRN academic management system)"
 readme = "README.md"
 license = { file = "LICENSE" }
@@ -66,3 +66,6 @@ select = ["E", "F", "W", "I"]
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["django_suap_auth*"]
+
+[tool.setuptools.package-data]
+"*" = ["*.html", "*.css", "*.js", "*.png", "*.jpg", "*.svg"]
