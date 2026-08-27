@@ -253,10 +253,11 @@
                     Caso deseje acessar a aplicação novamente, clique no botão abaixo para retornar à página de login.
                 </div>
                 {% url 'suap_auth:login' as login_url %}
-                {% if not login_url %}
-                    {% url 'login' as login_url %}
+                {% if login_url %}
+                    <a href="{% url 'suap_auth:login' %}" class="btn btn-outline">Voltar ao Login</a>
+                {% else %}
+                    <a href="/" class="btn btn-outline">Voltar ao Login</a>
                 {% endif %}
-                <a href="{{ login_url|default:'/' }}" class="btn btn-outline">Voltar ao Login</a>
             </div>
 
             <!-- Opção 4: Seguir como está -->
