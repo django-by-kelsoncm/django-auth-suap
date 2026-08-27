@@ -273,16 +273,16 @@ def sync_suap_profile(user, raw_info):
 
     # Sync DadosBrutos
     clean_raw_info = {k: v for k, v in raw_info.items() if not k.startswith("_")}
-    DadosBrutos.objects.update_or_create(perfil=perfil, defaults={"data": clean_raw_info})
+    DadosBrutos.objects.update_or_create(user=user, defaults={"data": clean_raw_info})
 
     # Sync Vinculos
     if meus_vinculos:
-        perfil.vinculos.all().delete()
+        user.suap_vinculos.all().delete()
         for item in meus_vinculos:
             if isinstance(item, dict):
                 det = item.get("detalhamento") if isinstance(item.get("detalhamento"), dict) else {}
                 Vinculo.objects.create(
-                    perfil=perfil,
+                    user=user,
                     suap_id=to_int(item.get("id")),
                     identificador=str(item.get("identificador", "")),
                     tipo=item.get("tipo", ""),
@@ -297,9 +297,9 @@ def sync_suap_profile(user, raw_info):
                     estrangeiro=bool(item.get("estrangeiro", False)),
                 )
     elif vinculo_dict:
-        perfil.vinculos.all().delete()
+        user.suap_vinculos.all().delete()
         Vinculo.objects.create(
-            perfil=perfil,
+            user=user,
             suap_id=to_int(vinculo_dict.get("id")),
             identificador=str(vinculo_dict.get("matricula") or identificacao),
             tipo=vinculo_dict.get("tipo_vinculo") or raw_info.get("tipo_vinculo", ""),

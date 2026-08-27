@@ -166,7 +166,7 @@ class Perfil(models.Model):
 
 
 class DadosBrutos(models.Model):
-    perfil = models.OneToOneField(Perfil, on_delete=models.CASCADE, related_name="raw_data")
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="suap_raw_data")
     data = models.JSONField(default=dict, null=True, blank=True)
 
     class Meta:
@@ -174,11 +174,11 @@ class DadosBrutos(models.Model):
         verbose_name_plural = "Dados Brutos"
 
     def __str__(self):
-        return f"DadosBrutos para {self.perfil.user.username}"
+        return f"DadosBrutos para {self.user.username}"
 
 
 class Vinculo(models.Model):
-    perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name="vinculos")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="suap_vinculos")
     suap_id = models.IntegerField(null=True, blank=True)
     identificador = models.CharField(max_length=50, null=True, blank=True)
     tipo = models.CharField(max_length=50, null=True, blank=True)

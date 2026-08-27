@@ -54,14 +54,14 @@ def test_sync_suap_profile_servidor():
     assert str(perfil) == f"Perfil de {user.username}"
 
     # Check DadosBrutos
-    raw_data = perfil.raw_data
+    raw_data = user.suap_raw_data
     assert raw_data is not None
     assert raw_data.data["id"] == 100
     assert "DadosBrutos para" in str(raw_data)
 
     # Check Vinculo
-    assert perfil.vinculos.count() == 1
-    v = perfil.vinculos.first()
+    assert user.suap_vinculos.count() == 1
+    v = user.suap_vinculos.first()
     assert v.identificador == "2080882"
     assert v.tipo == "servidor"
     assert "Vínculo (servidor)" in str(v)
@@ -289,12 +289,12 @@ def test_sync_suap_profile_with_vinculo_and_meus_vinculos_matching():
     assert perfil.curriculo_lattes == "http://lattes.cnpq.br/1734494254835148"
     assert "(84) 3092-8938 (ramal: 8938)" in perfil.telefones_institucionais
 
-    assert perfil.vinculos.count() == 3
-    servidor_vinculo = perfil.vinculos.get(identificador="2080882")
+    assert user.suap_vinculos.count() == 3
+    servidor_vinculo = user.suap_vinculos.get(identificador="2080882")
     assert servidor_vinculo.cargo == "ANALISTA DE TEC DA INFORMACAO"
     assert servidor_vinculo.categoria == "Técnico Administrativo"
 
-    aluno_vinculo = perfil.vinculos.get(identificador="20251ZL00140041")
+    aluno_vinculo = user.suap_vinculos.get(identificador="20251ZL00140041")
     assert aluno_vinculo.curso == course_name
     assert aluno_vinculo.ativo is False
 
@@ -581,3 +581,72 @@ def test_perfil_properties():
     # Test zoom_level invalid value fallback
     p.settings["accessibility"]["zoom_level"] = "invalid"
     assert p.zoom_level == 100
+
+
+@pytest.mark.django_db
+def test_profile_admin_registration():
+    import importlib
+
+    from django.contrib import admin
+
+    import django_suap_auth.profile.admin
+    from django_suap_auth.profile.admin import CustomUserAdmin
+    from django_suap_auth.profile.models import DadosBrutos, Perfil, Vinculo
+
+    user_admin = admin.site._registry.get(User)
+    assert isinstance(user_admin, CustomUserAdmin)
+    inline_models = [inline.model for inline in user_admin.inlines]
+    assert Perfil in inline_models
+    assert Vinculo in inline_models
+    assert DadosBrutos in inline_models
+
+    # Test foto_preview method on PerfilInline
+    perfil_inline_cls = [inline for inline in user_admin.inlines if inline.model == Perfil][0]
+    perfil_inline = perfil_inline_cls(User, admin.site)
+    p = Perfil(user=User(username="test_foto"), url_foto_150x200="http://example.com/foto.jpg")
+    preview = perfil_inline.foto_preview(p)
+    assert '<img src="http://example.com/foto.jpg"' in preview
+
+    p_no_foto = Perfil(user=User(username="nofoto"))
+    assert perfil_inline.foto_preview(p_no_foto) == "Sem foto"
+    assert perfil_inline.foto_preview(None) == "Sem foto"
+
+    # Trigger NotRegistered exception handler in admin.py
+    admin.site.unregister(User)
+    importlib.reload(django_suap_auth.profile.admin)
+
+
+@pytest.mark.django_db
+def test_migration_0008_populate_user_from_perfil():
+    import importlib
+    from unittest.mock import MagicMock
+
+    mig = importlib.import_module("django_suap_auth.profile.migrations.0008_dadosbrutos_user_vinculo_user")
+
+    field_perfil = MagicMock()
+    field_perfil.name = "perfil"
+
+    mock_dados_brutos = MagicMock()
+    mock_dados_brutos._meta.get_fields.return_value = [field_perfil]
+    mock_db_obj = MagicMock()
+    mock_db_obj.perfil.user_id = 123
+    mock_dados_brutos.objects.filter.return_value = [mock_db_obj]
+
+    mock_vinculo = MagicMock()
+    mock_vinculo._meta.get_fields.return_value = [field_perfil]
+    mock_v_obj = MagicMock()
+    mock_v_obj.perfil.user_id = 456
+    mock_vinculo.objects.filter.return_value = [mock_v_obj]
+
+    mock_apps = MagicMock()
+
+    def get_model_side_effect(app_label, model_name):
+        if model_name == "DadosBrutos":
+            return mock_dados_brutos
+        return mock_vinculo
+
+    mock_apps.get_model.side_effect = get_model_side_effect
+
+    mig.populate_user_from_perfil(mock_apps, MagicMock())
+    assert mock_db_obj.user_id == 123
+    assert mock_v_obj.user_id == 456

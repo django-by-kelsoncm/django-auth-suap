@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "simple_history",
+    "django_json_widget",
     "django_suap_auth",
     "django_suap_auth.profile",
     "django_suap_auth.jwt",
@@ -96,8 +97,8 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 SUAP_AUTH = {
-    "CLIENT_ID": os.environ.get("SUAP_CLIENT_ID", ""),
-    "CLIENT_SECRET": os.environ.get("SUAP_CLIENT_SECRET", ""),
+    "CLIENT_ID": os.environ.get("SUAP_CLIENT_ID", "dev_client_id"),
+    "CLIENT_SECRET": os.environ.get("SUAP_CLIENT_SECRET", "dev_client_secret"),
     "REDIRECT_URI": os.environ.get("SUAP_REDIRECT_URI", "http://localhost:8000/auth/suap/callback/"),
     "SCOPES": ["identificacao", "email"],
     "DIRECT_REDIRECT": os.environ.get("SUAP_DIRECT_REDIRECT", "True") == "True",

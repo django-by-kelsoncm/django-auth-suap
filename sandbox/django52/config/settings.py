@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "simple_history",
+    "django_json_widget",
     "django_suap_auth",
     "django_suap_auth.profile",
     "django_suap_auth.jwt",
@@ -96,11 +97,64 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 SUAP_AUTH = {
-    "CLIENT_ID": os.environ.get("SUAP_AUTH_CLIENT_ID", ""),
-    "CLIENT_SECRET": os.environ.get("SUAP_AUTH_CLIENT_SECRET", ""),
-    "REDIRECT_URI": os.environ.get("SUAP_AUTH_REDIRECT_URI", "http://localhost:8000/auth/suap/callback/"),
-    "SCOPES": os.environ.get("SUAP_AUTH_SCOPES", "identificacao,email").split(","),
-    "DIRECT_REDIRECT": os.environ.get("SUAP_AUTH_DIRECT_REDIRECT", "True") == "True",
+    "CLIENT_ID": os.environ.get("SUAP_CLIENT_ID", "dev_client_id"),
+    "CLIENT_SECRET": os.environ.get("SUAP_CLIENT_SECRET", "dev_client_secret"),
+    "REDIRECT_URI": os.environ.get("SUAP_REDIRECT_URI", "http://localhost:8000/auth/suap/callback/"),
+    "SCOPES": ["identificacao", "email"],
+    "DIRECT_REDIRECT": os.environ.get("SUAP_DIRECT_REDIRECT", "True") == "True",
+    "BACKEND": "django_suap_auth.profile.backends.SuapProfileAuthBackend",
+    "USER_JSON_FIELD": "suap_data",
+    "USER_INFO_ENDPOINTS": [
+        # RH / Servidor
+        "/api/rh/eu/",
+        "/api/rh/meus-dados/",
+        {
+            "endpoint": "/api/rh/meus-vinculos/",
+            "namespace": "meus_vinculos",
+            "extract_list": "results",
+        },
+        {
+            "endpoint": "/api/rh/servidores_funcao_ativa/?matricula={identificacao}",
+            "namespace": "servidores_funcao_ativa",
+            "extract_list": "results",
+        },
+        {
+            "endpoint": "/api/rh/meu-historico-funcional/",
+            "namespace": "meu_historico_funcional",
+            "extract_list": "results",
+        },
+        # Ensino / Aluno
+        {
+            "endpoint": "/api/ensino/meus-dados-aluno/",
+            "namespace": "meus_dados_aluno",
+        },
+        {
+            "endpoint": "/api/ensino/requisitos-conclusao/",
+            "namespace": "requisitos_conclusao",
+        },
+        {
+            "endpoint": "/api/ensino/periodos/",
+            "namespace": "periodos",
+            "extract_list": "results",
+        },
+        {
+            "endpoint": "/api/ensino/diarios/{semestre}/",
+            "for_each": "periodos",
+            "namespace": "diarios",
+            "extract_list": "results",
+        },
+        {
+            "endpoint": "/api/ensino/meus-periodos-letivos/",
+            "namespace": "meus_periodos_letivos",
+            "extract_list": "results",
+        },
+        {
+            "endpoint": "/api/ensino/meu-boletim/{ano_letivo}/{periodo_letivo}/",
+            "for_each": "meus_periodos_letivos",
+            "namespace": "boletins",
+            "extract_list": "results",
+        },
+    ],
 }
 
 LOGIN_REDIRECT_URL = "/dashboard/"

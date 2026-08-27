@@ -1,0 +1,29 @@
+.form-row.field-foto_preview.field-url_foto_75x100.field-url_foto_150x200 {
+    display: grid !important;
+    grid-template-columns: min-content 1fr !important;
+    grid-template-rows: auto auto !important;
+    gap: 10px 20px !important;
+    align-items: start !important;
+}
+
+.form-row.field-foto_preview.field-url_foto_75x100.field-url_foto_150x200 .fieldBox.field-foto_preview {
+    grid-column: 1 !important;
+    grid-row: 1 / span 2 !important;
+    float: none !important;
+    width: auto !important;
+    padding-right: 0 !important;
+}
+
+.form-row.field-foto_preview.field-url_foto_75x100.field-url_foto_150x200 .fieldBox.field-url_foto_75x100 {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    float: none !important;
+    width: 100% !important;
+}
+
+.form-row.field-foto_preview.field-url_foto_75x100.field-url_foto_150x200 .fieldBox.field-url_foto_150x200 {
+    grid-column: 2 !important;
+    grid-row: 2 !important;
+    float: none !important;
+    width: 100% !important;
+}

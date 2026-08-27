@@ -10,8 +10,8 @@ Visão Geral dos Modelos
 O submódulo define 3 modelos principais:
 
 1. ``Perfil``: Modelo 1-para-1 vinculado ao modelo ``User`` do Django (via ``user.suap_profile``). Armazena dados pessoais, acadêmicos e funcionais.
-2. ``DadosBrutos``: Modelo 1-para-1 vinculado ao ``Perfil`` (via ``perfil.raw_data``). Armazena em um campo ``JSONField`` a resposta completa em JSON retornada pelas APIs do SUAP.
-3. ``Vinculo``: Modelo 1-para-Muitos vinculado ao ``Perfil`` (via ``perfil.vinculos``). Armazena a lista de vínculos do usuário com a instituição (ex: servidor, aluno, estagiário).
+2. ``DadosBrutos``: Modelo 1-para-1 vinculado ao ``User`` (via ``user.suap_raw_data``). Armazena em um campo ``JSONField`` a resposta completa em JSON retornada pelas APIs do SUAP.
+3. ``Vinculo``: Modelo 1-para-Muitos vinculado ao ``User`` (via ``user.suap_vinculos``). Armazena a lista de vínculos do usuário com a instituição (ex: servidor, aluno, estagiário).
 
 Instalação e Configuração
 =========================
@@ -243,8 +243,8 @@ Sincronização Automática
 Ao utilizar o backend ``SuapProfileAuthBackend``, em todo login (ou criação de usuário) os seguintes procedimentos são executados automaticamente:
 
 1. Uma instância de ``Perfil`` é criada/atualizada para o usuário.
-2. A resposta JSON completa acumulada da API do SUAP é salva em ``DadosBrutos`` (acessível via ``user.suap_profile.raw_data.data``).
-3. A lista de vínculos em ``Vinculo`` é sincronizada (acessível via ``user.suap_profile.vinculos.all()``).
+2. A resposta JSON completa acumulada da API do SUAP é salva em ``DadosBrutos`` (acessível via ``user.suap_raw_data.data``).
+3. A lista de vínculos em ``Vinculo`` é sincronizada (acessível via ``user.suap_vinculos.all()``).
 4. O campo ``first_login`` é preenchido com a data/hora atual no primeiro acesso.
 
 Propriedades Calculadas e Acessibilidade

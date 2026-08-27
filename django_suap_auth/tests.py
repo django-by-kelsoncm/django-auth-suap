@@ -1882,7 +1882,7 @@ def test_get_suap_settings_legacy_user_mapper(settings):
 
 
 def test_suap_auth_templatetags(settings):
-    from django_suap_auth.templatetags.suap_auth import suap_base_url, suap_login_url
+    from django_suap_auth.templatetags.suap_auth import suap_base_url, suap_login_url, suap_logout_url
 
     settings.SUAP_AUTH = {
         "CLIENT_ID": "id",
@@ -1892,6 +1892,7 @@ def test_suap_auth_templatetags(settings):
     }
     assert suap_base_url() == "https://suap.custom.edu.br"
     assert suap_login_url() == "https://suap.custom.edu.br/accounts/login/"
+    assert suap_logout_url() == "https://suap.custom.edu.br/accounts/logout/"
 
 
 def test_logged_out_template_rendering(settings):
@@ -1911,7 +1912,7 @@ def test_logged_out_template_rendering(settings):
     assert "2. Fechar a janela manualmente" in html
     assert "3. Voltar a fazer login na aplicação" in html
     assert "4. Seguir como está" in html
-    assert "https://suap.test.edu.br/accounts/login/" in html
+    assert "https://suap.test.edu.br/accounts/logout/" in html
 
 
 def test_suap_logout_view_get(rf, db):

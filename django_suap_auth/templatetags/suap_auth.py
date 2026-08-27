@@ -17,3 +17,10 @@ def suap_login_url():
     """Return the SUAP login/logout accounts page URL."""
     base_url = suap_base_url()
     return f"{base_url}/accounts/login/"
+
+
+@register.simple_tag
+def suap_logout_url():
+    """Return the SUAP login/logout accounts page URL."""
+    base_url = suap_base_url()
+    return f"{base_url}/accounts/logout/"
