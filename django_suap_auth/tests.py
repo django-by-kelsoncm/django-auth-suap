@@ -1912,3 +1912,40 @@ def test_logged_out_template_rendering(settings):
     assert "3. Voltar a fazer login na aplicação" in html
     assert "4. Seguir como está" in html
     assert "https://suap.test.edu.br/accounts/login/" in html
+
+
+def test_suap_logout_view_get(rf, db):
+    from django.contrib.auth.models import User
+    from django.contrib.sessions.middleware import SessionMiddleware
+    from django_suap_auth.views import SuapLogoutView
+
+    user = User.objects.create_user(username="testlogoutget")
+    request = rf.get("/auth/suap/logout/")
+    request.user = user
+    middleware = SessionMiddleware(lambda req: None)
+    middleware.process_request(request)
+    request.session.save()
+
+    view = SuapLogoutView.as_view(next_page="/")
+    response = view(request)
+    assert response.status_code == 302
+    assert response.url == "/"
+
+
+def test_suap_logout_view_post(rf, db):
+    from django.contrib.auth.models import User
+    from django.contrib.sessions.middleware import SessionMiddleware
+    from django_suap_auth.views import SuapLogoutView
+
+    user = User.objects.create_user(username="testlogoutpost")
+    request = rf.post("/auth/suap/logout/")
+    request._dont_enforce_csrf_checks = True
+    request.user = user
+    middleware = SessionMiddleware(lambda req: None)
+    middleware.process_request(request)
+    request.session.save()
+
+    view = SuapLogoutView.as_view(next_page="/")
+    response = view(request)
+    assert response.status_code == 302
+    assert response.url == "/"

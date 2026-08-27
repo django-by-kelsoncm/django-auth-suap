@@ -11,13 +11,27 @@ from django.views import View
 from .exceptions import SuapStateMismatchError, SuapTokenError, SuapUserInfoError, SuapUserNotAllowedError
 from .utils import generate_state, get_oauth2_client, get_suap_settings
 
+from django.contrib.auth.views import LogoutView
+
 logger = logging.getLogger(__name__)
 
 __all__ = [
     "SuapLoginView",
     "SuapCallbackView",
+    "SuapLogoutView",
     "SuapAuthenticationError",
 ]
+
+
+class SuapLogoutView(LogoutView):
+    """
+    Handles user logout for SUAP authentication. Supports both GET and POST requests.
+    """
+
+    http_method_names = ["get", "post", "options"]
+
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
 
 
 class SuapLoginView(View):
