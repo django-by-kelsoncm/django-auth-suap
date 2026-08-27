@@ -3,6 +3,7 @@ from urllib.parse import urlsplit, urlunsplit
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.views import LogoutView
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.utils.http import url_has_allowed_host_and_scheme
@@ -10,8 +11,6 @@ from django.views import View
 
 from .exceptions import SuapStateMismatchError, SuapTokenError, SuapUserInfoError, SuapUserNotAllowedError
 from .utils import generate_state, get_oauth2_client, get_suap_settings
-
-from django.contrib.auth.views import LogoutView
 
 logger = logging.getLogger(__name__)
 

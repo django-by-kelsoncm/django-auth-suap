@@ -1917,6 +1917,7 @@ def test_logged_out_template_rendering(settings):
 def test_suap_logout_view_get(rf, db):
     from django.contrib.auth.models import User
     from django.contrib.sessions.middleware import SessionMiddleware
+
     from django_suap_auth.views import SuapLogoutView
 
     user = User.objects.create_user(username="testlogoutget")
@@ -1935,6 +1936,7 @@ def test_suap_logout_view_get(rf, db):
 def test_suap_logout_view_post(rf, db):
     from django.contrib.auth.models import User
     from django.contrib.sessions.middleware import SessionMiddleware
+
     from django_suap_auth.views import SuapLogoutView
 
     user = User.objects.create_user(username="testlogoutpost")
