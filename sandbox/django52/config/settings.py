@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "django_suap_auth.profile",
     "django_suap_auth.jwt",
     "django_suap_auth.erros",
+    "django_suap_auth.audit",
     "home",
 ]
 

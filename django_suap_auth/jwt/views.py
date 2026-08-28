@@ -80,6 +80,14 @@ class SuapTokenPairView(BaseSuapTokenView):
 
         client = self.get_client()
         status_code, response_data = client.obtain_token_pair(username, password)
+        if status_code == 200:
+            from django_suap_auth.audit.signals import suap_jwt_issued
+
+            suap_jwt_issued.send(sender=self.__class__, request=request, token_type="pair")
+        else:
+            from django_suap_auth.audit.signals import suap_auth_failed
+
+            suap_auth_failed.send(sender=self.__class__, request=request, reason=f"JWT pair failed: {status_code}")
         return JsonResponse(response_data, status=status_code)
 
 
@@ -107,6 +115,10 @@ class SuapTokenRefreshView(BaseSuapTokenView):
 
         client = self.get_client()
         status_code, response_data = client.refresh_token(refresh)
+        if status_code == 200:
+            from django_suap_auth.audit.signals import suap_jwt_refreshed
+
+            suap_jwt_refreshed.send(sender=self.__class__, request=request)
         return JsonResponse(response_data, status=status_code)
 
 

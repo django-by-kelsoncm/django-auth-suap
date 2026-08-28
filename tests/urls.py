@@ -1,3 +1,4 @@
+from django.contrib import admin
 from django.http import HttpResponse
 from django.urls import include, path
 
@@ -7,6 +8,8 @@ def dummy_view(request):
 
 
 urlpatterns = [
+    path("admin/", admin.site.urls),
+    path("audit/", include("django_suap_auth.audit.urls")),
     path("dashboard/", dummy_view, name="dashboard"),
     path("profile/", dummy_view, name="profile"),
     path("home/", dummy_view, name="home"),

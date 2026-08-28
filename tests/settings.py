@@ -10,6 +10,7 @@ INSTALLED_APPS = [
     "django_suap_auth.jwt",
     "django_suap_auth.erros",
     "django_suap_auth.impersonation",
+    "django_suap_auth.audit",
 ]
 DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory:"}}
 SUAP_AUTH = {

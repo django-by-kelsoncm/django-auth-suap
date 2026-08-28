@@ -77,6 +77,13 @@ class ImpersonateView(View):
             return _get_safe_redirect(request)
 
         request.session["impersonated_user"] = getattr(target_user, username_field)
+        request.session["_impersonate_by"] = user.pk
+        from django_suap_auth.audit.signals import suap_impersonate_started
+
+        suap_impersonate_started.send(
+            sender=self.__class__, request=request, impersonator=user, target_user=target_user
+        )
+
         messages.success(request, f"You are now impersonating {target_username}.")
         return _get_safe_redirect(request)
 
@@ -94,7 +101,18 @@ class StopImpersonatingView(View):
 
     def _handle_stop(self, request):
         if "impersonated_user" in request.session:
+            impersonator = getattr(request, "user", None)
             request.session.pop("impersonated_user", None)
+            request.session.pop("_impersonate_by", None)
+            from django_suap_auth.audit.signals import suap_impersonate_stopped
+
+            suap_impersonate_stopped.send(
+                sender=self.__class__,
+                request=request,
+                impersonator=impersonator,
+                target_user=None,
+            )
+
             messages.success(request, "Impersonation ended successfully.")
         return _get_safe_redirect(request)
 
