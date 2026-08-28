@@ -1,9 +1,8 @@
-# Configuration file for Sphinx documentation of django-suap-auth
+# Configuration file for Sphinx documentation of django-suap-auth (English)
 import os
 import sys
 
-# Ensure package root is in Python path
-sys.path.insert(0, os.path.abspath(".."))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..")))
 
 import django_docs_theme
 
@@ -11,7 +10,7 @@ project = "django-suap-auth"
 copyright = "2026, Kelson C. Medeiros"
 author = "Kelson C. Medeiros"
 release = "1.6.0"
-language = "pt_BR"
+language = "en"
 
 extensions = [
     "sphinx.ext.autodoc",
@@ -29,21 +28,20 @@ html_theme_path = [django_docs_theme.get_html_theme_path()]
 
 html_theme_options = {
     "project_name": "django-suap-auth",
-    "tagline": "Backend de autenticação OAuth2 do Django para SUAP",
+    "tagline": "Django OAuth2 authentication backend for SUAP",
     "github_url": "https://github.com/django-by-kelsoncm/django-auth-suap",
     "github_repo": "django-by-kelsoncm/django-auth-suap",
     "github_version": "main",
-    "doc_path": "docs/",
+    "doc_path": "docs/en/1.6.x/",
     "show_edit_on_github": True,
     "navigation_links": (
-        "Início|index.html, Instalação|installation.html, Configuração|configuration.html, "
-        "Modelos de Perfil|profile-models.html, Endpoints JWT|jwt-endpoints.html, "
-        "Escopos|scopes.html, Mapeamento|attribute-mapping.html, Pipeline|user-info-pipeline.html, "
-        "Fetchers|fetchers.html, Mappers|mappers.html, Fluxo de Autenticação|auth-flow.html, "
-        "Sandboxes|sandboxes.html, Desenvolvimento|development.html, Release|release.html, "
+        "Home|index.html, Installation|installation.html, Configuration|configuration.html, "
+        "Profile Models|profile-models.html, JWT Endpoints|jwt-endpoints.html, "
+        "Scopes|scopes.html, Attribute Mapping|attribute-mapping.html, Pipeline|user-info-pipeline.html, "
+        "Fetchers|fetchers.html, Mappers|mappers.html, Auth Flow|auth-flow.html, "
+        "Sandboxes|sandboxes.html, Development|development.html, Release|release.html, "
         "GitHub|https://github.com/django-by-kelsoncm/django-auth-suap"
     ),
 }
-
 
 html_static_path = []

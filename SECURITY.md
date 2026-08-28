@@ -1,22 +1,49 @@
-# Política de Segurança
+# Security Policy
 
-## Versões Suportadas
+## Supported Versions
 
-| Versão | Suportada          |
+The following versions of `django-suap-auth` are currently supported with security updates:
+
+| Version | Supported          |
 | ------- | ------------------ |
-| 0.1.x   | :white_check_mark: |
+| 1.6.x   | :white_check_mark: |
+| < 1.6.0 | :x:                |
 
-## Relatando uma Vulnerabilidade
+We strongly recommend upgrading to the latest `1.6.x` release to receive security updates.
 
-Se você descobrir uma vulnerabilidade de segurança no django-suap-auth, por favor relate-a abrindo um [Aviso de Segurança do GitHub](https://github.com/kelsoncm/django-suap-auth/security/advisories/new).
+---
 
-**Por favor, não relate vulnerabilidades de segurança através de issues públicas do GitHub.**
+## Reporting a Vulnerability
 
-Reconheceremos seu relatório dentro de 48 horas e forneceremos uma resposta mais detalhada dentro de 7 dias. Se o problema for confirmado, lançaremos um patch o mais rápido possível.
+We take the security of `django-suap-auth` seriously. If you discover a security vulnerability, please report it responsibly:
 
-## Considerações de Segurança
+1. **Private Vulnerability Reporting**: Use GitHub's [Private Vulnerability Reporting](https://github.com/django-by-kelsoncm/django-auth-suap/security/advisories/new) feature on this repository.
+2. **Direct Contact**: If Private Vulnerability Reporting is unavailable, email **Kelson C. Medeiros** at [kelsoncm@gmail.com](mailto:kelsoncm@gmail.com) with details.
 
-- O parâmetro de estado OAuth2 é validado em cada callback para prevenir ataques CSRF.
-- Tokens de acesso nunca são armazenados; eles são trocados imediatamente por informações do usuário.
-- Segredos do cliente devem ser mantidos fora do controle de versão.
-- Sempre use HTTPS em produção (`SUAP_REDIRECT_URI` deve usar HTTPS em produção).
+### Please Include:
+- A description of the vulnerability and potential impact.
+- Steps to reproduce the issue or a proof of concept (PoC).
+- Affected versions.
+
+### What NOT to do:
+- Please **do not** open a public GitHub issue for security vulnerabilities.
+- Please **do not** disclose the vulnerability publicly until a patch has been released.
+
+---
+
+## Response Process & Timelines
+
+- **Acknowledgement**: We will acknowledge receipt of your report within 48 hours.
+- **Triage & Patch**: We aim to investigate and develop a security patch within 7 business days.
+- **Disclosure**: Once a fix is released, a public security advisory will be published detailing the vulnerability and fix.
+
+---
+
+## Security Best Practices for Production
+
+When deploying `django-suap-auth` in production environments, ensure you follow these security guidelines:
+
+1. **Keep Secrets Confidential**: Never commit `CLIENT_SECRET` to version control. Always load configuration from environment variables (e.g., `python-dotenv`, `django-environ`).
+2. **Use HTTPS**: Always use HTTPS for both your application URL (`REDIRECT_URI`) and the SUAP server URL (`BASE_URL`) to prevent token interception.
+3. **Session Security**: Keep `DIRECT_REDIRECT = True` or ensure proper state validation parameters are maintained across sessions.
+4. **Regular Updates**: Keep Django and `django-suap-auth` updated to their latest security releases.

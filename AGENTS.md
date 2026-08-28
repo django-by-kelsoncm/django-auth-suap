@@ -16,7 +16,7 @@
   2. Elevar versão em `pyproject.toml` e `docs/conf.py`.
   3. Criar e testar migrações.
   4. Garantir 100% de cobertura de testes.
-  5. Atualizar documentação em `docs/`.
+  5. Atualizar documentação em `docs/`. Ao criar nova versão (ex: 1.7.0), copiar a versão atual da documentação (`docs/pt-br/<versao-anterior>/` e `docs/en/<versao-anterior>/`) para a nova série (ex: `docs/pt-br/1.7.x/` e `docs/en/1.7.x/`), atualizar o `conf.py` e ajustar os links/redirecionadores em `docs/index.html`.
   6. Commit detalhado com `Closes #issue`.
   7. Push (`git push origin main`).
   8. Criar release no GitHub (`gh release create vX.Y.Z`).
