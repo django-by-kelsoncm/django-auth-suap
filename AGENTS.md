@@ -23,4 +23,5 @@
   9. Fechar issue caso não fechada automaticamente.
   10. Registrar o tempo gasto no desenvolvimento na issue correspondente.
 - Semgrep GitHub Action: `returntocorp/semgrep-action` obsoleto. Usar `act` para validar.
-- release de correção bug (fix) apenas incrementar versão patch (ex: 1.7.1).
+- release de correcao bug (fix) apenas incrementar versao patch (ex: 1.7.1).
+- alteracao apenas em documentacao ou CI nao precisa criar nova release.
