@@ -31,29 +31,47 @@
   </style>
 
   <script>
-    function switchDocVersion(newVer) {
-      var currentVer = '{{ "1.7.x" if release.startswith("1.7") else "1.6.x" }}';
-      if (currentVer !== newVer) {
-        var href = window.location.href;
-        var newHref = href.replace('/' + currentVer + '/', '/' + newVer + '/');
-        if (newHref === href) {
-          var lang = '{{ "pt-br" if language in ["pt_BR", "pt-br", "pt"] else "en" }}';
-          newHref = href.replace(/(\/(pt-br|en)\/).*/, '/' + lang + '/' + newVer + '/index.html');
+    function switchDocVersion(targetVer) {
+      var href = window.location.href;
+      var match = href.match(/^(.*?)\/(pt-br|en)\/(\d+\.\d+\.x)\/(.*)$/i);
+      if (match) {
+        var prefix = match[1];
+        var curLang = match[2];
+        var curVer = match[3];
+        var page = match[4];
+        if (curVer !== targetVer) {
+          window.location.href = prefix + '/' + curLang + '/' + targetVer + '/' + page;
         }
-        window.location.href = newHref;
+      } else {
+        var curVer = '{{ "1.7.x" if release.startswith("1.7") else "1.6.x" }}';
+        if (curVer !== targetVer) {
+          var newHref = href.replace(new RegExp('/' + curVer + '/', 'i'), '/' + targetVer + '/');
+          if (newHref !== href) {
+            window.location.href = newHref;
+          }
+        }
       }
     }
 
-    function switchDocLanguage(newLang) {
-      var currentLang = '{{ "pt-br" if language in ["pt_BR", "pt-br", "pt"] else "en" }}';
-      if (currentLang !== newLang) {
-        var href = window.location.href;
-        var newHref = href.replace('/' + currentLang + '/', '/' + newLang + '/');
-        if (newHref === href) {
-          var ver = '{{ "1.7.x" if release.startswith("1.7") else "1.6.x" }}';
-          newHref = href.replace(/(\/(pt-br|en)\/).*/, '/' + newLang + '/' + ver + '/index.html');
+    function switchDocLanguage(targetLang) {
+      var href = window.location.href;
+      var match = href.match(/^(.*?)\/(pt-br|en)\/(\d+\.\d+\.x)\/(.*)$/i);
+      if (match) {
+        var prefix = match[1];
+        var curLang = match[2];
+        var curVer = match[3];
+        var page = match[4];
+        if (curLang.toLowerCase() !== targetLang.toLowerCase()) {
+          window.location.href = prefix + '/' + targetLang + '/' + curVer + '/' + page;
         }
-        window.location.href = newHref;
+      } else {
+        var curLang = '{{ "pt-br" if language in ["pt_BR", "pt-br", "pt"] else "en" }}';
+        if (curLang !== targetLang) {
+          var newHref = href.replace(new RegExp('/' + curLang + '/', 'i'), '/' + targetLang + '/');
+          if (newHref !== href) {
+            window.location.href = newHref;
+          }
+        }
       }
     }
   </script>
