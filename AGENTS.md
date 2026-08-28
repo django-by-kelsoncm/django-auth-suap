@@ -16,7 +16,7 @@
   2. Elevar versão em `pyproject.toml` e `docs/conf.py`.
   3. Criar e testar migrações.
   4. Garantir 100% de cobertura de testes.
-  5. Atualizar documentação em `docs/`. Ao criar nova versão (ex: 1.7.0), copiar a versão atual da documentação (`docs/pt-br/<versao-anterior>/` e `docs/en/<versao-anterior>/`) para a nova série (ex: `docs/pt-br/1.7.x/` e `docs/en/1.7.x/`), atualizar o `conf.py` e ajustar os links/redirecionadores em `docs/index.html`.
+  5. Atualizar documentação em `docs/`. Ao criar nova série de versão (ex: 1.8.x): copiar pastas da versão anterior (`docs/pt-br/<versao-anterior>/` e `docs/en/<versao-anterior>/`), atualizar `conf.py` (`release`, `doc_path`), adicionar alvos no `docs/Makefile`, atualizar seletor/função de versão em `docs/_templates/layout.html` e ajustar redirecionador em `docs/index.html`.
   6. Commit detalhado com `Closes #issue`.
   7. Push (`git push origin main`).
   8. Criar release no GitHub (`gh release create vX.Y.Z`).
@@ -26,3 +26,4 @@
 - release de correcao bug (fix) apenas incrementar versao patch (ex: 1.7.1).
 - alteracao apenas em documentacao ou CI nao precisa criar nova release.
 - sempre que for fazer nova release, antes conferir o SECURITY.md para ver se precisa fazer alguma alteracao.
+- nova serie doc (ex 1.8.x): copiar pasta, conf.py (release e doc_path), alvos docs/Makefile, option/script docs/_templates/layout.html e redirect docs/index.html.

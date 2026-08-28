@@ -43,7 +43,7 @@
           window.location.href = prefix + '/' + curLang + '/' + targetVer + '/' + page;
         }
       } else {
-        var curVer = '{{ "1.7.x" if release.startswith("1.7") else "1.6.x" }}';
+        var curVer = '{{ "1.8.x" if release.startswith("1.8") else ("1.7.x" if release.startswith("1.7") else "1.6.x") }}';
         if (curVer !== targetVer) {
           var newHref = href.replace(new RegExp('/' + curVer + '/', 'i'), '/' + targetVer + '/');
           if (newHref !== href) {
@@ -103,6 +103,7 @@
 
       <div class="django-header-tools">
         <select class="doc-header-select" aria-label="Versão / Version" onchange="switchDocVersion(this.value)">
+          <option value="1.8.x" {% if release.startswith("1.8") %}selected{% endif %}>v1.8.x</option>
           <option value="1.7.x" {% if release.startswith("1.7") %}selected{% endif %}>v1.7.x</option>
           <option value="1.6.x" {% if release.startswith("1.6") %}selected{% endif %}>v1.6.x</option>
         </select>

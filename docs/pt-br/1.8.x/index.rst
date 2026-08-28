@@ -18,6 +18,26 @@ Além do fluxo básico de login, a biblioteca fornece:
 * **Autenticação JWT Nativa (``django_suap_auth.jwt``)**: Endpoints integrados para emissão e validação de tokens JWT (sem necessidade de frameworks REST externos).
 * **Personificação de Usuários (``django_suap_auth.impersonation`` / impersonate)**: Suporte a workflows de testes e suporte através da troca temporária de identidade de usuários.
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Sumário de Conteúdos:
+
+   installation
+   configuration
+   profile-models
+   impersonation
+   audit
+   jwt-endpoints
+   scopes
+   attribute-mapping
+   user-info-pipeline
+   fetchers
+   mappers
+   auth-flow
+   sandboxes
+   development
+   release
+
 Funcionalidades
 ===============
 
@@ -30,3 +50,22 @@ Funcionalidades
 - Armazenamento opcional em campo JSON para a resposta completa do SUAP
 - Página de login intermediária configurável (``SUAP_AUTH['DIRECT_REDIRECT']``)
 - Proteção CSRF via validação do parâmetro de estado
+
+Links Rápidos
+=============
+
+- :doc:`Instalação <installation>`
+- :doc:`Configuração <configuration>`
+- :doc:`Modelos de Perfil <profile-models>`
+- :doc:`Personificação <impersonation>`
+- :doc:`Auditoria <audit>`
+- :doc:`Endpoints JWT <jwt-endpoints>`
+- :doc:`Escopos <scopes>`
+- :doc:`Mapeamento <attribute-mapping>`
+- :doc:`Pipeline <user-info-pipeline>`
+- :doc:`Fetchers <fetchers>`
+- :doc:`Mappers <mappers>`
+- :doc:`Fluxo de Autenticação <auth-flow>`
+- :doc:`Sandboxes <sandboxes>`
+- :doc:`Desenvolvimento <development>`
+- :doc:`Release <release>`

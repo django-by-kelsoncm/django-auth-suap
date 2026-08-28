@@ -33,7 +33,7 @@ html_theme_options = {
     "github_url": "https://github.com/django-by-kelsoncm/django-auth-suap",
     "github_repo": "django-by-kelsoncm/django-auth-suap",
     "github_version": "main",
-    "doc_path": "docs/",
+    "doc_path": "docs/pt-br/1.8.x/",
     "show_edit_on_github": True,
     "navigation_links": (
         "Início|index.html, Instalação|installation.html, Configuração|configuration.html, "
