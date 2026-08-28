@@ -16,7 +16,7 @@ Além do fluxo básico de login, a biblioteca fornece:
 * **Pipeline Extensível de Dados**: Arquitetura baseada no padrão *Chain of Responsibility* com *fetchers* e *mappers* customizáveis para consultar diferentes endpoints da API do SUAP e mapear atributos diretamente para o modelo de usuário.
 * **Módulo de Perfil e Dados Brutos (``django_suap_auth.profile``)**: Modelos Django prontos (``Perfil``, ``DadosBrutos``, ``Vinculo``) para armazenar os vínculos acadêmicos/servidores e guardar a resposta completa do SUAP em formato JSON.
 * **Autenticação JWT Nativa (``django_suap_auth.jwt``)**: Endpoints integrados para emissão e validação de tokens JWT (sem necessidade de frameworks REST externos).
-* **Personificação de Usuários (``django_suap_auth.impersonation``)**: Suporte a workflows de testes e suporte através da troca temporária de identidade de usuários.
+* **Personificação de Usuários (``django_suap_auth.impersonation`` / impersonate)**: Suporte a workflows de testes e suporte através da troca temporária de identidade de usuários.
 
 Funcionalidades
 ===============

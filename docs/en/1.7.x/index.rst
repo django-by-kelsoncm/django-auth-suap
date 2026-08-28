@@ -16,7 +16,7 @@ Beyond basic login integration, the library provides:
 * **Extensible Data Pipeline**: A *Chain of Responsibility* architecture featuring customizable fetchers and mappers to retrieve data from various SUAP API endpoints and map attributes onto the user model.
 * **Profile & Raw Data Submodule (``django_suap_auth.profile``)**: Ready-to-use Django models (``Perfil``, ``DadosBrutos``, ``Vinculo``) to store academic/staff roles and persist full raw JSON responses from SUAP.
 * **Native JWT Authentication (``django_suap_auth.jwt``)**: Built-in endpoints for issuing and validating JWT tokens (without requiring heavy third-party REST frameworks).
-* **User Impersonation (``django_suap_auth.impersonation``)**: Support for testing and support workflows requiring temporary user identity switching.
+* **User Impersonation (``django_suap_auth.impersonation`` / impersonate)**: Support for testing and support workflows requiring temporary user identity switching.
 
 .. toctree::
    :maxdepth: 2
