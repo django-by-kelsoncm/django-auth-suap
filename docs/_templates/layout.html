@@ -1,0 +1,127 @@
+{% extends "!layout.html" %}
+
+{% block extrahead %}
+  {{ super() }}
+  <style>
+    .doc-header-select {
+      background-color: rgba(255, 255, 255, 0.18);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: 4px;
+      padding: 4px 8px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      outline: none;
+      margin-right: 6px;
+      transition: background-color 0.2s, border-color 0.2s;
+    }
+    .doc-header-select:hover, .doc-header-select:focus {
+      background-color: rgba(255, 255, 255, 0.3);
+      border-color: rgba(255, 255, 255, 0.7);
+    }
+    .doc-header-select option {
+      background-color: #0c4b33;
+      color: #ffffff;
+    }
+    [data-theme="dark"] .doc-header-select option {
+      background-color: #1a1a1a;
+      color: #e0e0e0;
+    }
+  </style>
+
+  <script>
+    function switchDocVersion(newVer) {
+      var currentVer = '{{ "1.7.x" if release.startswith("1.7") else "1.6.x" }}';
+      if (currentVer !== newVer) {
+        var href = window.location.href;
+        var newHref = href.replace('/' + currentVer + '/', '/' + newVer + '/');
+        if (newHref === href) {
+          var lang = '{{ "pt-br" if language in ["pt_BR", "pt-br", "pt"] else "en" }}';
+          newHref = href.replace(/(\/(pt-br|en)\/).*/, '/' + lang + '/' + newVer + '/index.html');
+        }
+        window.location.href = newHref;
+      }
+    }
+
+    function switchDocLanguage(newLang) {
+      var currentLang = '{{ "pt-br" if language in ["pt_BR", "pt-br", "pt"] else "en" }}';
+      if (currentLang !== newLang) {
+        var href = window.location.href;
+        var newHref = href.replace('/' + currentLang + '/', '/' + newLang + '/');
+        if (newHref === href) {
+          var ver = '{{ "1.7.x" if release.startswith("1.7") else "1.6.x" }}';
+          newHref = href.replace(/(\/(pt-br|en)\/).*/, '/' + newLang + '/' + ver + '/index.html');
+        }
+        window.location.href = newHref;
+      }
+    }
+  </script>
+{% endblock %}
+
+{% block header %}
+<div class="django-site-wrapper">
+  <header class="django-header">
+    <div class="django-header-inner">
+      <div class="django-brand-group">
+        <a href="{{ pathto(master_doc) }}" class="django-brand">
+          {% if theme_logo %}
+            <img src="{{ pathto('_static/' ~ theme_logo, 1) }}" alt="{{ project }}" class="django-brand-logo" style="{% if theme_logo_height %}height: {{ theme_logo_height }};{% endif %}" />
+          {% elif logo_url %}
+            <img src="{{ logo_url }}" alt="{{ project }}" class="django-brand-logo" />
+          {% elif logo %}
+            <img src="{{ pathto('_static/' ~ logo, 1) }}" alt="{{ project }}" class="django-brand-logo" />
+          {% else %}
+            <span class="django-brand-title">
+              {% if theme_project_name %}{{ theme_project_name }}{% else %}{{ project }}{% endif %}
+            </span>
+          {% endif %}
+        </a>
+        <span class="django-tagline">
+          {% if theme_tagline %}{{ theme_tagline }}{% else %}Documentação da Suite Django{% endif %}
+        </span>
+      </div>
+
+      <div class="django-header-tools">
+        <select class="doc-header-select" aria-label="Versão / Version" onchange="switchDocVersion(this.value)">
+          <option value="1.7.x" {% if release.startswith("1.7") %}selected{% endif %}>v1.7.x</option>
+          <option value="1.6.x" {% if release.startswith("1.6") %}selected{% endif %}>v1.6.x</option>
+        </select>
+
+        <select class="doc-header-select" aria-label="Idioma / Language" onchange="switchDocLanguage(this.value)">
+          <option value="pt-br" {% if language in ["pt_BR", "pt-br", "pt"] %}selected{% endif %}>🌐 PT</option>
+          <option value="en" {% if language in ["en", "en_US"] %}selected{% endif %}>🌐 EN</option>
+        </select>
+
+        <form action="{{ pathto('search') }}" method="get" class="django-header-search">
+          <input type="text" name="q" placeholder="Buscar..." aria-label="Buscar na documentação" required />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+          <button type="submit" title="Buscar">🔍</button>
+        </form>
+
+        {% if theme_enable_dark_mode|tobool %}
+          <button id="theme-toggle" class="theme-toggle-btn" aria-label="Alternar modo claro/escuro" title="Alternar modo claro/escuro">
+            <span id="theme-toggle-icon">🌙</span>
+          </button>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+  <section class="django-sub-header">
+    <div class="django-sub-header-inner">
+      <div class="django-sub-header-title">
+        <span>Documentação</span>
+        {% if release %}
+          <span class="django-version-badge">v{{ release }}</span>
+        {% endif %}
+      </div>
+      <div>
+        {% if theme_github_url %}
+          <a href="{{ theme_github_url }}" style="color: rgba(255, 255, 255, 0.85); font-size: 0.85rem;" target="_blank" rel="noopener noreferrer">Repositório no GitHub ↗</a>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+{% endblock %}
