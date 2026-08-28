@@ -22,6 +22,7 @@ Além do fluxo básico de login, a biblioteca fornece:
    :maxdepth: 2
    :caption: Sumário de Conteúdos:
 
+   whats-new
    installation
    configuration
    profile-models
@@ -54,6 +55,7 @@ Funcionalidades
 Links Rápidos
 =============
 
+- :doc:`O Que Há de Novo <whats-new>`
 - :doc:`Instalação <installation>`
 - :doc:`Configuração <configuration>`
 - :doc:`Modelos de Perfil <profile-models>`

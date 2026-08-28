@@ -22,6 +22,7 @@ Beyond basic login integration, the library provides:
    :maxdepth: 2
    :caption: Table of Contents:
 
+   whats-new
    installation
    configuration
    profile-models
@@ -54,6 +55,7 @@ Features
 Quick Links
 ===========
 
+- :doc:`What's New <whats-new>`
 - :doc:`Installation <installation>`
 - :doc:`Configuration <configuration>`
 - :doc:`Profile Models <profile-models>`

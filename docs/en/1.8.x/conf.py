@@ -35,8 +35,8 @@ html_theme_options = {
     "doc_path": "docs/en/1.8.x/",
     "show_edit_on_github": True,
     "navigation_links": (
-        "Home|index.html, Installation|installation.html, Configuration|configuration.html, "
-        "Profile Models|profile-models.html, Impersonation|impersonation.html, JWT Endpoints|jwt-endpoints.html, "
+        "Home|index.html, What's New|whats-new.html, Installation|installation.html, "
+        "Configuration|configuration.html, Profile Models|profile-models.html, "
         "Scopes|scopes.html, Attribute Mapping|attribute-mapping.html, Pipeline|user-info-pipeline.html, "
         "Fetchers|fetchers.html, Mappers|mappers.html, Auth Flow|auth-flow.html, "
         "Sandboxes|sandboxes.html, Development|development.html, Release|release.html, "
