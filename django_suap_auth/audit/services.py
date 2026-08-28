@@ -110,38 +110,47 @@ def record_audit_event(
             getattr(impersonator, "email", str(impersonator.pk)),
         )
 
+    from django.apps import apps
+
+    if not apps.is_installed("django_suap_auth.audit"):
+        return None
+
     meta = sanitize_metadata(metadata or {})
 
-    event = AuditEvent.objects.create(
-        correlation_id=correlation_id,
-        category=category,
-        event_type=event_type,
-        severity=severity,
-        application_name=app_name,
-        user=user if getattr(user, "pk", None) else None,
-        user_identifier=user_ident,
-        impersonator=impersonator if getattr(impersonator, "pk", None) else None,
-        impersonator_identifier=imp_ident,
-        ip_address=ip_addr,
-        user_agent=user_agent_str,
-        request_path=req_path,
-        request_method=req_method,
-        status_code=status_code,
-        duration_ms=duration_ms,
-        metadata=meta,
-    )
+    try:
+        event = AuditEvent.objects.create(
+            correlation_id=correlation_id,
+            category=category,
+            event_type=event_type,
+            severity=severity,
+            application_name=app_name,
+            user=user if getattr(user, "pk", None) else None,
+            user_identifier=user_ident,
+            impersonator=impersonator if getattr(impersonator, "pk", None) else None,
+            impersonator_identifier=imp_ident,
+            ip_address=ip_addr,
+            user_agent=user_agent_str,
+            request_path=req_path,
+            request_method=req_method,
+            status_code=status_code,
+            duration_ms=duration_ms,
+            metadata=meta,
+        )
 
-    # Logger dual-write (para coletor stdout/SIEM)
-    logger.info(
-        f"[AUDIT] {event.event_type} | correlation_id={event.correlation_id} | "
-        f"user={event.user_identifier} | ip={event.ip_address}"
-    )
+        # Logger dual-write (para coletor stdout/SIEM)
+        logger.info(
+            f"[AUDIT] {event.event_type} | correlation_id={event.correlation_id} | "
+            f"user={event.user_identifier} | ip={event.ip_address}"
+        )
 
-    # Avaliação de alertas automáticos se não for um evento do próprio alerta
-    if category != EventCategory.SECURITY_ALERT:
-        check_alert_rules(event)
+        # Avaliação de alertas automáticos se não for um evento do próprio alerta
+        if category != EventCategory.SECURITY_ALERT:
+            check_alert_rules(event)
 
-    return event
+        return event
+    except Exception as e:
+        logger.warning("Could not record audit event: %s", e)
+        return None
 
 
 def check_alert_rules(event: AuditEvent) -> None:

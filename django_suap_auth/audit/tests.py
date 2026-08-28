@@ -132,6 +132,22 @@ class AuditServicesTests(TestCase):
         )
         self.assertEqual(event.ip_address, "10.0.0.1")
 
+    @patch("django.apps.apps.is_installed", return_value=False)
+    def test_record_audit_event_uninstalled(self, mock_is_installed):
+        event = record_audit_event(
+            category=EventCategory.AUTHENTICATION,
+            event_type="test.uninstalled",
+        )
+        self.assertIsNone(event)
+
+    @patch.object(AuditEvent.objects, "create", side_effect=Exception("DB Error"))
+    def test_record_audit_event_db_error(self, mock_create):
+        event = record_audit_event(
+            category=EventCategory.AUTHENTICATION,
+            event_type="test.db_error",
+        )
+        self.assertIsNone(event)
+
     def test_check_alert_rules_failed_logins(self):
         now = timezone.now()
         for i in range(5):
