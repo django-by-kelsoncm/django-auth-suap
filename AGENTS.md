@@ -24,4 +24,3 @@
   10. Registrar o tempo gasto no desenvolvimento na issue correspondente.
 - Semgrep GitHub Action: `returntocorp/semgrep-action` obsoleto. Usar `act` para validar.
 - release de correção bug (fix) apenas incrementar versão patch (ex: 1.7.1).
-
