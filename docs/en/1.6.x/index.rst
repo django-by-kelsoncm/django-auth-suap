@@ -4,6 +4,19 @@ django-suap-auth
 
 Django OAuth2 authentication backend for **SUAP** (Unified Public Administration Management System), the academic management system of IFRN.
 
+Introduction
+============
+
+**django-suap-auth** is a Python/Django library designed to simplify and standardize authentication and user profile data retrieval between Django applications and **SUAP** (Unified Public Administration Management System) — the academic and administrative management platform used by the Federal Institute of Rio Grande do Norte (IFRN).
+
+The package abstracts the complexity of communicating via the **OAuth2 Authorization Code Flow** protocol with SUAP's identity provider. It automatically handles exchanging authorization codes for access tokens, querying SUAP user data APIs, and mapping those attributes onto the Django ``User`` model.
+
+Beyond basic login integration, the library provides:
+
+* **Extensible Data Pipeline**: A *Chain of Responsibility* architecture featuring customizable fetchers and mappers to retrieve data from various SUAP API endpoints and map attributes onto the user model.
+* **Profile & Raw Data Submodule (``django_suap_auth.profile``)**: Ready-to-use Django models (``Perfil``, ``DadosBrutos``, ``Vinculo``) to store academic/staff roles and persist full raw JSON responses from SUAP.
+* **Native JWT Authentication (``django_suap_auth.jwt``)**: Built-in endpoints for issuing and validating JWT tokens (without requiring heavy third-party REST frameworks).
+
 .. toctree::
    :maxdepth: 2
    :caption: Table of Contents:
