@@ -5,7 +5,6 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
-from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views import View
@@ -36,7 +35,7 @@ def _get_safe_redirect(request):
         )
     )
     if is_safe:
-        return HttpResponseRedirect(urlunsplit(("", "", parsed_next.path, parsed_next.query, "")))
+        return redirect(urlunsplit(("", "", parsed_next.path, parsed_next.query, "")))
     return redirect(getattr(settings, "LOGIN_REDIRECT_URL", "/"))
 
 
