@@ -6,10 +6,11 @@ The following versions of `django-suap-auth` are currently supported with securi
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 1.6.x   | :white_check_mark: |
-| < 1.6.0 | :x:                |
+| 1.8.x   | :white_check_mark: |
+| 1.7.x   | :white_check_mark: |
+| < 1.7.0 | :x:                |
 
-We strongly recommend upgrading to the latest `1.6.x` release to receive security updates.
+We strongly recommend upgrading to the latest `1.8.x` release to receive security updates.
 
 ---
 
@@ -46,4 +47,5 @@ When deploying `django-suap-auth` in production environments, ensure you follow 
 1. **Keep Secrets Confidential**: Never commit `CLIENT_SECRET` to version control. Always load configuration from environment variables (e.g., `python-dotenv`, `django-environ`).
 2. **Use HTTPS**: Always use HTTPS for both your application URL (`REDIRECT_URI`) and the SUAP server URL (`BASE_URL`) to prevent token interception.
 3. **Session Security**: Keep `DIRECT_REDIRECT = True` or ensure proper state validation parameters are maintained across sessions.
-4. **Regular Updates**: Keep Django and `django-suap-auth` updated to their latest security releases.
+4. **Enable Audit Trail**: Enable `django_suap_auth.audit` in production to maintain LGPD-compliant audit logs, track impersonation sessions, and receive automated security alerts.
+5. **Regular Updates**: Keep Django and `django-suap-auth` updated to their latest security releases.
