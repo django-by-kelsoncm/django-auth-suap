@@ -1,0 +1,12 @@
+{% extends "admin/change_list.html" %}
+{% load i18n %}
+
+{% block object-tools-items %}
+  <li>
+    <a href="{% url 'admin:django_suap_auth_audit_dashboard' %}" class="viewsitelink" style="background: var(--accent, #417690); color: #ffffff; font-weight: bold; border-radius: 4px; padding: 6px 12px; margin-right: 8px; display: inline-flex; align-items: center; gap: 6px; text-decoration: none;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+      Dashboard de Análise
+    </a>
+  </li>
+  {{ block.super }}
+{% endblock %}

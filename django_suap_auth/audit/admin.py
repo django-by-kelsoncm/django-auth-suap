@@ -9,6 +9,7 @@ from .views import AuditDashboardView
 
 @admin.register(AuditEvent)
 class AuditEventAdmin(admin.ModelAdmin):
+    change_list_template = "admin/django_suap_auth/audit/auditevent/change_list.html"
     list_display = [
         "timestamp_format",
         "event_type",

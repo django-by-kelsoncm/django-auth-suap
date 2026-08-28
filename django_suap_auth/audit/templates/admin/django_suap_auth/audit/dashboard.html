@@ -112,7 +112,10 @@
       <h1 style="margin:0; font-size: 1.6rem; color: var(--body-fg);">{{ title }}</h1>
       <span style="color: var(--secondary-fg); font-size: 0.9rem;">{{ subtitle }}</span>
     </div>
-    <div class="period-selector">
+    <div class="period-selector" style="display: flex; gap: 6px; align-items: center;">
+      <a href="{% url 'admin:django_suap_auth_audit_auditevent_changelist' %}" style="margin-right: 12px; font-weight: bold;">
+        ⬅ Lista de Eventos
+      </a>
       <a href="?period=24h" class="{% if period == '24h' %}active{% endif %}">Últimas 24h</a>
       <a href="?period=7d" class="{% if period == '7d' %}active{% endif %}">Últimos 7 dias</a>
       <a href="?period=30d" class="{% if period == '30d' %}active{% endif %}">Últimos 30 dias</a>
