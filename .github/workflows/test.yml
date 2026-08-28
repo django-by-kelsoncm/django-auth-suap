@@ -51,9 +51,5 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v7
-      - uses: returntocorp/semgrep-action@v1
-        with:
-          config: >-
-            p/python
-            p/django
-            p/security-audit
+      - name: Run Semgrep
+        run: docker run --rm -v "${PWD}:/src" semgrep/semgrep semgrep scan --config p/python --config p/django --config p/security-audit --error

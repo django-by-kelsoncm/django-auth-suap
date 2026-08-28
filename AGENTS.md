@@ -21,3 +21,4 @@
   7. Push (`git push origin main`).
   8. Criar release no GitHub (`gh release create vX.Y.Z`).
   9. Fechar issue caso não fechada automaticamente.
+- Semgrep GitHub Action: `returntocorp/semgrep-action` obsoleto. Usar `act` para validar.
