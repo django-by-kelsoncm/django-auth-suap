@@ -1,0 +1,215 @@
+# Translation catalog for django-suap-auth (Dutch - nl)
+# Copyright (C) 2026 Kelson C. Medeiros
+# This file is distributed under the same license as the django-suap-auth package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: django-suap-auth 1.8.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-28 19:00-0300\n"
+"PO-Revision-Date: 2026-08-28 19:00-0300\n"
+"Last-Translator: Kelson C. Medeiros <kelsoncm@gmail.com>\n"
+"Language-Team: Dutch <nl@li.org>\n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "SUAP Auth"
+msgstr "SUAP Auth"
+
+msgid "SUAP Auth Erros"
+msgstr "SUAP Auth Fouten"
+
+msgid "SUAP Auth Profile"
+msgstr "SUAP Auth Profiel"
+
+msgid "SUAP Auth Impersonation"
+msgstr "SUAP Auth Impersonatie"
+
+msgid "SUAP Auth Auditoria"
+msgstr "SUAP Auth Audit"
+
+msgid "usuário"
+msgstr "gebruiker"
+
+msgid "endpoint"
+msgstr "eindpunt"
+
+msgid "status HTTP"
+msgstr "HTTP-status"
+
+msgid "mensagem de erro"
+msgstr "foutmelding"
+
+msgid "data da ocorrência"
+msgstr "datum van optreden"
+
+msgid "erro de sincronização"
+msgstr "synchronisatiefout"
+
+msgid "erros de sincronização"
+msgstr "synchronisatiefouten"
+
+msgid "Autenticação OAuth2/JWT"
+msgstr "OAuth2/JWT Authenticatie"
+
+msgid "Sessão Impersonada"
+msgstr "Geïmpersoneerde Sessie"
+
+msgid "Acesso a API / Endpoint"
+msgstr "API / Eindpunt Toegang"
+
+msgid "Alerta de Segurança"
+msgstr "Beveiligingswaarschuwing"
+
+msgid "Informação"
+msgstr "Informatie"
+
+msgid "Aviso / Suspeito"
+msgstr "Waarschuwing / Verdacht"
+
+msgid "Crítico / Falha de Segurança"
+msgstr "Kritiek / Beveiligingslek"
+
+msgid "UUID da requisição HTTP para rastreamento de fluxo."
+msgstr "UUID van het HTTP-verzoek voor stroomtracering."
+
+msgid "Ex: auth.login.success, auth.jwt.issued, impersonate.start, api.ninja.access"
+msgstr "Bijv: auth.login.success, auth.jwt.issued, impersonate.start, api.ninja.access"
+
+msgid "Nome da aplicação consumidor (ex: sas-painel)"
+msgstr "Naam van de consumententoepassing (bijv: sas-painel)"
+
+msgid "Username/Matrícula preservado para integridade auditável"
+msgstr "Gebruikersnaam/Registratie behouden voor auditeerbare integriteit"
+
+msgid "IP bruto original (acesso restrito por permissão)"
+msgstr "Oorspronkelijk ruw IP-adres (toegang beperkt door machtiging)"
+
+msgid "Hash SHA-256 do IP para dashboards e analytics sem PII"
+msgstr "SHA-256 hash van IP voor dashboards en analytics zonder PII"
+
+msgid "Tempo de resposta em milissegundos"
+msgstr "Reactietijd in milliseconden"
+
+msgid "Evento de Auditoria"
+msgstr "Auditevenement"
+
+msgid "Eventos de Auditoria"
+msgstr "Auditevenementen"
+
+msgid "Data / Hora"
+msgstr "Datum / Tijd"
+
+msgid "Gravidade"
+msgstr "Ernst"
+
+msgid "Endereço IP"
+msgstr "IP-adres"
+
+msgid "Personal info"
+msgstr "Persoonlijke informatie"
+
+msgid "Permissions"
+msgstr "Machtigingen"
+
+msgid "Important dates"
+msgstr "Belangrijke datums"
+
+msgid "configurações/preferências"
+msgstr "instellingen/voorkeuren"
+
+msgid "primeiro login"
+msgstr "eerste inlogbestand"
+
+msgid "Perfil"
+msgstr "Profiel"
+
+msgid "Perfis"
+msgstr "Profielen"
+
+msgid "Dado Bruto"
+msgstr "Ruwe gegevens"
+
+msgid "Dados Brutos"
+msgstr "Ruwe gegevens"
+
+msgid "Vínculo"
+msgstr "Koppeling"
+
+msgid "Vínculos"
+msgstr "Koppelingen"
+
+msgid "Login com SUAP"
+msgstr "Inloggen met SUAP"
+
+msgid "Entrar com SUAP"
+msgstr "Inloggen met SUAP"
+
+msgid "Clique no botão abaixo para autenticar com sua conta SUAP."
+msgstr "Klik op de onderstaande knop om te authenticeren met uw SUAP-account."
+
+msgid "Sessão Encerrada"
+msgstr "Sessie beëindigd"
+
+msgid "Atenção:"
+msgstr "Let op:"
+
+msgid "Você fez logout apenas na sessão desta aplicação."
+msgstr "U bent alleen uitgelogd uit de sessie van deze toepassing."
+
+msgid "Sua sessão no SUAP e nas outras aplicações conectadas não foi encerrada."
+msgstr "Uw sessie in SUAP en andere verbonden toepassingen is niet beëindigd."
+
+msgid "Observação importante:"
+msgstr "Belangrijke opmerking:"
+
+msgid "O SUAP não possui um mecanismo de fazer logout seguro em TODAS as aplicações simultaneamente."
+msgstr "SUAP heeft geen mechanisme om tegelijkertijd veilig uit te loggen bij ALLE toepassingen."
+
+msgid "Opções disponíveis:"
+msgstr "Beschikbare opties:"
+
+msgid "1. Fazer logout no SUAP e depois fechar a janela"
+msgstr "1. Uitloggen bij SUAP en daarna het venster sluiten"
+
+msgid "Mais seguro"
+msgstr "Veiligst"
+
+msgid "Para garantir a segurança da sua conta (especialmente em computadores públicos ou compartilhados), faça logout diretamente no SUAP e em seguida feche esta janela manualmente."
+msgstr "Om de veiligheid van uw account te garanderen (vooral op openbare of gedeelde computers), logt u rechtstreeks uit bij SUAP en sluit u dit venster vervolgens handmatig."
+
+msgid "Fazer logout no SUAP"
+msgstr "Uitloggen bij SUAP"
+
+msgid "2. Fechar a janela manualmente"
+msgstr "2. Het venster handmatig sluiten"
+
+msgid "Parcialmente seguro"
+msgstr "Gedeeltelijk veilig"
+
+msgid "Fechar a janela manualmente manterá a sessão encerrada apenas nesta aplicação, mas a sessão no SUAP permanecerá ativa."
+msgstr "Als u het venster handmatig sluit, blijft de sessie alleen in deze toepassing beëindigd, maar de sessie in SUAP blijft actief."
+
+msgid "3. Voltar a fazer login na aplicação"
+msgstr "3. Opnieuw inloggen op de toepassing"
+
+msgid "Reconectar"
+msgstr "Opnieuw verbinden"
+
+msgid "Caso deseje acessar a aplicação novamente, clique no botão abaixo para retornar à página de login."
+msgstr "Als u opnieuw toegang wilt tot de toepassing, klikt u op de onderstaande knop om terug te keren naar de inlogpagina."
+
+msgid "Voltar ao Login"
+msgstr "Terug naar Inloggen"
+
+msgid "4. Seguir como está"
+msgstr "4. Doorgaan zoals het is"
+
+msgid "Não é seguro"
+msgstr "Niet veilig"
+
+msgid "Continuar sem fechar o navegador ou sem fazer logout no SUAP deixará sua conta do SUAP aberta e vulnerável a acessos indevidos por terceiros que utilizem este mesmo computador."
+msgstr "Als u doorgaat zonder de browser te sluiten of zonder uit te loggen bij SUAP, blijft uw SUAP-account open en kwetsbaar voor onbevoegde toegang door derden die dezelfde computer gebruiken."

@@ -506,9 +506,12 @@ class AuditAdminAndViewsTests(TestCase):
         self.assertFalse(admin_obj.has_change_permission(request))
         self.assertFalse(admin_obj.has_delete_permission(request))
 
+        from django.utils import translation
+
         event = AuditEvent.objects.create(category="AUTH", event_type="t")
         self.assertIn("2026", admin_obj.timestamp_format(event))
-        self.assertIn("Crítico", admin_obj.severity_badge(AuditEvent(severity=EventSeverity.CRITICAL)))
+        with translation.override("pt-br"):
+            self.assertIn("Crítico", admin_obj.severity_badge(AuditEvent(severity=EventSeverity.CRITICAL)))
 
     def test_audit_archive_management_command(self):
         out = tempfile.NamedTemporaryFile(suffix=".jsonl.gz", delete=False)

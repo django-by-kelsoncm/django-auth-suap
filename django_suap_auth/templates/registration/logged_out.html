@@ -1,10 +1,10 @@
-{% load suap_auth %}
+{% load suap_auth i18n %}
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="{{ LANGUAGE_CODE|default:'pt-br' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sessão Encerrada</title>
+    <title>{% trans "Sessão Encerrada" %}</title>
     <style>
         :root {
             --primary-color: #0d6efd;
@@ -204,70 +204,70 @@
 </head>
 <body>
     <div class="container">
-        <h1>Sessão Encerrada</h1>
+        <h1>{% trans "Sessão Encerrada" %}</h1>
 
         <div class="alert-info">
-            <p><strong>Atenção:</strong> Você fez logout apenas na sessão desta aplicação.</p>
-            <p>Sua sessão no <strong>SUAP</strong> e nas outras aplicações conectadas <strong>não foi encerrada</strong>.</p>
+            <p><strong>{% trans "Atenção:" %}</strong> {% trans "Você fez logout apenas na sessão desta aplicação." %}</p>
+            <p>{% trans "Sua sessão no SUAP e nas outras aplicações conectadas não foi encerrada." %}</p>
         </div>
 
         <div class="notice-box">
-            <p><strong>Observação importante:</strong> O SUAP não possui um mecanismo de fazer logout seguro em TODAS as aplicações simultaneamente.</p>
+            <p><strong>{% trans "Observação importante:" %}</strong> {% trans "O SUAP não possui um mecanismo de fazer logout seguro em TODAS as aplicações simultaneamente." %}</p>
         </div>
 
-        <h2>Opções disponíveis:</h2>
+        <h2>{% trans "Opções disponíveis:" %}</h2>
 
         <div class="options-list">
             <!-- Opção 1: Logout no SUAP -->
             <div class="option-card">
                 <div class="option-header">
-                    <span class="option-title">1. Fazer logout no SUAP e depois fechar a janela</span>
-                    <span class="badge badge-success">Mais seguro</span>
+                    <span class="option-title">1. {% trans "Fazer logout no SUAP e depois fechar a janela" %}</span>
+                    <span class="badge badge-success">{% trans "Mais seguro" %}</span>
                 </div>
                 <div class="option-desc">
-                    Para garantir a segurança da sua conta (especialmente em computadores públicos ou compartilhados), faça logout diretamente no SUAP e em seguida feche esta janela manualmente.
+                    {% trans "Para garantir a segurança da sua conta (especialmente em computadores públicos ou compartilhados), faça logout diretamente no SUAP e em seguida feche esta janela manualmente." %}
                 </div>
                 <a href="{% suap_logout_url %}" rel="noopener noreferrer" class="btn btn-primary">
-                    Fazer logout no SUAP
+                    {% trans "Fazer logout no SUAP" %}
                 </a>
             </div>
 
             <!-- Opção 2: Fechar a janela -->
             <div class="option-card">
                 <div class="option-header">
-                    <span class="option-title">2. Fechar a janela manualmente</span>
-                    <span class="badge badge-secondary">Parcialmente seguro</span>
+                    <span class="option-title">2. {% trans "Fechar a janela manualmente" %}</span>
+                    <span class="badge badge-secondary">{% trans "Parcialmente seguro" %}</span>
                 </div>
                 <div class="option-desc">
-                    Fechar a janela manualmente manterá a sessão encerrada apenas nesta aplicação, mas a sessão no SUAP permanecerá ativa.
+                    {% trans "Fechar a janela manualmente manterá a sessão encerrada apenas nesta aplicação, mas a sessão no SUAP permanecerá ativa." %}
                 </div>
             </div>
 
             <!-- Opção 3: Voltar a fazer login -->
             <div class="option-card">
                 <div class="option-header">
-                    <span class="option-title">3. Voltar a fazer login na aplicação</span>
-                    <span class="badge badge-secondary">Reconectar</span>
+                    <span class="option-title">3. {% trans "Voltar a fazer login na aplicação" %}</span>
+                    <span class="badge badge-secondary">{% trans "Reconectar" %}</span>
                 </div>
                 <div class="option-desc">
-                    Caso deseje acessar a aplicação novamente, clique no botão abaixo para retornar à página de login.
+                    {% trans "Caso deseje acessar a aplicação novamente, clique no botão abaixo para retornar à página de login." %}
                 </div>
                 {% url 'suap_auth:login' as login_url %}
                 {% if login_url %}
-                    <a href="{% url 'suap_auth:login' %}" class="btn btn-outline">Voltar ao Login</a>
+                    <a href="{% url 'suap_auth:login' %}" class="btn btn-outline">{% trans "Voltar ao Login" %}</a>
                 {% else %}
-                    <a href="/" class="btn btn-outline">Voltar ao Login</a>
+                    <a href="/" class="btn btn-outline">{% trans "Voltar ao Login" %}</a>
                 {% endif %}
             </div>
 
             <!-- Opção 4: Seguir como está -->
             <div class="option-card">
                 <div class="option-header">
-                    <span class="option-title">4. Seguir como está</span>
-                    <span class="badge badge-danger">Não é seguro</span>
+                    <span class="option-title">4. {% trans "Seguir como está" %}</span>
+                    <span class="badge badge-danger">{% trans "Não é seguro" %}</span>
                 </div>
                 <div class="option-desc">
-                    Continuar sem fechar o navegador ou sem fazer logout no SUAP deixará sua conta do SUAP aberta e vulnerável a acessos indevidos por terceiros que utilizem este mesmo computador.
+                    {% trans "Continuar sem fechar o navegador ou sem fazer logout no SUAP deixará sua conta do SUAP aberta e vulnerável a acessos indevidos por terceiros que utilizem este mesmo computador." %}
                 </div>
             </div>
         </div>

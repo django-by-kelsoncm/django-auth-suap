@@ -7,6 +7,11 @@ Esta página resume as novidades e melhorias introduzidas na série **1.8.x** do
 .. note::
    Esta página deve ser atualizada a cada nova release publicada.
 
+Versão 1.8.4
+============
+
+- **Internacionalização em Holandês (``nl``)**: Adicionado suporte a internacionalização no código para o idioma Holandês (catálogos de tradução ``.po``/``.mo`` para ``nl``).
+
 Versão 1.8.3
 ============
 

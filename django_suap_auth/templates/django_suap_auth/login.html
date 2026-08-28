@@ -1,15 +1,17 @@
+{% load i18n %}
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="{{ LANGUAGE_CODE|default:'pt-br' }}">
 <head>
     <meta charset="UTF-8">
-    <title>Login com SUAP</title>
+    <title>{% trans "Login com SUAP" %}</title>
 </head>
 <body>
-    <h1>Entrar com SUAP</h1>
-    <p>Clique no botão abaixo para autenticar com sua conta SUAP.</p>
+    <h1>{% trans "Entrar com SUAP" %}</h1>
+    <p>{% trans "Clique no botão abaixo para autenticar com sua conta SUAP." %}</p>
     <form method="post">
         {% csrf_token %}
-        <button type="submit">Entrar com SUAP</button>
+        <button type="submit">{% trans "Entrar com SUAP" %}</button>
     </form>
 </body>
 </html>
+

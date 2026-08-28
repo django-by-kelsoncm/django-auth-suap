@@ -21,3 +21,11 @@ Backend de autenticação OAuth2 do Django para **SUAP** (Sistema Unificado de A
 Django OAuth2 authentication backend for **SUAP** (Unified Public Administration Management System), the academic management system of [IFRN](https://www.ifrn.edu.br), hosted at [suap.ifrn.edu.br](https://suap.ifrn.edu.br).
 
 > [Read the documentation](https://django-by-kelsoncm.github.io/django-auth-suap/).
+
+
+## NL
+
+Django OAuth2-authenticatie-backend voor **SUAP** (Genoemd Uniek Systeem voor Openbaar Bestuur), het academisch beheersysteem van [IFRN](https://www.ifrn.edu.br), gehost op [suap.ifrn.edu.br](https://suap.ifrn.edu.br).
+
+> [Lees de documentatie](https://django-by-kelsoncm.github.io/django-auth-suap/).
+

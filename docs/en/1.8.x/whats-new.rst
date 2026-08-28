@@ -7,6 +7,11 @@ This page summarizes the new features and improvements introduced in the **1.8.x
 .. note::
    This page must be updated with every new release published.
 
+Version 1.8.4
+=============
+
+- **Dutch Internationalization (``nl``)**: Added code internationalization support for Dutch (translation catalogs ``.po``/``.mo`` for ``nl``).
+
 Version 1.8.3
 =============
 

@@ -1,0 +1,215 @@
+# Translation catalog for django-suap-auth (Portuguese - pt_BR)
+# Copyright (C) 2026 Kelson C. Medeiros
+# This file is distributed under the same license as the django-suap-auth package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: django-suap-auth 1.8.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-28 19:00-0300\n"
+"PO-Revision-Date: 2026-08-28 19:00-0300\n"
+"Last-Translator: Kelson C. Medeiros <kelsoncm@gmail.com>\n"
+"Language-Team: Portuguese <pt_BR@li.org>\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "SUAP Auth"
+msgstr "SUAP Auth"
+
+msgid "SUAP Auth Erros"
+msgstr "SUAP Auth Erros"
+
+msgid "SUAP Auth Profile"
+msgstr "SUAP Auth Perfil"
+
+msgid "SUAP Auth Impersonation"
+msgstr "SUAP Auth Personificação"
+
+msgid "SUAP Auth Auditoria"
+msgstr "SUAP Auth Auditoria"
+
+msgid "usuário"
+msgstr "usuário"
+
+msgid "endpoint"
+msgstr "endpoint"
+
+msgid "status HTTP"
+msgstr "status HTTP"
+
+msgid "mensagem de erro"
+msgstr "mensagem de erro"
+
+msgid "data da ocorrência"
+msgstr "data da ocorrência"
+
+msgid "erro de sincronização"
+msgstr "erro de sincronização"
+
+msgid "erros de sincronização"
+msgstr "erros de sincronização"
+
+msgid "Autenticação OAuth2/JWT"
+msgstr "Autenticação OAuth2/JWT"
+
+msgid "Sessão Impersonada"
+msgstr "Sessão Impersonada"
+
+msgid "Acesso a API / Endpoint"
+msgstr "Acesso a API / Endpoint"
+
+msgid "Alerta de Segurança"
+msgstr "Alerta de Segurança"
+
+msgid "Informação"
+msgstr "Informação"
+
+msgid "Aviso / Suspeito"
+msgstr "Aviso / Suspeito"
+
+msgid "Crítico / Falha de Segurança"
+msgstr "Crítico / Falha de Segurança"
+
+msgid "UUID da requisição HTTP para rastreamento de fluxo."
+msgstr "UUID da requisição HTTP para rastreamento de fluxo."
+
+msgid "Ex: auth.login.success, auth.jwt.issued, impersonate.start, api.ninja.access"
+msgstr "Ex: auth.login.success, auth.jwt.issued, impersonate.start, api.ninja.access"
+
+msgid "Nome da aplicação consumidor (ex: sas-painel)"
+msgstr "Nome da aplicação consumidor (ex: sas-painel)"
+
+msgid "Username/Matrícula preservado para integridade auditável"
+msgstr "Username/Matrícula preservado para integridade auditável"
+
+msgid "IP bruto original (acesso restrito por permissão)"
+msgstr "IP bruto original (acesso restrito por permissão)"
+
+msgid "Hash SHA-256 do IP para dashboards e analytics sem PII"
+msgstr "Hash SHA-256 do IP para dashboards e analytics sem PII"
+
+msgid "Tempo de resposta em milissegundos"
+msgstr "Tempo de resposta em milissegundos"
+
+msgid "Evento de Auditoria"
+msgstr "Evento de Auditoria"
+
+msgid "Eventos de Auditoria"
+msgstr "Eventos de Auditoria"
+
+msgid "Data / Hora"
+msgstr "Data / Hora"
+
+msgid "Gravidade"
+msgstr "Gravidade"
+
+msgid "Endereço IP"
+msgstr "Endereço IP"
+
+msgid "Personal info"
+msgstr "Informações Pessoais"
+
+msgid "Permissions"
+msgstr "Permissões"
+
+msgid "Important dates"
+msgstr "Datas Importantes"
+
+msgid "configurações/preferências"
+msgstr "configurações/preferências"
+
+msgid "primeiro login"
+msgstr "primeiro login"
+
+msgid "Perfil"
+msgstr "Perfil"
+
+msgid "Perfis"
+msgstr "Perfis"
+
+msgid "Dado Bruto"
+msgstr "Dado Bruto"
+
+msgid "Dados Brutos"
+msgstr "Dados Brutos"
+
+msgid "Vínculo"
+msgstr "Vínculo"
+
+msgid "Vínculos"
+msgstr "Vínculos"
+
+msgid "Login com SUAP"
+msgstr "Login com SUAP"
+
+msgid "Entrar com SUAP"
+msgstr "Entrar com SUAP"
+
+msgid "Clique no botão abaixo para autenticar com sua conta SUAP."
+msgstr "Clique no botão abaixo para autenticar com sua conta SUAP."
+
+msgid "Sessão Encerrada"
+msgstr "Sessão Encerrada"
+
+msgid "Atenção:"
+msgstr "Atenção:"
+
+msgid "Você fez logout apenas na sessão desta aplicação."
+msgstr "Você fez logout apenas na sessão desta aplicação."
+
+msgid "Sua sessão no SUAP e nas outras aplicações conectadas não foi encerrada."
+msgstr "Sua sessão no SUAP e nas outras aplicações conectadas não foi encerrada."
+
+msgid "Observação importante:"
+msgstr "Observação importante:"
+
+msgid "O SUAP não possui um mecanismo de fazer logout seguro em TODAS as aplicações simultaneamente."
+msgstr "O SUAP não possui um mecanismo de fazer logout seguro em TODAS as aplicações simultaneamente."
+
+msgid "Opções disponíveis:"
+msgstr "Opções disponíveis:"
+
+msgid "1. Fazer logout no SUAP e depois fechar a janela"
+msgstr "1. Fazer logout no SUAP e depois fechar a janela"
+
+msgid "Mais seguro"
+msgstr "Mais seguro"
+
+msgid "Para garantir a segurança da sua conta (especialmente em computadores públicos ou compartilhados), faça logout diretamente no SUAP e em seguida feche esta janela manualmente."
+msgstr "Para garantir a segurança da sua conta (especialmente em computadores públicos ou compartilhados), faça logout diretamente no SUAP e em seguida feche esta janela manualmente."
+
+msgid "Fazer logout no SUAP"
+msgstr "Fazer logout no SUAP"
+
+msgid "2. Fechar a janela manualmente"
+msgstr "2. Fechar a janela manualmente"
+
+msgid "Parcialmente seguro"
+msgstr "Parcialmente seguro"
+
+msgid "Fechar a janela manualmente manterá a sessão encerrada apenas nesta aplicação, mas a sessão no SUAP permanecerá ativa."
+msgstr "Fechar a janela manualmente manterá a sessão encerrada apenas nesta aplicação, mas a sessão no SUAP permanecerá ativa."
+
+msgid "3. Voltar a fazer login na aplicação"
+msgstr "3. Voltar a fazer login na aplicação"
+
+msgid "Reconectar"
+msgstr "Reconectar"
+
+msgid "Caso deseje acessar a aplicação novamente, clique no botão abaixo para retornar à página de login."
+msgstr "Caso deseje acessar a aplicação novamente, clique no botão abaixo para retornar à página de login."
+
+msgid "Voltar ao Login"
+msgstr "Voltar ao Login"
+
+msgid "4. Seguir como está"
+msgstr "4. Seguir como está"
+
+msgid "Não é seguro"
+msgstr "Não é seguro"
+
+msgid "Continuar sem fechar o navegador ou sem fazer logout no SUAP deixará sua conta do SUAP aberta e vulnerável a acessos indevidos por terceiros que utilizem este mesmo computador."
+msgstr "Continuar sem fechar o navegador ou sem fazer logout no SUAP deixará sua conta do SUAP aberta e vulnerável a acessos indevidos por terceiros que utilizem este mesmo computador."

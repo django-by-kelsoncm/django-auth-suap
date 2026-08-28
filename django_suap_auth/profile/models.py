@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 class Perfil(models.Model):
@@ -59,12 +60,12 @@ class Perfil(models.Model):
     linha_pesquisa = models.CharField(max_length=256, null=True, blank=True)
 
     # Preferências e Configurações do Usuário
-    settings = models.JSONField("configurações/preferências", null=True, blank=True, default=dict)
-    first_login = models.DateTimeField("primeiro login", null=True, blank=True)
+    settings = models.JSONField(_("configurações/preferências"), null=True, blank=True, default=dict)
+    first_login = models.DateTimeField(_("primeiro login"), null=True, blank=True)
 
     class Meta:
-        verbose_name = "Perfil"
-        verbose_name_plural = "Perfis"
+        verbose_name = _("Perfil")
+        verbose_name_plural = _("Perfis")
 
     def __str__(self):
         return f"Perfil de {self.user.username}"
@@ -170,8 +171,8 @@ class DadosBrutos(models.Model):
     data = models.JSONField(default=dict, null=True, blank=True)
 
     class Meta:
-        verbose_name = "Dado Bruto"
-        verbose_name_plural = "Dados Brutos"
+        verbose_name = _("Dado Bruto")
+        verbose_name_plural = _("Dados Brutos")
 
     def __str__(self):
         return f"DadosBrutos para {self.user.username}"
@@ -193,8 +194,8 @@ class Vinculo(models.Model):
     estrangeiro = models.BooleanField(default=False, null=True, blank=True)
 
     class Meta:
-        verbose_name = "Vínculo"
-        verbose_name_plural = "Vínculos"
+        verbose_name = _("Vínculo")
+        verbose_name_plural = _("Vínculos")
 
     def __str__(self):
         return f"Vínculo ({self.tipo}) - {self.identificador}"

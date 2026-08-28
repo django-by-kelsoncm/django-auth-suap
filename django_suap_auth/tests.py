@@ -1904,15 +1904,18 @@ def test_logged_out_template_rendering(settings):
         "REDIRECT_URI": "http://localhost/callback/",
         "BASE_URL": "https://suap.test.edu.br",
     }
-    html = render_to_string("registration/logged_out.html")
-    assert "Sessão Encerrada" in html
-    assert "Você fez logout apenas na sessão desta aplicação" in html
-    assert "SUAP não possui um mecanismo de fazer logout seguro em TODAS as aplicações" in html
-    assert "1. Fazer logout no SUAP e depois fechar a janela" in html
-    assert "2. Fechar a janela manualmente" in html
-    assert "3. Voltar a fazer login na aplicação" in html
-    assert "4. Seguir como está" in html
-    assert "https://suap.test.edu.br/accounts/logout/" in html
+    from django.utils import translation
+
+    with translation.override("pt-br"):
+        html = render_to_string("registration/logged_out.html")
+        assert "Sessão Encerrada" in html
+        assert "Você fez logout apenas na sessão desta aplicação" in html
+        assert "SUAP não possui um mecanismo de fazer logout seguro em TODAS as aplicações" in html
+        assert "1. Fazer logout no SUAP e depois fechar a janela" in html
+        assert "2. Fechar a janela manualmente" in html
+        assert "3. Voltar a fazer login na aplicação" in html
+        assert "4. Seguir como está" in html
+        assert "https://suap.test.edu.br/accounts/logout/" in html
 
 
 def test_suap_logout_view_get(rf, db):
@@ -1952,3 +1955,34 @@ def test_suap_logout_view_post(rf, db):
     response = view(request)
     assert response.status_code == 302
     assert response.url == "/"
+
+
+def test_dutch_i18n_translation():
+    from django.utils import translation
+
+    from django_suap_auth.audit.models import AuditEvent
+    from django_suap_auth.erros.models import SincronizacaoErro
+    from django_suap_auth.profile.models import DadosBrutos, Perfil, Vinculo
+
+    with translation.override("nl"):
+        assert str(Perfil._meta.verbose_name) == "Profiel"
+        assert str(Perfil._meta.verbose_name_plural) == "Profielen"
+        assert str(DadosBrutos._meta.verbose_name) == "Ruwe gegevens"
+        assert str(Vinculo._meta.verbose_name) == "Koppeling"
+        assert str(SincronizacaoErro._meta.verbose_name) == "synchronisatiefout"
+        assert str(AuditEvent._meta.verbose_name) == "Auditevenement"
+        assert str(AuditEvent._meta.verbose_name_plural) == "Auditevenementen"
+
+
+def test_i18n_translation_catalogs_en_and_pt():
+    from django.utils import translation
+
+    from django_suap_auth.profile.models import Perfil
+
+    with translation.override("en"):
+        assert str(Perfil._meta.verbose_name) == "Profile"
+        assert str(Perfil._meta.verbose_name_plural) == "Profiles"
+
+    with translation.override("pt-br"):
+        assert str(Perfil._meta.verbose_name) == "Perfil"
+        assert str(Perfil._meta.verbose_name_plural) == "Perfis"
