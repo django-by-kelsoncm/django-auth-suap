@@ -165,6 +165,22 @@ class AuditServicesTests(TestCase):
         self.assertIsNotNone(alert)
         self.assertIn("Pico de Falhas", alert.metadata["rule"])
 
+    @override_settings(SUAP_AUTH_AUDIT_FAILED_LOGIN_THRESHOLD=2)
+    def test_check_alert_rules_custom_failed_login_threshold(self):
+        now = timezone.now()
+        for i in range(2):
+            AuditEvent.objects.create(
+                category=EventCategory.AUTHENTICATION,
+                event_type="auth.login.failed",
+                severity=EventSeverity.WARNING,
+                ip_address="192.168.1.99",
+                timestamp=now - timedelta(minutes=1),
+            )
+        event = AuditEvent.objects.last()
+        check_alert_rules(event)
+        alert = AuditEvent.objects.filter(category=EventCategory.SECURITY_ALERT).first()
+        self.assertIsNotNone(alert)
+
     def test_check_alert_rules_impersonate_off_hours(self):
         event = AuditEvent.objects.create(
             category=EventCategory.IMPERSONATION,

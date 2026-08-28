@@ -157,17 +157,20 @@ def check_alert_rules(event: AuditEvent) -> None:
     """Verifica regras de anomalias (picos de falha, impersonate fora de hora, erros 401/403)."""
     now = timezone.now()
 
-    # Regra 1: Falhas consecutivas de login SUAP (> 5 falhas nos últimos 5 min por IP ou usuário)
+    # Regra 1: Falhas consecutivas de login SUAP
+    failed_threshold = getattr(settings, "SUAP_AUTH_AUDIT_FAILED_LOGIN_THRESHOLD", 5)
+    failed_minutes = getattr(settings, "SUAP_AUTH_AUDIT_FAILED_LOGIN_MINUTES", 5)
+
     if event.event_type in ["auth.login.failed", "auth.jwt.failed"]:
-        five_min_ago = now - timedelta(minutes=5)
+        min_ago = now - timedelta(minutes=failed_minutes)
         failed_count = AuditEvent.objects.filter(
             event_type__in=["auth.login.failed", "auth.jwt.failed"],
-            timestamp__gte=five_min_ago,
+            timestamp__gte=min_ago,
         )
         if event.ip_address:
             failed_count = failed_count.filter(ip_address=event.ip_address)
 
-        if failed_count.count() >= 5:
+        if failed_count.count() >= failed_threshold:
             trigger_security_alert(
                 rule_name="Pico de Falhas de Autenticação SUAP",
                 severity=EventSeverity.CRITICAL,
@@ -178,10 +181,13 @@ def check_alert_rules(event: AuditEvent) -> None:
                 },
             )
 
-    # Regra 2: Impersonate iniciado fora de horário (entre 22h e 06h)
+    # Regra 2: Impersonate iniciado fora de horário comercial
+    night_start = getattr(settings, "SUAP_AUTH_AUDIT_IMPERSONATE_NIGHT_START", 22)
+    morning_end = getattr(settings, "SUAP_AUTH_AUDIT_IMPERSONATE_MORNING_END", 6)
+
     if event.event_type == "impersonate.start":
         hour = event.timestamp.hour
-        if hour >= 22 or hour < 6:
+        if hour >= night_start or hour < morning_end:
             trigger_security_alert(
                 rule_name="Impersonate Fora de Horário Comercial",
                 severity=EventSeverity.WARNING,
@@ -192,15 +198,18 @@ def check_alert_rules(event: AuditEvent) -> None:
                 },
             )
 
-    # Regra 3: Abuso de erros 401/403 em APIs (> 20 requisições negadas em 1 min pelo mesmo IP)
+    # Regra 3: Abuso de erros 401/403 em APIs
+    api_threshold = getattr(settings, "SUAP_AUTH_AUDIT_API_DENIED_THRESHOLD", 20)
+    api_minutes = getattr(settings, "SUAP_AUTH_AUDIT_API_DENIED_MINUTES", 1)
+
     if event.status_code in [401, 403]:
-        one_min_ago = now - timedelta(minutes=1)
+        api_min_ago = now - timedelta(minutes=api_minutes)
         denied_count = AuditEvent.objects.filter(
             status_code__in=[401, 403],
-            timestamp__gte=one_min_ago,
+            timestamp__gte=api_min_ago,
             ip_address=event.ip_address,
         ).count()
-        if denied_count >= 20:
+        if denied_count >= api_threshold:
             trigger_security_alert(
                 rule_name="Possível Força Bruta ou Injeção em APIs (HTTP 401/403)",
                 severity=EventSeverity.CRITICAL,

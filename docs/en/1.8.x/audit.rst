@@ -42,3 +42,25 @@ To archive audit records older than 365 days:
 .. code-block:: bash
 
     python manage.py audit_archive --days=365 --output=/path/to/backup.jsonl.gz
+
+Alert Rules Configuration
+=========================
+
+Custom security thresholds and notification channels can be configured in ``settings.py``:
+
+.. code-block:: python
+
+    # Security Alert Thresholds
+    SUAP_AUTH_AUDIT_FAILED_LOGIN_THRESHOLD = 5     # Login failures to trigger alert
+    SUAP_AUTH_AUDIT_FAILED_LOGIN_MINUTES = 5       # Window in minutes for login failures
+    SUAP_AUTH_AUDIT_IMPERSONATE_NIGHT_START = 22   # Impersonate night start hour
+    SUAP_AUTH_AUDIT_IMPERSONATE_MORNING_END = 6    # Impersonate morning end hour
+    SUAP_AUTH_AUDIT_API_DENIED_THRESHOLD = 20      # 401/403 API errors to trigger alert
+    SUAP_AUTH_AUDIT_API_DENIED_MINUTES = 1         # Window in minutes for API denied errors
+
+    # Notification Channels
+    SUAP_AUTH_AUDIT_CHANNELS = ["admin", "email", "webhook", "telegram"]
+    SUAP_AUTH_AUDIT_NOTIFY_EMAILS = ["security@example.com"]
+    SUAP_AUTH_AUDIT_WEBHOOK_URL = "https://hooks.example.com/security"
+    SUAP_AUTH_AUDIT_TELEGRAM_TOKEN = "123456789:TOKEN"
+    SUAP_AUTH_AUDIT_TELEGRAM_CHAT_ID = "-100123456789"
