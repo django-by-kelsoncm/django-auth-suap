@@ -13,8 +13,8 @@ help:
 
 html:
 	mkdir -p $(BUILDDIR)/html
-	$(SPHINXBUILD) $(SPHINXOPTS) -b html pt-br/1.6.x $(BUILDDIR)/html/pt-br/1.6.x
-	$(SPHINXBUILD) $(SPHINXOPTS) -b html en/1.6.x $(BUILDDIR)/html/en/1.6.x
+	$(SPHINXBUILD) $(SPHINXOPTS) -b html pt-br/1.7.x $(BUILDDIR)/html/pt-br/1.7.x
+	$(SPHINXBUILD) $(SPHINXOPTS) -b html en/1.7.x $(BUILDDIR)/html/en/1.7.x
 	cp index.html $(BUILDDIR)/html/index.html
 
 clean:

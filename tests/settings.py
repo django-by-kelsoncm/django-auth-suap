@@ -9,6 +9,7 @@ INSTALLED_APPS = [
     "django_suap_auth.profile",
     "django_suap_auth.jwt",
     "django_suap_auth.erros",
+    "django_suap_auth.impersonation",
 ]
 DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory:"}}
 SUAP_AUTH = {
@@ -22,6 +23,7 @@ LOGIN_URL = "/login/"
 ROOT_URLCONF = "tests.urls"
 MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
 ]
 SESSION_ENGINE = "django.contrib.sessions.backends.db"
@@ -34,6 +36,7 @@ TEMPLATES = [
             "context_processors": [
                 "django.contrib.messages.context_processors.messages",
                 "django.template.context_processors.request",
+                "django_suap_auth.impersonation.context_processors.impersonation",
             ]
         },
     }
