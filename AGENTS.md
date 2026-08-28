@@ -25,3 +25,4 @@
 - Semgrep GitHub Action: `returntocorp/semgrep-action` obsoleto. Usar `act` para validar.
 - release de correcao bug (fix) apenas incrementar versao patch (ex: 1.7.1).
 - alteracao apenas em documentacao ou CI nao precisa criar nova release.
+- sempre que for fazer nova release, antes conferir o SECURITY.md para ver se precisa fazer alguma alteracao.
