@@ -668,3 +668,30 @@ def test_sync_suap_profile_long_attribute_strings():
     assert len(perfil.tipo_sanguineo) > 10
     assert perfil.sexo.startswith("PREFERE NÃO INFORMAR")
     assert perfil.tipo_sanguineo.startswith("NÃO INFORMADO")
+
+
+@pytest.mark.django_db
+def test_sync_suap_profile_saves_dados_brutos_first():
+    from unittest.mock import MagicMock
+
+    user = User.objects.create_user(username="db_first_user", email="dbfirst@ifrn.edu.br")
+    raw_info = {"identificacao": "db_first_user", "nome_usual": "Dados Brutos First"}
+
+    call_order = []
+
+    def mock_update_or_create(*args, **kwargs):
+        call_order.append("DadosBrutos")
+        return MagicMock(), True
+
+    def mock_perfil_save(*args, **kwargs):
+        call_order.append("Perfil")
+
+    target_db = "django_suap_auth.profile.backends.DadosBrutos.objects.update_or_create"
+    with (
+        patch(target_db, side_effect=mock_update_or_create),
+        patch("django_suap_auth.profile.backends.Perfil.save", side_effect=mock_perfil_save),
+    ):
+        sync_suap_profile(user, raw_info)
+
+    assert call_order[0] == "DadosBrutos"
+    assert "Perfil" in call_order

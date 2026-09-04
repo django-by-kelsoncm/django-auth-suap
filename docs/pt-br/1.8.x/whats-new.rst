@@ -7,6 +7,11 @@ Esta página resume as novidades e melhorias introduzidas na série **1.8.x** do
 .. note::
    Esta página deve ser atualizada a cada nova release publicada.
 
+Versão 1.8.7
+============
+
+- **Persistência Prioritária de DadosBrutos**: Alterado o fluxo de sincronização do perfil (`sync_suap_profile`) para salvar o modelo `DadosBrutos` antes de tentar manipular ou salvar os modelos `Perfil` e `Vinculo`, garantindo que os dados brutos recebidos do SUAP fiquem salvos mesmo em caso de falha de persistência no perfil.
+
 Versão 1.8.6
 ============
 

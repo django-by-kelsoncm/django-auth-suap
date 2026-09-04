@@ -7,6 +7,11 @@ This page summarizes the new features and improvements introduced in the **1.8.x
 .. note::
    This page must be updated with every new release published.
 
+Version 1.8.7
+=============
+
+- **Prioritized Persistence of DadosBrutos**: Updated the profile sync workflow (`sync_suap_profile`) to save the `DadosBrutos` raw data model before attempting to build or save `Perfil` and `Vinculo` models, guaranteeing raw SUAP data is persisted even if profile save fails.
+
 Version 1.8.6
 =============
 

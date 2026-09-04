@@ -165,6 +165,10 @@ def sync_suap_profile(user, raw_info):
     if not raw_info or not isinstance(raw_info, dict):
         return None
 
+    # Sync DadosBrutos first
+    clean_raw_info = {k: v for k, v in raw_info.items() if not k.startswith("_")}
+    DadosBrutos.objects.update_or_create(user=user, defaults={"data": clean_raw_info})
+
     perfil, _ = Perfil.objects.get_or_create(user=user)
 
     vinculo_dict = raw_info.get("vinculo") if isinstance(raw_info.get("vinculo"), dict) else {}
@@ -270,10 +274,6 @@ def sync_suap_profile(user, raw_info):
         perfil.first_login = now()
 
     perfil.save()
-
-    # Sync DadosBrutos
-    clean_raw_info = {k: v for k, v in raw_info.items() if not k.startswith("_")}
-    DadosBrutos.objects.update_or_create(user=user, defaults={"data": clean_raw_info})
 
     # Sync Vinculos
     if meus_vinculos:
