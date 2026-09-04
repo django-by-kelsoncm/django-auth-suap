@@ -588,6 +588,66 @@ def test_secondary_endpoint_dict_spec_failure_is_non_fatal():
     assert result["identificacao"] == "2080882"
 
 
+def test_secondary_endpoint_at_index_zero_failure_is_non_fatal():
+    mock_client = MagicMock()
+
+    def side_effect(token, path):
+        if path == "/api/rh/eu/":
+            return {"identificacao": "2080882"}
+        raise SuapUserInfoError(f"Failed: {path}", status_code=500)
+
+    mock_client.get_endpoint_data.side_effect = side_effect
+
+    cfg = {
+        "user_info_endpoints": [
+            "/api/v2/dados_academicos/",
+            "/api/rh/eu/",
+        ]
+    }
+
+    fetcher = DefaultEndpointsUserInfoFetcher(suap_settings=cfg)
+    result = fetcher.fetch(mock_client, "fake-token")
+    assert result["identificacao"] == "2080882"
+    assert "_sync_errors" in result
+    assert result["_sync_errors"][0]["endpoint"] == "/api/v2/dados_academicos/"
+
+
+def test_custom_fetcher_exception_in_chain_is_non_fatal():
+    mock_client = MagicMock()
+    mock_client.get_endpoint_data.return_value = {"identificacao": "2080882"}
+
+    def failing_fetcher(client, token, user_info):
+        raise ValueError("Custom fetcher error")
+
+    cfg = {
+        "user_info_fetchers": [
+            DefaultEndpointsUserInfoFetcher,
+            failing_fetcher,
+        ],
+        "user_info_endpoints": ["/api/rh/eu/"],
+    }
+
+    res = run_user_info_fetcher_chain(mock_client, "fake-token", cfg=cfg)
+    assert res["identificacao"] == "2080882"
+    assert "_sync_errors" in res
+    assert res["_sync_errors"][0]["mensagem_erro"] == "Custom fetcher error"
+
+
+def test_is_primary_endpoint_helper():
+    from django_suap_auth.fetchers import is_primary_endpoint
+
+    assert is_primary_endpoint("/api/rh/eu/") is True
+    assert is_primary_endpoint("https://suap.ifrn.edu.br/api/rh/eu/") is True
+    assert is_primary_endpoint("/api/rh/meus-dados/") is False
+    assert is_primary_endpoint({"endpoint": "/api/rh/eu/"}) is True
+    assert is_primary_endpoint({"endpoint": "/api/rh/eu/", "required": False}) is False
+    assert is_primary_endpoint({"endpoint": "/api/rh/eu/", "ignore_errors": True}) is False
+    assert is_primary_endpoint({"endpoint": "/api/v2/custom/", "required": True}) is True
+    assert is_primary_endpoint({"endpoint": "/api/v2/custom/"}) is False
+    assert is_primary_endpoint(None) is False
+    assert is_primary_endpoint(123) is False
+
+
 def test_base_user_info_fetcher_none_user_info():
     fetcher = BaseUserInfoFetcher()
     info = fetcher.fetch(None, "token", user_info=None)

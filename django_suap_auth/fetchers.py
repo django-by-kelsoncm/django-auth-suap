@@ -3,13 +3,29 @@ import logging
 
 from django.utils.module_loading import import_string
 
-from .exceptions import SuapUserInfoError
-
 logger = logging.getLogger(__name__)
 
+PRIMARY_USER_INFO_ENDPOINT = "/api/rh/eu/"
+
 DEFAULT_SUAP_ENDPOINTS = [
-    "/api/rh/eu/",
+    PRIMARY_USER_INFO_ENDPOINT,
 ]
+
+
+def is_primary_endpoint(endpoint_spec, url_path=None):
+    """Determine if an endpoint spec or path corresponds to the primary SUAP user info endpoint (/api/rh/eu/)."""
+    if isinstance(endpoint_spec, dict):
+        if endpoint_spec.get("required") is True:
+            return True
+        if endpoint_spec.get("required") is False or endpoint_spec.get("ignore_errors") is True:
+            return False
+        ep = endpoint_spec.get("endpoint", "")
+        return ep.rstrip("/").endswith("/api/rh/eu") or ep == PRIMARY_USER_INFO_ENDPOINT
+
+    ep = url_path or endpoint_spec or ""
+    if isinstance(ep, str):
+        return ep.rstrip("/").endswith("/api/rh/eu") or ep == PRIMARY_USER_INFO_ENDPOINT
+    return False
 
 
 def resolve_callable_or_class(target):
@@ -147,35 +163,11 @@ class DefaultEndpointsUserInfoFetcher(BaseUserInfoFetcher):
                     else (endpoint_spec if isinstance(endpoint_spec, str) else endpoint_spec.get("endpoint", ""))
                 )
                 status_code = getattr(exc, "status_code", None)
-                if isinstance(exc, SuapUserInfoError):
-                    is_secondary = False
-                    if isinstance(endpoint_spec, dict):
-                        if endpoint_spec.get("ignore_errors") or endpoint_spec.get("required") is False:
-                            logger.warning("Optional SUAP user info endpoint failed: %s: %s", endpoint_spec, exc)
-                            is_secondary = True
-                        elif idx > 0 and endpoint_spec.get("required") is not True:
-                            logger.warning("Secondary SUAP user info endpoint failed: %s: %s", endpoint_spec, exc)
-                            is_secondary = True
-                    else:
-                        if idx > 0:
-                            logger.warning("Secondary SUAP user info endpoint failed '%s': %s", endpoint_spec, exc)
-                            is_secondary = True
-
-                    if is_secondary:
-                        err_dict = {
-                            "endpoint": endpoint_url,
-                            "status_code": status_code,
-                            "mensagem_erro": str(exc),
-                            "exc": exc,
-                        }
-                        user_info.setdefault("_sync_errors", []).append(err_dict)
-                        from .erros.services import report_sync_error_to_sentry
-
-                        report_sync_error_to_sentry(exc, endpoint=endpoint_url, status_code=status_code)
-                        continue
+                if is_primary_endpoint(endpoint_spec, endpoint_url):
+                    setattr(exc, "is_primary_endpoint_error", True)
                     raise
 
-                logger.warning("Failed to fetch SUAP user info endpoint '%s': %s", endpoint_url, exc)
+                logger.warning("Secondary SUAP user info endpoint failed '%s': %s", endpoint_url, exc)
                 err_dict = {
                     "endpoint": endpoint_url,
                     "status_code": status_code,
@@ -216,9 +208,26 @@ def run_user_info_fetcher_chain(client, access_token, cfg=None):
     user_info = {}
 
     for fetcher in fetchers:
-        if hasattr(fetcher, "fetch"):
-            user_info = fetcher.fetch(client, access_token, user_info)
-        elif callable(fetcher):
-            user_info = fetcher(client, access_token, user_info)
+        try:
+            if hasattr(fetcher, "fetch"):
+                user_info = fetcher.fetch(client, access_token, user_info)
+            elif callable(fetcher):
+                user_info = fetcher(client, access_token, user_info)
+        except Exception as exc:
+            if getattr(exc, "is_primary_endpoint_error", False):
+                raise
+            fetcher_name = getattr(fetcher, "__name__", str(fetcher))
+            logger.warning("User info fetcher '%s' failed: %s", fetcher_name, exc)
+            status_code = getattr(exc, "status_code", None)
+            err_dict = {
+                "fetcher": fetcher_name,
+                "status_code": status_code,
+                "mensagem_erro": str(exc),
+                "exc": exc,
+            }
+            user_info.setdefault("_sync_errors", []).append(err_dict)
+            from .erros.services import report_sync_error_to_sentry
+
+            report_sync_error_to_sentry(exc, status_code=status_code)
 
     return user_info

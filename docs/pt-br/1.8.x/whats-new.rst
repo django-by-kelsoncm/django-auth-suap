@@ -7,6 +7,11 @@ Esta página resume as novidades e melhorias introduzidas na série **1.8.x** do
 .. note::
    Esta página deve ser atualizada a cada nova release publicada.
 
+Versão 1.8.5
+============
+
+- **Tratamento de Erros em Fetchers Secundários**: Corrigida a tolerância a falhas na busca de dados do usuário via fetchers e endpoints do SUAP. Erros em endpoints secundários registram o erro em ``_sync_errors`` e permitem a conclusão do login, interrompendo o fluxo apenas se a falha ocorrer no endpoint primário de identificação (``/api/rh/eu/``).
+
 Versão 1.8.4
 ============
 

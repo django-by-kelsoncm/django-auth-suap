@@ -7,6 +7,11 @@ This page summarizes the new features and improvements introduced in the **1.8.x
 .. note::
    This page must be updated with every new release published.
 
+Version 1.8.5
+=============
+
+- **Error Handling in Secondary Fetchers**: Fixed fault tolerance when retrieving user profile data via fetchers and SUAP API endpoints. Errors on secondary endpoints now record sync errors in ``_sync_errors`` and allow login to complete, interrupting authentication only if the failure occurs on the primary identification endpoint (``/api/rh/eu/``).
+
 Version 1.8.4
 =============
 
