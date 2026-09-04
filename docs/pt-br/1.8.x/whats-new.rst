@@ -7,6 +7,12 @@ Esta página resume as novidades e melhorias introduzidas na série **1.8.x** do
 .. note::
    Esta página deve ser atualizada a cada nova release publicada.
 
+Versão 1.8.6
+============
+
+- **Expansão de Tamanhos de Campos de Perfil e Auditoria**: Expandido o tamanho limite (``max_length``) dos campos dos modelos de perfil, auditoria e erros (de 10/50/100 para 256) para evitar falha ``DataError`` ao receber valores mais longos retornados pelas APIs do SUAP (ex: sexo "PREFERE NÃO INFORMAR", tipo sanguíneo "NÃO INFORMADO").
+- **Filtragem de Notificações ao Sentry para Status HTTP 404 e 403**: Atualizado o serviço ``report_sync_error_to_sentry`` para ignorar erros HTTP 404 (Não Encontrado) e 403 (Proibido) em buscas secundárias, evitando falsos alertas de exceção no Sentry quando endpoints opcionais não contêm dados para determinados usuários.
+
 Versão 1.8.5
 ============
 

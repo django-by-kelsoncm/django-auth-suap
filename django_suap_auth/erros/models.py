@@ -15,7 +15,7 @@ class SincronizacaoErro(models.Model):
         null=True,
         blank=True,
     )
-    endpoint = models.CharField(_("endpoint"), max_length=255)
+    endpoint = models.CharField(_("endpoint"), max_length=256)
     status_code = models.IntegerField(_("status HTTP"), null=True, blank=True)
     mensagem_erro = models.TextField(_("mensagem de erro"))
     data_ocorrencia = models.DateTimeField(_("data da ocorrência"), auto_now_add=True)

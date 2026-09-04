@@ -7,6 +7,12 @@ logger = logging.getLogger(__name__)
 
 def report_sync_error_to_sentry(exc, endpoint="", status_code=None, user=None):
     """Notify Sentry if sentry_sdk is installed and initialized."""
+    if status_code is None and hasattr(exc, "status_code"):
+        status_code = getattr(exc, "status_code", None)
+
+    if status_code in (403, 404):
+        return
+
     try:
         import sentry_sdk
 

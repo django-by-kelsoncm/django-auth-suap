@@ -7,6 +7,12 @@ This page summarizes the new features and improvements introduced in the **1.8.x
 .. note::
    This page must be updated with every new release published.
 
+Version 1.8.6
+=============
+
+- **Profile and Audit Model Field Length Expansion**: Increased ``max_length`` of profile, audit, and error model fields (from 10/50/100 to 256) to prevent ``DataError`` failures when receiving longer text values from SUAP API endpoints (e.g. gender "PREFERE NÃO INFORMAR", blood type "NÃO INFORMADO").
+- **Sentry Error Filtering for HTTP 404 and 403**: Updated ``report_sync_error_to_sentry`` service to ignore HTTP 404 (Not Found) and 403 (Forbidden) statuses during secondary fetcher requests, avoiding false error alerts in Sentry when optional endpoints have no data for specific users.
+
 Version 1.8.5
 =============
 

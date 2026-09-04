@@ -31,7 +31,7 @@ class AuditEvent(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     correlation_id = models.CharField(
-        max_length=64,
+        max_length=256,
         db_index=True,
         help_text=_("UUID da requisição HTTP para rastreamento de fluxo."),
     )
@@ -39,18 +39,18 @@ class AuditEvent(models.Model):
 
     category = models.CharField(max_length=20, choices=EventCategory.choices, db_index=True)
     event_type = models.CharField(
-        max_length=100,
+        max_length=256,
         db_index=True,
         help_text=_("Ex: auth.login.success, auth.jwt.issued, impersonate.start, api.ninja.access"),
     )
     severity = models.CharField(
-        max_length=10,
+        max_length=256,
         choices=EventSeverity.choices,
         default=EventSeverity.INFO,
         db_index=True,
     )
     application_name = models.CharField(
-        max_length=100,
+        max_length=256,
         db_index=True,
         default="default",
         help_text=_("Nome da aplicação consumidor (ex: sas-painel)"),
@@ -65,7 +65,7 @@ class AuditEvent(models.Model):
         related_name="audit_events",
     )
     user_identifier = models.CharField(
-        max_length=150,
+        max_length=256,
         blank=True,
         default="",
         db_index=True,
@@ -79,7 +79,7 @@ class AuditEvent(models.Model):
         blank=True,
         related_name="audit_events_as_impersonator",
     )
-    impersonator_identifier = models.CharField(max_length=150, blank=True, default="", db_index=True)
+    impersonator_identifier = models.CharField(max_length=256, blank=True, default="", db_index=True)
 
     # Contexto Técnico HTTP e LGPD
     ip_address = models.GenericIPAddressField(
@@ -89,7 +89,7 @@ class AuditEvent(models.Model):
         help_text=_("IP bruto original (acesso restrito por permissão)"),
     )
     ip_hashed = models.CharField(
-        max_length=64,
+        max_length=256,
         blank=True,
         default="",
         db_index=True,
@@ -97,7 +97,7 @@ class AuditEvent(models.Model):
     )
     user_agent = models.TextField(blank=True, default="")
     request_path = models.CharField(max_length=500, blank=True, default="", db_index=True)
-    request_method = models.CharField(max_length=10, blank=True, default="")
+    request_method = models.CharField(max_length=256, blank=True, default="")
     status_code = models.PositiveIntegerField(null=True, blank=True, db_index=True)
     duration_ms = models.FloatField(null=True, blank=True, help_text=_("Tempo de resposta em milissegundos"))
 

@@ -650,3 +650,21 @@ def test_migration_0008_populate_user_from_perfil():
     mig.populate_user_from_perfil(mock_apps, MagicMock())
     assert mock_db_obj.user_id == 123
     assert mock_v_obj.user_id == 456
+
+
+@pytest.mark.django_db
+def test_sync_suap_profile_long_attribute_strings():
+    user = User.objects.create_user(username="long_attr_user", email="long@ifrn.edu.br")
+    raw_info = {
+        "identificacao": "long_attr_user",
+        "sexo": "PREFERE NÃO INFORMAR " * 10,
+        "tipo_sanguineo": "NÃO INFORMADO " * 10,
+        "naturalidade": "CIDADE DE NOME EXTREMAMENTE LONGO " * 5,
+        "cpf": "123.456.789-01",
+    }
+    perfil = sync_suap_profile(user, raw_info)
+    assert perfil is not None
+    assert len(perfil.sexo) > 10
+    assert len(perfil.tipo_sanguineo) > 10
+    assert perfil.sexo.startswith("PREFERE NÃO INFORMAR")
+    assert perfil.tipo_sanguineo.startswith("NÃO INFORMADO")

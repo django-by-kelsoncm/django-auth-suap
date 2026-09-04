@@ -74,16 +74,32 @@ def test_report_sync_error_to_sentry_initialized():
     user = User.objects.create(username="sentryuser")
 
     with patch.dict("sys.modules", {"sentry_sdk": mock_sentry}):
-        report_sync_error_to_sentry(ValueError("sentry test"), endpoint="/api/sentry", status_code=404, user=user)
+        report_sync_error_to_sentry(ValueError("sentry test"), endpoint="/api/sentry", status_code=500, user=user)
         mock_sentry.capture_exception.assert_called_once()
         scope_mock.set_extra.assert_any_call("endpoint", "/api/sentry")
-        scope_mock.set_extra.assert_any_call("status_code", 404)
+        scope_mock.set_extra.assert_any_call("status_code", 500)
         scope_mock.set_user.assert_called_once_with({"id": user.pk, "username": "sentryuser"})
 
         # String error message branch
         mock_sentry.reset_mock()
         report_sync_error_to_sentry("string message", endpoint="/api/sentry2", status_code=500)
         mock_sentry.capture_message.assert_called_once_with("string message")
+
+
+@pytest.mark.django_db
+def test_report_sync_error_to_sentry_ignores_404_and_403():
+    mock_sentry = MagicMock()
+    mock_sentry.is_initialized.return_value = True
+
+    with patch.dict("sys.modules", {"sentry_sdk": mock_sentry}):
+        # Explicit status_code 404
+        report_sync_error_to_sentry(ValueError("404 error"), endpoint="/api/not-found", status_code=404)
+        mock_sentry.capture_exception.assert_not_called()
+
+        # Exception with status_code 403 attribute
+        exc_403 = SuapUserInfoError("Forbidden", status_code=403)
+        report_sync_error_to_sentry(exc_403, endpoint="/api/forbidden")
+        mock_sentry.capture_exception.assert_not_called()
 
 
 @pytest.mark.django_db
