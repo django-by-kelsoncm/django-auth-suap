@@ -7,6 +7,11 @@ Esta página resume as novidades e melhorias introduzidas na série **1.8.x** do
 .. note::
    Esta página deve ser atualizada a cada nova release publicada.
 
+Versão 1.8.8
+============
+
+- **Notificação do Sentry com Nível ``info`` para Falhas de Sincronização Secundária**: As notificações enviadas ao Sentry durante erros de busca secundária de dados no SUAP agora utilizam o nível de severidade ``info`` em vez de ``error``, evitando alertas de erro/bug para falhas não-críticas que não impedem a conclusão do login.
+
 Versão 1.8.7
 ============
 

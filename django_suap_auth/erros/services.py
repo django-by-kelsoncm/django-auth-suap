@@ -5,7 +5,7 @@ from django.apps import apps
 logger = logging.getLogger(__name__)
 
 
-def report_sync_error_to_sentry(exc, endpoint="", status_code=None, user=None):
+def report_sync_error_to_sentry(exc, endpoint="", status_code=None, user=None, level="info"):
     """Notify Sentry if sentry_sdk is installed and initialized."""
     if status_code is None and hasattr(exc, "status_code"):
         status_code = getattr(exc, "status_code", None)
@@ -18,6 +18,7 @@ def report_sync_error_to_sentry(exc, endpoint="", status_code=None, user=None):
 
         if sentry_sdk.is_initialized():
             with sentry_sdk.push_scope() as scope:
+                scope.level = level
                 if endpoint:
                     scope.set_extra("endpoint", endpoint)
                 if status_code is not None:
@@ -27,7 +28,7 @@ def report_sync_error_to_sentry(exc, endpoint="", status_code=None, user=None):
                 if isinstance(exc, Exception):
                     sentry_sdk.capture_exception(exc)
                 else:
-                    sentry_sdk.capture_message(str(exc))
+                    sentry_sdk.capture_message(str(exc), level=level)
     except Exception as e:
         logger.warning("Could not send error report to Sentry: %s", e)
 

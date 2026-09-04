@@ -7,6 +7,11 @@ This page summarizes the new features and improvements introduced in the **1.8.x
 .. note::
    This page must be updated with every new release published.
 
+Version 1.8.8
+=============
+
+- **Sentry Notification Level Set to ``info`` for Secondary Sync Failures**: Notifications sent to Sentry when fetching secondary SUAP user info endpoints now use severity level ``info`` instead of ``error``, avoiding error/bug alerts for non-critical failures that do not block user login.
+
 Version 1.8.7
 =============
 

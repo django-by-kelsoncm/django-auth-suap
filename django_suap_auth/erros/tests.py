@@ -80,10 +80,12 @@ def test_report_sync_error_to_sentry_initialized():
         scope_mock.set_extra.assert_any_call("status_code", 500)
         scope_mock.set_user.assert_called_once_with({"id": user.pk, "username": "sentryuser"})
 
+        assert scope_mock.level == "info"
+
         # String error message branch
         mock_sentry.reset_mock()
         report_sync_error_to_sentry("string message", endpoint="/api/sentry2", status_code=500)
-        mock_sentry.capture_message.assert_called_once_with("string message")
+        mock_sentry.capture_message.assert_called_once_with("string message", level="info")
 
 
 @pytest.mark.django_db
