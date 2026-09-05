@@ -131,7 +131,7 @@
 
         <div class="alert-danger">
             <p>
-                {% blocktrans with username=request.user %}Você está autenticado como <strong>{{ username }}</strong>, mas sua conta não tem permissão para acessar a página solicitada.{% endblocktrans %}
+                {% filter force_escape %}{% blocktrans with username=request.user %}Você está autenticado como {{ username }}, mas sua conta não tem permissão para acessar a página solicitada.{% endblocktrans %}{% endfilter %}
             </p>
         </div>
 

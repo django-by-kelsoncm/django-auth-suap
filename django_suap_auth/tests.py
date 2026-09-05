@@ -1346,6 +1346,7 @@ def test_login_view_get_shows_access_denied_when_authenticated(client_fixture):
     response = client_fixture.get("/auth/suap/login/")
     assert response.status_code == 403
     assert "django_suap_auth/access_denied.html" in [t.name for t in response.templates]
+    assert "20211234567" in response.content.decode()
 
 
 @pytest.mark.django_db
