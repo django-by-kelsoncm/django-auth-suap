@@ -41,11 +41,24 @@ class SuapLoginView(View):
     redirected immediately to SUAP. Set it to ``False`` to render an
     intermediate confirmation page instead — subclass this view and override
     ``get_intermediate_template`` to customize the template rendered.
+
+    If the user hitting this view is **already authenticated**, the OAuth2
+    flow is not restarted. Reaching ``LOGIN_URL`` while authenticated means a
+    permission check elsewhere (e.g. Django Admin's ``has_permission``, or a
+    view guarded by ``user_passes_test``/``staff_member_required``) failed —
+    not that the user needs to log in again. In that case an access-denied
+    page is rendered instead, explaining that the user is logged in but does
+    not have permission for the page requested. Subclass this view and
+    override ``access_denied_template`` to customize it.
     """
 
     intermediate_template = "django_suap_auth/login.html"
+    access_denied_template = "django_suap_auth/access_denied.html"
 
     def get(self, request):
+        if request.user.is_authenticated:
+            return self._render_access_denied(request)
+
         cfg = get_suap_settings()
         storage = messages.get_messages(request)
         if not cfg["direct_redirect"] or bool(storage):
@@ -61,11 +74,20 @@ class SuapLoginView(View):
 
     def post(self, request):
         """Handle form submission from the intermediate login page."""
+        if request.user.is_authenticated:
+            return self._render_access_denied(request)
+
         client = get_oauth2_client()
         state = generate_state()
         request.session["suap_oauth2_state"] = state
         authorization_url = client.get_authorization_url(state)
         return redirect(authorization_url)
+
+    def _render_access_denied(self, request):
+        """Render the access-denied page for an already-authenticated user."""
+        from django.shortcuts import render
+
+        return render(request, self.access_denied_template, status=403)
 
 
 class SuapAuthenticationError(Exception):

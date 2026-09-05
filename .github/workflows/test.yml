@@ -33,6 +33,15 @@ jobs:
           pip install -e ".[dev]"
           pip install "Django~=${{ matrix.django-version }}"
 
+      - name: Install gettext (for compilemessages)
+        run: sudo apt-get update && sudo apt-get install -y gettext
+
+      - name: Compile translation catalogs
+        env:
+          DJANGO_SETTINGS_MODULE: tests.settings
+          PYTHONPATH: .
+        run: django-admin compilemessages --ignore sandbox --ignore .venv
+
       - name: Run tests
         run: pytest --cov=django_suap_auth --cov-report=xml --cov-fail-under=95
 

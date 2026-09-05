@@ -19,7 +19,16 @@ jobs:
           python-version: "3.12"
 
       - name: Install build
-        run: pip install build
+        run: pip install build ".[dev]"
+
+      - name: Install gettext (for compilemessages)
+        run: sudo apt-get update && sudo apt-get install -y gettext
+
+      - name: Compile translation catalogs
+        env:
+          DJANGO_SETTINGS_MODULE: tests.settings
+          PYTHONPATH: .
+        run: django-admin compilemessages --ignore sandbox --ignore .venv
 
       - name: Build package
         run: python -m build

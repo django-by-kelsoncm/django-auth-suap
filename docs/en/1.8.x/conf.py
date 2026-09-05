@@ -9,7 +9,7 @@ import django_docs_theme
 project = "django-suap-auth"
 copyright = "2026, Kelson C. Medeiros"
 author = "Kelson C. Medeiros"
-release = "1.8.8"
+release = "1.8.9"
 language = "en"
 
 extensions = [

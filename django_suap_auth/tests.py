@@ -1338,6 +1338,29 @@ def test_login_view_stores_state_in_session(client_fixture):
 
 
 @pytest.mark.django_db
+def test_login_view_get_shows_access_denied_when_authenticated(client_fixture):
+    User = get_user_model()
+    user = User.objects.create_user(username="20211234567", email="joao@ifrn.edu.br")
+    client_fixture.force_login(user)
+
+    response = client_fixture.get("/auth/suap/login/")
+    assert response.status_code == 403
+    assert "django_suap_auth/access_denied.html" in [t.name for t in response.templates]
+    assert "20211234567" in response.content.decode()
+
+
+@pytest.mark.django_db
+def test_login_view_post_shows_access_denied_when_authenticated(client_fixture):
+    User = get_user_model()
+    user = User.objects.create_user(username="20211234567", email="joao@ifrn.edu.br")
+    client_fixture.force_login(user)
+
+    response = client_fixture.post("/auth/suap/login/")
+    assert response.status_code == 403
+    assert "django_suap_auth/access_denied.html" in [t.name for t in response.templates]
+
+
+@pytest.mark.django_db
 def test_callback_view_handles_error_param(client_fixture):
     response = client_fixture.get("/auth/suap/callback/?error=access_denied")
     assert response.status_code == 302
