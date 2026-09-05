@@ -27,7 +27,8 @@ jobs:
       - name: Compile translation catalogs
         env:
           DJANGO_SETTINGS_MODULE: tests.settings
-        run: (cd django_suap_auth && django-admin compilemessages)
+          PYTHONPATH: .
+        run: django-admin compilemessages --ignore sandbox --ignore .venv
 
       - name: Build package
         run: python -m build
