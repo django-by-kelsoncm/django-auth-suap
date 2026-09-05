@@ -7,6 +7,11 @@ Esta página resume as novidades e melhorias introduzidas na série **1.8.x** do
 .. note::
    Esta página deve ser atualizada a cada nova release publicada.
 
+Versão 1.8.9
+============
+
+- **Página de Acesso Negado para Usuário Autenticado sem Permissão**: A ``SuapLoginView`` agora detecta quando é acessada por um usuário já autenticado (sinal de que uma verificação de permissão em outra página falhou, como o ``has_permission`` do Django Admin) e, em vez de reiniciar o fluxo OAuth2 — criando um loop confuso de login —, exibe uma página informando que o usuário está logado mas não tem permissão para o recurso solicitado. Personalizável via o atributo ``access_denied_template``.
+
 Versão 1.8.8
 ============
 
