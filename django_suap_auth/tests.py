@@ -1197,7 +1197,7 @@ def test_user_info_fetch_exception(mock_get_data, client_fixture):
     mock_get_data.side_effect = Exception("SUAP request failed")
     response = client_fixture.get("/api/rh/eu/", HTTP_AUTHORIZATION="Bearer valid_token")
     assert response.status_code == 400
-    assert response.json() == {"detail": "SUAP request failed"}
+    assert response.json() == {"detail": "Failed to fetch the SUAP endpoint."}
 
 
 def test_url_names_and_reversing():
