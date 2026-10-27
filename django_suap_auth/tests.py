@@ -395,6 +395,23 @@ def test_client_get_endpoint_data_full_url():
     assert data["identificacao"] == "123"
 
 
+@pytest.mark.parametrize(
+    "target",
+    [
+        "https://evil.example/api/rh/eu/",
+        "http://suap.ifrn.edu.br/api/rh/eu/",
+        "//evil.example/api/rh/eu/",
+    ],
+)
+def test_client_rejects_urls_outside_base_url(target):
+    client_obj = SuapOAuth2Client(client_id="id", client_secret="sec", redirect_uri="http://localhost/")
+    with pytest.raises(SuapUserInfoError):
+        client_obj.get_endpoint_data("token", target)
+    status, data = client_obj._post_json_endpoint(target, {})
+    assert status == 400
+    assert "outside" in data["detail"]
+
+
 # ---------------------------------------------------------------------------
 # 3. Fetchers Tests
 # ---------------------------------------------------------------------------
@@ -1250,13 +1267,13 @@ def test_client_post_json_endpoint_full_url():
         mock_post.return_value = mock_resp
 
         status, data = client_instance._post_json_endpoint(
-            "https://custom-suap.gov.br/api/token/pair",
+            "https://suap.example.com/api/token/pair",
             {"username": "u", "password": "p"},
         )
         assert status == 200
         assert data == {"status": "ok"}
         mock_post.assert_called_once_with(
-            "https://custom-suap.gov.br/api/token/pair",
+            "https://suap.example.com/api/token/pair",
             json={"username": "u", "password": "p"},
             headers={"Content-Type": "application/json"},
             timeout=30,

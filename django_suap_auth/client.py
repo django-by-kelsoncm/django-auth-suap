@@ -1,5 +1,5 @@
 import logging
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlsplit
 
 import requests
 
@@ -69,13 +69,28 @@ class SuapOAuth2Client:
         except Exception as exc:
             raise SuapTokenError(f"Token exchange unexpected error: {exc}") from exc
 
+    def _build_url(self, path_or_url):
+        """Return the absolute URL for ``path_or_url``, restricted to the SUAP ``base_url`` origin.
+
+        Absolute URLs are accepted only when scheme and host match ``base_url``; this keeps
+        values coming from SUAP responses from redirecting requests (and the bearer token)
+        to arbitrary hosts. Raises ``ValueError`` otherwise.
+        """
+        base = urlsplit(self.base_url)
+        target = urlsplit(path_or_url)
+        if target.scheme or target.netloc:
+            if (target.scheme, target.netloc) != (base.scheme, base.netloc):
+                raise ValueError("URL outside the configured SUAP base URL")
+            return path_or_url
+        return f"{self.base_url}/{path_or_url.lstrip('/')}"
+
     def get_endpoint_data(self, access_token, path_or_url, timeout=30):
         """Fetch JSON data from a specific SUAP API endpoint or full URL."""
-        if path_or_url.startswith("http://") or path_or_url.startswith("https://"):
-            url = path_or_url
-        else:
-            url = f"{self.base_url}/{path_or_url.lstrip('/')}"
         headers = {"Authorization": f"Bearer {access_token}"}
+        try:
+            url = self._build_url(path_or_url)
+        except ValueError as exc:
+            raise SuapUserInfoError(f"Invalid endpoint '{path_or_url}': {exc}") from exc
         try:
             response = self._session.get(url, headers=headers, timeout=timeout)
             response.raise_for_status()
@@ -95,10 +110,10 @@ class SuapOAuth2Client:
 
         Returns a tuple of ``(status_code, data_dict)``.
         """
-        if path_or_url.startswith("http://") or path_or_url.startswith("https://"):
-            url = path_or_url
-        else:
-            url = f"{self.base_url}/{path_or_url.lstrip('/')}"
+        try:
+            url = self._build_url(path_or_url)
+        except ValueError:
+            return 400, {"detail": "Invalid endpoint: URL outside the configured SUAP base URL"}
         headers = {"Content-Type": "application/json"}
         try:
             response = self._session.post(url, json=payload, headers=headers, timeout=timeout)

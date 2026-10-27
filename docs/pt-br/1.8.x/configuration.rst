@@ -36,7 +36,7 @@ Opções de Configuração
      - URL de callback registrada no SUAP
    * - ``BASE_URL``
      - ``"https://suap.ifrn.edu.br"``
-     - URL base do servidor SUAP
+     - URL base do servidor SUAP. Endpoints com URL absoluta só são aceitos se tiverem o mesmo esquema e host desta URL
    * - ``SCOPES``
      - ``["identificacao", "email"]``
      - Escopos OAuth2 solicitados
