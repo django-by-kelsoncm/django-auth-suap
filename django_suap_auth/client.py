@@ -1,5 +1,5 @@
 import logging
-from urllib.parse import urlencode, urlsplit
+from urllib.parse import urlencode, urlsplit, urlunsplit
 
 import requests
 
@@ -70,18 +70,19 @@ class SuapOAuth2Client:
             raise SuapTokenError(f"Token exchange unexpected error: {exc}") from exc
 
     def _build_url(self, path_or_url):
-        """Return the absolute URL for ``path_or_url``, restricted to the SUAP ``base_url`` origin.
+        """Return the absolute URL for ``path_or_url``, always rooted at the SUAP ``base_url``.
 
-        Absolute URLs are accepted only when scheme and host match ``base_url``; this keeps
-        values coming from SUAP responses from redirecting requests (and the bearer token)
-        to arbitrary hosts. Raises ``ValueError`` otherwise.
+        Absolute URLs are accepted only when scheme and host match ``base_url`` and are reduced
+        to their path and query, so the host of the request can never come from outside the
+        configuration. This keeps values coming from SUAP responses from redirecting requests
+        (and the bearer token) to arbitrary hosts. Raises ``ValueError`` otherwise.
         """
         base = urlsplit(self.base_url)
         target = urlsplit(path_or_url)
         if target.scheme or target.netloc:
             if (target.scheme, target.netloc) != (base.scheme, base.netloc):
                 raise ValueError("URL outside the configured SUAP base URL")
-            return path_or_url
+            path_or_url = urlunsplit(("", "", target.path, target.query, ""))
         return f"{self.base_url}/{path_or_url.lstrip('/')}"
 
     def get_endpoint_data(self, access_token, path_or_url, timeout=30):

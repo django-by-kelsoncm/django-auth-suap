@@ -395,6 +395,12 @@ def test_client_get_endpoint_data_full_url():
     assert data["identificacao"] == "123"
 
 
+def test_client_build_url_keeps_path_and_query_of_same_host_urls():
+    client_obj = SuapOAuth2Client(base_url="https://suap.ifrn.edu.br/")
+    assert client_obj._build_url("https://suap.ifrn.edu.br/api/x/?a=1") == "https://suap.ifrn.edu.br/api/x/?a=1"
+    assert client_obj._build_url("/api/x/?a=1") == "https://suap.ifrn.edu.br/api/x/?a=1"
+
+
 @pytest.mark.parametrize(
     "target",
     [
