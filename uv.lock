@@ -651,7 +651,7 @@ wheels = [
 
 [[package]]
 name = "django-suap-auth"
-version = "1.8.9"
+version = "1.8.10"
 source = { editable = "." }
 dependencies = [
     { name = "django", version = "5.2.18", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },

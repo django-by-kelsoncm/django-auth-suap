@@ -112,8 +112,8 @@ class SuapOAuth2Client:
         """
         try:
             url = self._build_url(path_or_url)
-        except ValueError as exc:
-            return 400, {"detail": f"Invalid endpoint: {exc}"}
+        except ValueError:
+            return 400, {"detail": "Invalid endpoint: URL outside the configured SUAP base URL"}
         headers = {"Content-Type": "application/json"}
         try:
             response = self._session.post(url, json=payload, headers=headers, timeout=timeout)
