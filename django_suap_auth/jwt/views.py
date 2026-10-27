@@ -40,8 +40,8 @@ class BaseSuapTokenView(View):
                     status=400,
                 )
             return data, None
-        except (json.JSONDecodeError, UnicodeDecodeError) as exc:
-            return None, JsonResponse({"detail": f"Invalid JSON: {exc}"}, status=400)
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            return None, JsonResponse({"detail": "Invalid JSON."}, status=400)
 
     def get_client(self):
         """Return SUAP client configured from Django settings."""
@@ -199,7 +199,8 @@ class SuapUserInfoFetchView(BaseSuapTokenView):
             response_data = client.get_endpoint_data(token, endpoint)
             return JsonResponse(response_data, status=200, safe=False)
         except Exception as exc:
-            return JsonResponse({"detail": str(exc)}, status=400)
+            logger.warning("Failed to fetch SUAP endpoint '%s': %s", endpoint, exc)
+            return JsonResponse({"detail": "Failed to fetch the SUAP endpoint."}, status=400)
 
     def get(self, request, *args, **kwargs):
         return self.handle_request(request, *args, **kwargs)

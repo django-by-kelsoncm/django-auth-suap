@@ -125,13 +125,13 @@ class SuapOAuth2Client:
             return response.status_code, data
         except requests.Timeout as exc:
             logger.warning("Timeout communicating with SUAP at '%s': %s", url, exc)
-            return 504, {"detail": f"Gateway timeout connecting to SUAP: {exc}"}
+            return 504, {"detail": "Gateway timeout connecting to SUAP."}
         except requests.RequestException as exc:
             logger.warning("Error communicating with SUAP at '%s': %s", url, exc)
-            return 503, {"detail": f"SUAP service unavailable: {exc}"}
+            return 503, {"detail": "SUAP service unavailable."}
         except Exception as exc:
             logger.exception("Unexpected error communicating with SUAP at '%s': %s", url, exc)
-            return 500, {"detail": f"Internal server error communicating with SUAP: {exc}"}
+            return 500, {"detail": "Internal server error communicating with SUAP."}
 
     def obtain_token_pair(self, username, password, timeout=30):
         """Request a JWT token pair (access, refresh) from SUAP.
