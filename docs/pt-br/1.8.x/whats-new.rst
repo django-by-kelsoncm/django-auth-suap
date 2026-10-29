@@ -7,6 +7,11 @@ Esta página resume as novidades e melhorias introduzidas na série **1.8.x** do
 .. note::
    Esta página deve ser atualizada a cada nova release publicada.
 
+Versão 1.8.13
+=============
+
+- **Correção: Migração Faltante dos Campos** ``identificador`` **e** ``tipo`` **do** ``Vinculo``: O modelo declarava esses campos com ``max_length=256`` e ``null=True``, mas o banco continuava com ``varchar(50) NOT NULL``; gravar um vínculo sem esses valores ou com mais de 50 caracteres falhava. Adicionada a migração ``0010`` e um teste que falha quando houver mudança de modelo sem migração.
+
 Versão 1.8.12
 =============
 

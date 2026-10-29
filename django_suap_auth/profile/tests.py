@@ -735,3 +735,16 @@ def test_dados_brutos_inline_usa_inline_json_editor_widget(rf):
     request.user = User.objects.create_superuser(username="admin_widget", password="x")
     formset = DadosBrutosInline(User, admin.site).get_formset(request)
     assert isinstance(formset.form.base_fields["data"].widget, InlineJSONEditorWidget)
+
+
+@pytest.mark.django_db
+def test_nao_ha_mudanca_de_modelo_sem_migracao():
+    from io import StringIO
+
+    from django.core.management import call_command
+
+    saida = StringIO()
+    try:
+        call_command("makemigrations", "--check", "--dry-run", stdout=saida, stderr=saida)
+    except SystemExit:  # pragma: no cover - só acontece quando falta migração
+        pytest.fail(f"Há mudança de modelo sem migração:\n{saida.getvalue()}")

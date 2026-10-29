@@ -7,6 +7,11 @@ This page summarizes the new features and improvements introduced in the **1.8.x
 .. note::
    This page must be updated with every new release published.
 
+Version 1.8.13
+==============
+
+- **Fix: Missing Migration for** ``Vinculo`` ``identificador`` **and** ``tipo`` **Fields**: The model declared these fields with ``max_length=256`` and ``null=True``, but the database still had ``varchar(50) NOT NULL``; saving a link without these values or with more than 50 characters failed. Added migration ``0010`` and a test that fails whenever a model change has no migration.
+
 Version 1.8.12
 ==============
 
