@@ -7,6 +7,13 @@ This page summarizes the new features and improvements introduced in the **1.8.x
 .. note::
    This page must be updated with every new release published.
 
+Version 1.8.12
+==============
+
+- **Fix: "Raw Data" Inline JSON Editor When Adding a Record**: In Django Admin, clicking "Add another Raw Data" for a user without ``DadosBrutos`` showed the JSON editor but it did not accept input (the admin clones the empty form template and the ``JSONEditorWidget`` init ``<script>`` does not run in the copy), so the record was saved as ``{}``. ``DadosBrutosInline`` now uses ``InlineJSONEditorWidget`` (``django_suap_auth.profile.widgets``), which initializes the editor from a static JS file, skips the empty form template (``__prefix__``) and handles the ``formset:added`` event.
+- **Fix: Absolute Endpoints Restricted to the** ``base_url`` **Host (SSRF)**: Absolute endpoint URLs are only accepted with the same scheme and host as ``base_url`` and are always rebuilt on top of it; other hosts are rejected, so the Bearer token is never sent to arbitrary hosts.
+- **Fix: Fixed Messages in JWT Endpoint Error Responses**: 400/500/503/504 responses no longer expose exception text; the exception is still logged.
+
 Version 1.8.9
 =============
 

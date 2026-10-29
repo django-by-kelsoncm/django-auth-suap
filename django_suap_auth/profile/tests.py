@@ -695,3 +695,43 @@ def test_sync_suap_profile_saves_dados_brutos_first():
 
     assert call_order[0] == "DadosBrutos"
     assert "Perfil" in call_order
+
+
+def test_inline_json_editor_widget_renderiza_sem_script_de_inicializacao():
+    from django_suap_auth.profile.widgets import InlineJSONEditorWidget
+
+    html = InlineJSONEditorWidget().render(
+        "suap_raw_data-__prefix__-data", '{"tipo_usuario": "Aluno"}', attrs={"id": "id_suap_raw_data-__prefix__-data"}
+    )
+
+    assert 'id="id_suap_raw_data-__prefix__-data"' in html
+    assert "data-json-editor " in html
+    assert "data-json-editor-options=" in html
+    assert 'id="id_suap_raw_data-__prefix__-data_textarea" name="suap_raw_data-__prefix__-data"' in html
+    assert '<script id="suap_raw_data-__prefix__-data_data" type="application/json">' in html
+    # A inicialização fica no JS estático: o formulário-modelo clonado pelo admin não pode trazer script inline.
+    assert "new JSONEditor" not in html
+
+
+def test_inline_json_editor_widget_inclui_js_de_inicializacao_apos_o_jsoneditor():
+    from django_suap_auth.profile.widgets import InlineJSONEditorWidget
+
+    js = [str(path) for path in InlineJSONEditorWidget().media._js]
+
+    assert js[-1] == "django_suap_auth_profile/js/inline_json_editor.js"
+    assert any("jsoneditor" in path for path in js[:-1])
+
+
+@pytest.mark.django_db
+def test_dados_brutos_inline_usa_inline_json_editor_widget(rf):
+    from django.contrib import admin
+    from django.db import models
+
+    from django_suap_auth.profile.admin import DadosBrutosInline
+    from django_suap_auth.profile.widgets import InlineJSONEditorWidget
+
+    assert DadosBrutosInline.formfield_overrides[models.JSONField]["widget"] is InlineJSONEditorWidget
+    request = rf.get("/")
+    request.user = User.objects.create_superuser(username="admin_widget", password="x")
+    formset = DadosBrutosInline(User, admin.site).get_formset(request)
+    assert isinstance(formset.form.base_fields["data"].widget, InlineJSONEditorWidget)
