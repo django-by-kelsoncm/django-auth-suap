@@ -1,0 +1,7 @@
+<div data-json-editor data-json-editor-options="{{ widget.options }}" {% if not widget.attrs.style %}style="height:{{ widget.height|default:'500px' }};width:{{ widget.width|default:'90%' }};display:inline-block;"{% endif %}{% include "django/forms/widgets/attrs.html" %}></div>
+
+<textarea id="{{ widget.attrs.id }}_textarea" name="{{ widget.name }}" required="" style="display: none"></textarea>
+
+{% with script_id=widget.name|add:"_data" %}
+{{ widget.value|json_script:script_id }}
+{% endwith %}

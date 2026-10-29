@@ -4,9 +4,9 @@ from django.contrib.auth.admin import UserAdmin
 from django.db import models
 from django.utils.html import mark_safe
 from django.utils.translation import gettext_lazy as _
-from django_json_widget.widgets import JSONEditorWidget
 
 from .models import DadosBrutos, Perfil, Vinculo
+from .widgets import InlineJSONEditorWidget
 
 User = get_user_model()
 
@@ -105,7 +105,7 @@ class DadosBrutosInline(admin.StackedInline):
     verbose_name_plural = "Dados Brutos SUAP"
     classes = ("collapse",)
     formfield_overrides = {
-        models.JSONField: {"widget": JSONEditorWidget},
+        models.JSONField: {"widget": InlineJSONEditorWidget},
     }
 
 

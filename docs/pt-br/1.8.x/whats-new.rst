@@ -7,6 +7,13 @@ Esta página resume as novidades e melhorias introduzidas na série **1.8.x** do
 .. note::
    Esta página deve ser atualizada a cada nova release publicada.
 
+Versão 1.8.12
+=============
+
+- **Correção: Editor JSON do Inline "Dados Brutos" ao Adicionar Registro**: No Django Admin, ao clicar em "Adicionar outro(a) Dado Bruto" para um usuário sem ``DadosBrutos``, o editor JSON aparecia mas não aceitava digitação (o admin clona o formulário-modelo e o ``<script>`` de inicialização do ``JSONEditorWidget`` não roda na cópia), e o registro era salvo como ``{}``. O ``DadosBrutosInline`` passa a usar o ``InlineJSONEditorWidget`` (``django_suap_auth.profile.widgets``), que inicializa o editor por um JS estático, ignora o formulário-modelo (``__prefix__``) e trata o evento ``formset:added``.
+- **Correção: Endpoints Absolutos Restritos ao Host do** ``base_url`` **(SSRF)**: URLs absolutas de endpoints só são aceitas quando têm o mesmo esquema e host do ``base_url`` e são sempre remontadas sobre ele; outros hosts são rejeitados, evitando enviar o token Bearer a hosts arbitrários.
+- **Correção: Mensagens Fixas nas Respostas de Erro dos Endpoints JWT**: As respostas 400/500/503/504 deixam de expor o texto das exceções; a exceção continua registrada no log.
+
 Versão 1.8.9
 ============
 
