@@ -13,10 +13,10 @@
 {% block content %}
 <div id="content-main">
   <p class="errornote" role="note">
-    {% blocktranslate trimmed %}
+    {% filter force_escape %}{% blocktranslate trimmed %}
       Atenção: o arquivo contém dados pessoais (CPF, RG, e-mails, data de nascimento, filiação, entre outros).
       Use-o apenas para suporte e testes, não o compartilhe e apague-o depois do uso.
-    {% endblocktranslate %}
+    {% endblocktranslate %}{% endfilter %}
   </p>
 
   {% if erros %}
@@ -48,7 +48,7 @@
             <td>{{ r.username }}</td>
             <td>{% if r.acao == "criar" %}{% translate "criar" %}{% else %}{% translate "atualizar" %}{% endif %}</td>
             <td>{% if r.perfil %}{% translate "criar/atualizar" %}{% else %}{% translate "manter" %}{% endif %}</td>
-            <td>{% blocktranslate count n=r.vinculos %}substituir por {{ n }}{% plural %}substituir por {{ n }}{% endblocktranslate %}</td>
+            <td>{% translate "substituir por" %} {{ r.vinculos }}</td>
             <td>{% if r.dados_brutos %}{% translate "substituir" %}{% else %}{% translate "remover" %}{% endif %}</td>
             <td>{% for aviso in r.avisos %}{{ aviso }}{% if not forloop.last %}<br>{% endif %}{% endfor %}</td>
           </tr>
@@ -65,12 +65,12 @@
     </form>
   {% else %}
     <p>
-      {% blocktranslate trimmed %}
-        Envie um JSON gerado pela ação "Exportar (JSON)" ou pelo comando <code>export_suap_user</code>.
+      {% filter force_escape %}{% blocktranslate trimmed %}
+        Envie um JSON gerado pela ação "Exportar (JSON)" ou pelo comando export_suap_user.
         Usuários são casados pelo username: os existentes têm nome, e-mail, situação e perfil atualizados e vínculos e
         dados brutos substituídos; os novos são criados com senha inutilizável. Senha, equipe, superusuário, grupos e
         permissões nunca são alterados.
-      {% endblocktranslate %}
+      {% endblocktranslate %}{% endfilter %}
     </p>
     <form method="post" enctype="multipart/form-data">
       {% csrf_token %}
