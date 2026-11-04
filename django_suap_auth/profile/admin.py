@@ -1,10 +1,17 @@
-from django.contrib import admin
+from django import forms
+from django.contrib import admin, messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
+from django.core.exceptions import PermissionDenied
 from django.db import models
+from django.http import HttpResponse, HttpResponseRedirect
+from django.template.response import TemplateResponse
+from django.urls import path, reverse
+from django.utils import timezone
 from django.utils.html import mark_safe
 from django.utils.translation import gettext_lazy as _
 
+from . import transfer
 from .models import DadosBrutos, Perfil, Vinculo
 from .widgets import InlineJSONEditorWidget
 
@@ -115,8 +122,20 @@ class VinculoInline(admin.TabularInline):
     verbose_name_plural = "Vínculos SUAP"
 
 
+# Tamanho máximo do arquivo aceito na página "Importar usuários".
+IMPORTACAO_TAMANHO_MAXIMO = 10 * 1024 * 1024
+
+
+class ImportarUsuariosForm(forms.Form):
+    arquivo = forms.FileField(label=_("Arquivo JSON"), required=False)
+    payload = forms.CharField(widget=forms.HiddenInput, required=False)
+
+
 class CustomUserAdmin(UserAdmin):
     inlines = [PerfilInline, VinculoInline, DadosBrutosInline]
+    actions = ["exportar_json"]
+    change_list_template = "admin/django_suap_auth_profile/user/change_list.html"
+    importar_template = "admin/django_suap_auth_profile/user/importar.html"
     filter_horizontal = ("groups",)
     fieldsets = (
         (None, {"fields": ("username", "password")}),
@@ -134,6 +153,87 @@ class CustomUserAdmin(UserAdmin):
         ),
         (_("Important dates"), {"fields": ("last_login", "date_joined")}),
     )
+
+    # ------------------------------------------------------------------ exportar / importar (só superusuário)
+
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+        if not request.user.is_superuser:
+            actions.pop("exportar_json", None)
+        return actions
+
+    @admin.action(description=_("Exportar (JSON) com perfil, vínculos e dados brutos"))
+    def exportar_json(self, request, queryset):
+        if not request.user.is_superuser:
+            raise PermissionDenied
+        payload = transfer.exportar_usuarios(queryset.order_by(queryset.model.USERNAME_FIELD))
+        nome = f"usuarios-suap-{timezone.now():%Y%m%d-%H%M%S}.json"
+        response = HttpResponse(transfer.para_json(payload), content_type="application/json; charset=utf-8")
+        response["Content-Disposition"] = f'attachment; filename="{nome}"'
+        return response
+
+    def get_urls(self):
+        custom_urls = [
+            path(
+                "importar/",
+                self.admin_site.admin_view(self.importar_view),
+                name=f"{self.opts.app_label}_{self.opts.model_name}_importar",
+            ),
+        ]
+        return custom_urls + super().get_urls()
+
+    def importar_view(self, request):
+        if not request.user.is_superuser:
+            raise PermissionDenied
+        form = ImportarUsuariosForm(request.POST, request.FILES) if request.method == "POST" else ImportarUsuariosForm()
+        erros: list[str] = []
+        previa = None
+        payload = ""
+        if form.is_bound and form.is_valid():
+            if "confirmar" in request.POST:
+                payload = form.cleaned_data["payload"]
+                if not payload:
+                    erros.append(str(_("Nada a importar: envie o arquivo novamente.")))
+            elif form.cleaned_data["arquivo"]:
+                arquivo = form.cleaned_data["arquivo"]
+                if arquivo.size > IMPORTACAO_TAMANHO_MAXIMO:
+                    erros.append(str(_("Arquivo maior que o limite de 10 MB.")))
+                else:
+                    try:
+                        payload = arquivo.read().decode("utf-8-sig")
+                    except UnicodeDecodeError:
+                        erros.append(str(_("O arquivo deve estar em UTF-8.")))
+            else:
+                erros.append(str(_("Selecione um arquivo JSON.")))
+            if payload:
+                try:
+                    usuarios = transfer.carregar_json(payload)
+                    if "confirmar" in request.POST:
+                        resultados = transfer.importar_usuarios(usuarios)
+                        criados = sum(1 for r in resultados if r.acao == "criar")
+                        self.message_user(
+                            request,
+                            _("Importação concluída: %(criados)d criado(s), %(atualizados)d atualizado(s).")
+                            % {"criados": criados, "atualizados": len(resultados) - criados},
+                            messages.SUCCESS,
+                        )
+                        return HttpResponseRedirect(
+                            reverse(f"admin:{self.opts.app_label}_{self.opts.model_name}_changelist")
+                        )
+                    previa = transfer.importar_usuarios(usuarios, dry_run=True)
+                except transfer.ImportacaoInvalida as exc:
+                    erros.extend(exc.erros)
+                    payload = ""
+        context = {
+            **self.admin_site.each_context(request),
+            "title": _("Importar usuários"),
+            "opts": self.opts,
+            "form": form,
+            "erros": erros,
+            "previa": previa,
+            "payload": payload,
+        }
+        return TemplateResponse(request, self.importar_template, context)
 
 
 try:

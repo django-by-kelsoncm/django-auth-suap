@@ -49,3 +49,4 @@ When deploying `django-suap-auth` in production environments, ensure you follow 
 3. **Session Security**: Keep `DIRECT_REDIRECT = True` or ensure proper state validation parameters are maintained across sessions.
 4. **Enable Audit Trail**: Enable `django_suap_auth.audit` in production to maintain LGPD-compliant audit logs, track impersonation sessions, and receive automated security alerts.
 5. **Regular Updates**: Keep Django and `django-suap-auth` updated to their latest security releases.
+6. **User Export Files**: Files from `export_suap_user` or the "Exportar (JSON)" admin action contain personal data (CPF, e-mails, birth date, full SUAP response). Restrict superuser access, never commit or share them, and delete them after use.
