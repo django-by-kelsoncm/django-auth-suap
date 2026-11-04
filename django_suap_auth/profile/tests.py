@@ -748,3 +748,83 @@ def test_nao_ha_mudanca_de_modelo_sem_migracao():
         call_command("makemigrations", "--check", "--dry-run", stdout=saida, stderr=saida)
     except SystemExit:  # pragma: no cover - só acontece quando falta migração
         pytest.fail(f"Há mudança de modelo sem migração:\n{saida.getvalue()}")
+
+
+VINCULOS_PAGINADOS = {
+    "count": 2,
+    "next": None,
+    "previous": None,
+    "results": [
+        {
+            "id": 101,
+            "tipo": "aluno",
+            "campus": "ZN",
+            "estrangeiro": False,
+            "identificador": "M-0001",
+            "detalhamento": {
+                "ativo": True,
+                "curso": "Técnico em Eletrônica",
+                "modalidade": "Técnico integrado ao ensino médio",
+                "nivel_ensino": "Médio",
+            },
+        },
+        {
+            "id": 102,
+            "tipo": "aluno",
+            "campus": "ZL",
+            "estrangeiro": False,
+            "identificador": "M-0002",
+            "detalhamento": {
+                "ativo": False,
+                "curso": "Iniciação à Extensão",
+                "modalidade": "Qualificação profissional menor",
+                "nivel_ensino": "Fundamental",
+            },
+        },
+    ],
+}
+
+
+@pytest.mark.parametrize(
+    "valor,esperado",
+    [
+        ([{"id": 1}], [{"id": 1}]),
+        ({"count": 1, "next": None, "results": [{"id": 1}]}, [{"id": 1}]),
+        ({"count": 0}, []),
+        (None, []),
+        ("x", []),
+    ],
+)
+def test_lista_de_vinculos_aceita_lista_ou_resposta_paginada(valor, esperado):
+    from django_suap_auth.profile.backends import lista_de_vinculos
+
+    assert lista_de_vinculos(valor) == esperado
+
+
+def test_lista_de_vinculos_avisa_quando_ha_mais_paginas(caplog):
+    from django_suap_auth.profile.backends import lista_de_vinculos
+
+    assert lista_de_vinculos({"next": "https://suap/api/?page=2", "results": [{"id": 1}]}) == [{"id": 1}]
+    assert "primeira página" in caplog.text
+
+
+@pytest.mark.django_db
+def test_sync_suap_profile_grava_vinculos_paginados_e_substitui_os_antigos():
+    from django_suap_auth.profile.models import Vinculo
+
+    user = get_user_model().objects.create(username="M-0001")
+    Vinculo.objects.create(
+        user=user, identificador="M-0001", tipo="aluno", modalidade="Técnico Integrado", detalhamento={}
+    )
+
+    sync_suap_profile(
+        user,
+        {"identificacao": "M-0001", "tipo_usuario": "Aluno", "campus": "ZN", "vinculos": VINCULOS_PAGINADOS},
+    )
+
+    vinculos = list(user.suap_vinculos.order_by("suap_id"))
+    assert [v.suap_id for v in vinculos] == [101, 102]
+    assert [v.modalidade for v in vinculos] == ["Técnico integrado ao ensino médio", "Qualificação profissional menor"]
+    assert [v.ativo for v in vinculos] == [True, False]
+    assert vinculos[0].curso == "Técnico em Eletrônica"
+    assert vinculos[1].campus == "ZL"

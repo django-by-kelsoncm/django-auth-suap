@@ -19,6 +19,21 @@ def parse_date(date_str):
         return None
 
 
+def lista_de_vinculos(valor):
+    """Vínculos do SUAP como lista: aceita a lista pura ou a resposta paginada (``results``).
+
+    ``/api/rh/meus-vinculos/`` devolve ``{"count", "next", "previous", "results": [...]}``. Só a
+    primeira página é usada; se houver mais, registra um aviso.
+    """
+    if isinstance(valor, list):
+        return valor
+    if isinstance(valor, dict) and isinstance(valor.get("results"), list):
+        if valor.get("next"):
+            logger.warning("Vínculos do SUAP paginados: só a primeira página foi usada (next=%r)", valor["next"])
+        return valor["results"]
+    return []
+
+
 def clean_cpf(val):
     if not val:
         return ""
@@ -47,8 +62,8 @@ def extract_telefones_institucionais(raw_info):
                 sources.append(val)
 
     # 2. Check inside meus_vinculos / vinculos items
-    vinculos = raw_info.get("meus_vinculos") or raw_info.get("vinculos") or []
-    if isinstance(vinculos, list):
+    vinculos = lista_de_vinculos(raw_info.get("meus_vinculos") or raw_info.get("vinculos"))
+    if vinculos:
         for v in vinculos:
             if isinstance(v, dict):
                 for key in (
@@ -172,9 +187,7 @@ def sync_suap_profile(user, raw_info):
     perfil, _ = Perfil.objects.get_or_create(user=user)
 
     vinculo_dict = raw_info.get("vinculo") if isinstance(raw_info.get("vinculo"), dict) else {}
-    meus_vinculos = raw_info.get("meus_vinculos") or raw_info.get("vinculos")
-    if not isinstance(meus_vinculos, list):
-        meus_vinculos = []
+    meus_vinculos = lista_de_vinculos(raw_info.get("meus_vinculos") or raw_info.get("vinculos"))
 
     identificacao = str(raw_info.get("identificacao") or raw_info.get("matricula") or "").strip()
 
