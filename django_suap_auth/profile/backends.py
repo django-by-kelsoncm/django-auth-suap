@@ -22,14 +22,15 @@ def parse_date(date_str):
 def lista_de_vinculos(valor):
     """Vínculos do SUAP como lista: aceita a lista pura ou a resposta paginada (``results``).
 
-    ``/api/rh/meus-vinculos/`` devolve ``{"count", "next", "previous", "results": [...]}``. Só a
-    primeira página é usada; se houver mais, registra um aviso.
+    ``/api/rh/meus-vinculos/`` devolve ``{"count", "next", "previous", "results": [...]}``. O fetcher
+    (``fetchers.get_all_pages``) já junta todas as páginas; se ainda houver ``next`` (limite de páginas
+    atingido), registra um aviso.
     """
     if isinstance(valor, list):
         return valor
     if isinstance(valor, dict) and isinstance(valor.get("results"), list):
         if valor.get("next"):
-            logger.warning("Vínculos do SUAP paginados: só a primeira página foi usada (next=%r)", valor["next"])
+            logger.warning("Vínculos do SUAP paginados: páginas restantes não lidas (next=%r)", valor["next"])
         return valor["results"]
     return []
 

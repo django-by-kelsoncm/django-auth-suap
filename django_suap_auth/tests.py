@@ -2092,3 +2092,57 @@ def test_i18n_translation_catalogs_en_and_pt():
     with translation.override("pt-br"):
         assert str(Perfil._meta.verbose_name) == "Perfil"
         assert str(Perfil._meta.verbose_name_plural) == "Perfis"
+
+
+def _cliente_paginado(paginas):
+    """Cliente falso: cada URL devolve a página correspondente."""
+    cliente = MagicMock()
+    cliente.get_endpoint_data.side_effect = lambda token, url: paginas[url]
+    return cliente
+
+
+def test_get_all_pages_junta_todas_as_paginas():
+    from django_suap_auth.fetchers import get_all_pages
+
+    paginas = {
+        "api/rh/meus-vinculos/": {"count": 3, "next": "https://suap/p2", "previous": None, "results": [1]},
+        "https://suap/p2": {"count": 3, "next": "https://suap/p3", "previous": "x", "results": [2]},
+        "https://suap/p3": {"count": 3, "next": None, "previous": "y", "results": [3]},
+    }
+    dados = get_all_pages(_cliente_paginado(paginas), "t", "api/rh/meus-vinculos/")
+    assert dados == {"count": 3, "next": None, "previous": None, "results": [1, 2, 3]}
+
+
+@pytest.mark.parametrize("resposta", [{"a": 1}, [1, 2], {"next": None, "results": [1]}])
+def test_get_all_pages_devolve_resposta_sem_proxima_pagina_como_veio(resposta):
+    from django_suap_auth.fetchers import get_all_pages
+
+    assert get_all_pages(_cliente_paginado({"u": resposta}), "t", "u") == resposta
+
+
+def test_get_all_pages_respeita_limite_e_para_em_pagina_invalida(caplog):
+    from django_suap_auth.fetchers import get_all_pages
+
+    infinitas = MagicMock()
+    infinitas.get_endpoint_data.side_effect = lambda token, url: {"next": url + "x", "results": [url]}
+    dados = get_all_pages(infinitas, "t", "u", max_paginas=3)
+    assert dados["results"] == ["u", "ux", "uxx"] and dados["next"] == "uxxx"
+    assert "limite de 3 páginas" in caplog.text
+
+    invalida = _cliente_paginado({"u": {"next": "v", "results": [1]}, "v": "erro"})
+    assert get_all_pages(invalida, "t", "u")["results"] == [1]
+
+
+def test_fetcher_junta_paginas_dos_vinculos(settings):
+    from django_suap_auth.fetchers import DefaultEndpointsUserInfoFetcher
+
+    paginas = {
+        "api/rh/eu/": {"identificacao": "M-0001"},
+        "api/rh/meus-vinculos/": {"count": 2, "next": "https://suap/p2", "results": [{"id": 1}]},
+        "https://suap/p2": {"count": 2, "next": None, "results": [{"id": 2}]},
+    }
+    fetcher = DefaultEndpointsUserInfoFetcher(
+        {"user_info_endpoints": ["api/rh/eu/", {"endpoint": "api/rh/meus-vinculos/", "namespace": "vinculos"}]}
+    )
+    info = fetcher.fetch(_cliente_paginado(paginas), "t")
+    assert [v["id"] for v in info["vinculos"]["results"]] == [1, 2]

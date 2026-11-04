@@ -12,6 +12,35 @@ DEFAULT_SUAP_ENDPOINTS = [
 ]
 
 
+#: Limite de páginas seguidas numa resposta paginada do SUAP (100 itens por página).
+MAX_PAGINAS = 50
+
+
+def get_all_pages(client, access_token, url_path, max_paginas=MAX_PAGINAS):
+    """Busca o endpoint e, se a resposta for paginada (``results`` + ``next``), junta todas as páginas.
+
+    Devolve o mesmo envelope da primeira página, com ``results`` de todas as páginas e ``next`` nulo.
+    O ``next`` é seguido pelo próprio ``client``, que só aceita URLs do host do SUAP.
+    """
+    data = client.get_endpoint_data(access_token, url_path)
+    if not (isinstance(data, dict) and isinstance(data.get("results"), list) and data.get("next")):
+        return data
+    data = dict(data)
+    results = list(data["results"])
+    proxima, paginas = data.get("next"), 1
+    while proxima:
+        if paginas >= max_paginas:
+            logger.warning("SUAP endpoint '%s': limite de %d páginas atingido", url_path, max_paginas)
+            break
+        pagina = client.get_endpoint_data(access_token, proxima)
+        if not (isinstance(pagina, dict) and isinstance(pagina.get("results"), list)):
+            break
+        results.extend(pagina["results"])
+        proxima, paginas = pagina.get("next"), paginas + 1
+    data.update(results=results, next=proxima, previous=None)
+    return data
+
+
 def is_primary_endpoint(endpoint_spec, url_path=None):
     """Determine if an endpoint spec or path corresponds to the primary SUAP user info endpoint (/api/rh/eu/)."""
     if isinstance(endpoint_spec, dict):
@@ -73,7 +102,7 @@ class DefaultEndpointsUserInfoFetcher(BaseUserInfoFetcher):
                         except KeyError as exc:
                             logger.warning("Could not format SUAP endpoint '%s' with user_info: %s", url_path, exc)
                             continue
-                    data = client.get_endpoint_data(access_token, url_path)
+                    data = get_all_pages(client, access_token, url_path)
                     if isinstance(data, dict):
                         user_info.update(data)
 
@@ -105,7 +134,7 @@ class DefaultEndpointsUserInfoFetcher(BaseUserInfoFetcher):
                                         )
                                         continue
                                     try:
-                                        data = client.get_endpoint_data(access_token, formatted_url)
+                                        data = get_all_pages(client, access_token, formatted_url)
                                         if extract_list and isinstance(data, dict):
                                             extracted = data.get(extract_list, [])
                                         else:
@@ -145,7 +174,7 @@ class DefaultEndpointsUserInfoFetcher(BaseUserInfoFetcher):
                             logger.warning("Could not format SUAP endpoint '%s' with user_info: %s", url_path, exc)
                             continue
 
-                    data = client.get_endpoint_data(access_token, url_path)
+                    data = get_all_pages(client, access_token, url_path)
 
                     if extract_list and isinstance(data, dict):
                         data_to_store = data.get(extract_list, [])
