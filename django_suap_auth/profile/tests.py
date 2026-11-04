@@ -805,7 +805,7 @@ def test_lista_de_vinculos_avisa_quando_ha_mais_paginas(caplog):
     from django_suap_auth.profile.backends import lista_de_vinculos
 
     assert lista_de_vinculos({"next": "https://suap/api/?page=2", "results": [{"id": 1}]}) == [{"id": 1}]
-    assert "primeira página" in caplog.text
+    assert "páginas restantes" in caplog.text
 
 
 @pytest.mark.django_db

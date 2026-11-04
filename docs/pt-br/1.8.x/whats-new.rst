@@ -7,6 +7,11 @@ Esta página resume as novidades e melhorias introduzidas na série **1.8.x** do
 .. note::
    Esta página deve ser atualizada a cada nova release publicada.
 
+Versão 1.8.16
+=============
+
+- **Respostas Paginadas do SUAP Lidas por Inteiro**: Os endpoints de lista do SUAP são paginados (100 itens por página). Ao buscar os ``user_info_endpoints``, a nova função ``fetchers.get_all_pages`` segue o ``next`` e junta os ``results`` de todas as páginas, num envelope com ``next`` nulo. Há limite de 50 páginas (``MAX_PAGINAS``), e o ``next`` só é seguido no host do SUAP configurado.
+
 Versão 1.8.15
 =============
 
