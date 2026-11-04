@@ -1,0 +1,88 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+  <a href="{% url 'admin:index' %}">{% translate "Home" %}</a>
+  &rsaquo; <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_config.verbose_name }}</a>
+  &rsaquo; <a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+  &rsaquo; {{ title }}
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+  <p class="errornote" role="note">
+    {% blocktranslate trimmed %}
+      Atenção: o arquivo contém dados pessoais (CPF, RG, e-mails, data de nascimento, filiação, entre outros).
+      Use-o apenas para suporte e testes, não o compartilhe e apague-o depois do uso.
+    {% endblocktranslate %}
+  </p>
+
+  {% if erros %}
+    <div class="errornote">
+      <p>{% translate "O arquivo não pode ser importado:" %}</p>
+      <ul>{% for erro in erros %}<li>{{ erro }}</li>{% endfor %}</ul>
+    </div>
+  {% endif %}
+  {{ form.non_field_errors }}
+  {{ form.arquivo.errors }}
+
+  {% if previa %}
+    <h2>{% translate "Prévia" %}</h2>
+    <p>{% translate "Nada foi gravado ainda. Confira e confirme a importação." %}</p>
+    <table>
+      <thead>
+        <tr>
+          <th>{% translate "Usuário" %}</th>
+          <th>{% translate "Ação" %}</th>
+          <th>{% translate "Perfil" %}</th>
+          <th>{% translate "Vínculos" %}</th>
+          <th>{% translate "Dados brutos" %}</th>
+          <th>{% translate "Avisos" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in previa %}
+          <tr>
+            <td>{{ r.username }}</td>
+            <td>{% if r.acao == "criar" %}{% translate "criar" %}{% else %}{% translate "atualizar" %}{% endif %}</td>
+            <td>{% if r.perfil %}{% translate "criar/atualizar" %}{% else %}{% translate "manter" %}{% endif %}</td>
+            <td>{% blocktranslate count n=r.vinculos %}substituir por {{ n }}{% plural %}substituir por {{ n }}{% endblocktranslate %}</td>
+            <td>{% if r.dados_brutos %}{% translate "substituir" %}{% else %}{% translate "remover" %}{% endif %}</td>
+            <td>{% for aviso in r.avisos %}{{ aviso }}{% if not forloop.last %}<br>{% endif %}{% endfor %}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="payload" value="{{ payload }}">
+      <div class="submit-row">
+        <input type="submit" name="confirmar" class="default" value="{% translate 'Confirmar importação' %}">
+        <a href="{% url opts|admin_urlname:'importar' %}" class="closelink">{% translate "Cancelar" %}</a>
+      </div>
+    </form>
+  {% else %}
+    <p>
+      {% blocktranslate trimmed %}
+        Envie um JSON gerado pela ação "Exportar (JSON)" ou pelo comando <code>export_suap_user</code>.
+        Usuários são casados pelo username: os existentes têm nome, e-mail, situação e perfil atualizados e vínculos e
+        dados brutos substituídos; os novos são criados com senha inutilizável. Senha, equipe, superusuário, grupos e
+        permissões nunca são alterados.
+      {% endblocktranslate %}
+    </p>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <fieldset class="module aligned">
+        <div class="form-row">
+          {{ form.arquivo.label_tag }} {{ form.arquivo }}
+        </div>
+      </fieldset>
+      <div class="submit-row">
+        <input type="submit" class="default" value="{% translate 'Ver prévia' %}">
+      </div>
+    </form>
+  {% endif %}
+</div>
+{% endblock %}

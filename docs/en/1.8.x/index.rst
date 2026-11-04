@@ -26,6 +26,7 @@ Beyond basic login integration, the library provides:
    installation
    configuration
    profile-models
+   user-transfer
    impersonation
    audit
    jwt-endpoints
@@ -59,6 +60,7 @@ Quick Links
 - :doc:`Installation <installation>`
 - :doc:`Configuration <configuration>`
 - :doc:`Profile Models <profile-models>`
+- :doc:`Exporting and Importing Users <user-transfer>`
 - :doc:`Impersonation <impersonation>`
 - :doc:`JWT Endpoints <jwt-endpoints>`
 - :doc:`Scopes <scopes>`

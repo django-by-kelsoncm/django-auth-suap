@@ -7,6 +7,11 @@ Esta página resume as novidades e melhorias introduzidas na série **1.8.x** do
 .. note::
    Esta página deve ser atualizada a cada nova release publicada.
 
+Versão 1.8.14
+=============
+
+- **Exportar e Importar Usuários com Perfil, Vínculos e Dados Brutos**: Novo módulo ``django_suap_auth.profile.transfer``, ação "Exportar (JSON)" e página "Importar usuários" (com prévia e confirmação) no ``CustomUserAdmin``, só para superusuários, e comandos ``export_suap_user`` e ``import_suap_user [--dry-run]``. A importação é transacional, faz *upsert* por ``username``, substitui vínculos e dados brutos e nunca leva senha, ``is_staff``, ``is_superuser``, grupos ou permissões. O arquivo contém dados pessoais. Veja :doc:`user-transfer`.
+
 Versão 1.8.13
 =============
 

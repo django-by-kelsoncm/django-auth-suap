@@ -1,0 +1,11 @@
+{% extends "admin/change_list.html" %}
+{% load i18n admin_urls %}
+
+{% block object-tools-items %}
+  {% if request.user.is_superuser %}
+    <li>
+      <a href="{% url opts|admin_urlname:'importar' %}" class="addlink">{% translate "Importar usuários" %}</a>
+    </li>
+  {% endif %}
+  {{ block.super }}
+{% endblock %}

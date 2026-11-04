@@ -26,6 +26,7 @@ Além do fluxo básico de login, a biblioteca fornece:
    installation
    configuration
    profile-models
+   user-transfer
    impersonation
    audit
    jwt-endpoints
@@ -59,6 +60,7 @@ Links Rápidos
 - :doc:`Instalação <installation>`
 - :doc:`Configuração <configuration>`
 - :doc:`Modelos de Perfil <profile-models>`
+- :doc:`Exportar e Importar Usuários <user-transfer>`
 - :doc:`Personificação <impersonation>`
 - :doc:`Auditoria <audit>`
 - :doc:`Endpoints JWT <jwt-endpoints>`
