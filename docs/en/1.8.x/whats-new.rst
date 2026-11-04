@@ -7,6 +7,11 @@ This page summarizes the new features and improvements introduced in the **1.8.x
 .. note::
    This page must be updated with every new release published.
 
+Version 1.8.15
+==============
+
+- **Fix: Paginated SUAP Links Were Not Saved**: ``/api/rh/meus-vinculos/`` returns ``{"count", "next", "previous", "results": [...]}``, but ``sync_suap_profile`` only accepted a list and discarded the response. ``Vinculo`` rows were never refreshed on login and kept stale values (e.g. modality ``Técnico Integrado`` instead of ``Técnico integrado ao ensino médio``). The new ``lista_de_vinculos`` function accepts the list or the paginated response (uses the first page and logs a warning if there are more), also when extracting institutional phones. Each user's links are fixed on their next login.
+
 Version 1.8.14
 ==============
 

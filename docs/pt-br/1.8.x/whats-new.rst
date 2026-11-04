@@ -7,6 +7,11 @@ Esta página resume as novidades e melhorias introduzidas na série **1.8.x** do
 .. note::
    Esta página deve ser atualizada a cada nova release publicada.
 
+Versão 1.8.15
+=============
+
+- **Correção: Vínculos do SUAP Paginados Não Eram Gravados**: ``/api/rh/meus-vinculos/`` devolve ``{"count", "next", "previous", "results": [...]}``, mas ``sync_suap_profile`` só aceitava lista e descartava a resposta. Os ``Vinculo`` nunca eram regravados no login e ficavam com valores antigos (ex.: modalidade ``Técnico Integrado`` no lugar de ``Técnico integrado ao ensino médio``). Nova função ``lista_de_vinculos`` aceita a lista ou a resposta paginada (usa a primeira página e avisa no log se houver mais), também na extração de telefones institucionais. Os vínculos de cada usuário são corrigidos no próximo login.
+
 Versão 1.8.14
 =============
 
